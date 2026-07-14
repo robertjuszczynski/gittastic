@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: false
+  electron: true
+  '@swc/core': true
+minimumReleaseAgeExclude:
+  - eslint@10.7.0
+nodeLinker: hoisted
