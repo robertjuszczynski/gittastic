@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import os from 'node:os'
 import path from 'node:path'
+import registerIpcHandlers from '@main/shared/ipc/register-ipc-handlers'
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -43,6 +44,7 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  registerIpcHandlers()
   createWindow()
 
   app.on('activate', () => {

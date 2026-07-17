@@ -1,9 +1,6 @@
-export interface IElectronAPI {
-  test: () => Promise<void>,
-}
-
+import type { TElectronAPI } from '../app/preload'
 declare global {
   interface Window {
-    electronAPI: IElectronAPI
+    electron: TElectronAPI
   }
 }

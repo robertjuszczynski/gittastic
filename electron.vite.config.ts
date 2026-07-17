@@ -12,7 +12,9 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        '@': resolve('src/app/main'),
+        '@': resolve('src/main'),
+        '@main': resolve('src/main'),
+        '@shared': resolve('src/shared'),
       },
     },
   },
@@ -20,6 +22,11 @@ export default defineConfig({
     build: {
       lib: {
         entry: resolve('src/app/preload/index.ts')
+      }
+    },
+    resolve: {
+      alias: {
+        '@shared': resolve('src/shared')
       }
     }
   },
