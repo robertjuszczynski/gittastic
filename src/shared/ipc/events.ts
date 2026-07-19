@@ -5,4 +5,8 @@ export interface IEvents {
         args: void,
         response?: Promise<string>;
     };
+    [CHANNELS.GET_WORKSPACES]: {
+        args: void,
+        response: Promise<string[]>;
+    };
 }

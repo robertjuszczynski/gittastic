@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import os from 'node:os'
 import path from 'node:path'
-import registerIpcHandlers from '@main/shared/ipc/register-ipc-handlers'
+import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
 
 function createWindow(): void {
   const win = new BrowserWindow({

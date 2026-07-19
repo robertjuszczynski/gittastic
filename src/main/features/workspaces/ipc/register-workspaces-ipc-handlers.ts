@@ -4,4 +4,5 @@ import { CHANNELS } from '@shared'
 
 export default function registerWorkspacesIpcHandlers() {
   ipcMain.handle(CHANNELS.OPEN_WORKSPACE, WorkspacesService.openWorkspace)
+  ipcMain.handle(CHANNELS.GET_WORKSPACES, WorkspacesService.getWorkspaces)
 }

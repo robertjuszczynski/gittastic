@@ -12,6 +12,7 @@ if (process.contextIsolated) {
   try {
     const API: TElectronAPI = {
       [CHANNELS.OPEN_WORKSPACE]: () => ipcRenderer.invoke(CHANNELS.OPEN_WORKSPACE),
+      [CHANNELS.GET_WORKSPACES]: () => ipcRenderer.invoke(CHANNELS.GET_WORKSPACES),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
   } catch (error) {

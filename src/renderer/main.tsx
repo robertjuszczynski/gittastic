@@ -4,6 +4,7 @@ import { createHashRouter, RouterProvider } from 'react-router'
 import Home from './pages'
 import './app.css'
 import { ModalProvider } from './contexts/ModalContext'
+import { WorkspacesProvider } from './contexts/WorkspacesContext'
 
 const router = createHashRouter([
   { path: '/', element: <Home /> },
@@ -11,8 +12,10 @@ const router = createHashRouter([
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <ModalProvider>
-      <RouterProvider router={router} />
-    </ModalProvider>
+    <WorkspacesProvider>
+      <ModalProvider>
+        <RouterProvider router={router} />
+      </ModalProvider>
+    </WorkspacesProvider>
   </StrictMode>
 )
