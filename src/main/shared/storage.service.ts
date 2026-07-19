@@ -15,18 +15,24 @@ type StorageFileContent = Partial<{
 type StorageKey = keyof StorageFileContent;
 
 export class Storage {
-  public static async get(): Promise<StorageFileContent>
-  public static async get<K extends StorageKey>(key: K): Promise<StorageFileContent[K]>
-  public static async get(key?: StorageKey): Promise<StorageFileContent | StorageFileContent[StorageKey]> {
-    if (!fs.existsSync(STORAGE_FILE_PATH)) return key ? undefined : {}
+  public static async getAll(): Promise<StorageFileContent | undefined> {
+      try {
+        const result: StorageFileContent = JSON.parse(await readFile(STORAGE_FILE_PATH, { encoding: 'utf8'}))
+        return result
+      } catch {
+        logger.error(`Failed to parse ${STORAGE_FILE_NAME}`)
+        return undefined
+      }
+  }
 
-    try {
-      const result: StorageFileContent = JSON.parse(await readFile(STORAGE_FILE_PATH, { encoding: 'utf8'}))
-      return key ? result[key] : result
-    } catch {
-      logger.error(`Failed to parse ${STORAGE_FILE_NAME}`)
-      return key ? undefined : {}
-    }
+  public static async get<K extends StorageKey>(key: K): Promise<StorageFileContent[K] | undefined> {
+      try {
+        const result: StorageFileContent = JSON.parse(await readFile(STORAGE_FILE_PATH, { encoding: 'utf8'}))
+        return result[key]
+      } catch {
+        logger.error(`Failed to parse ${STORAGE_FILE_NAME}`)
+        return undefined
+      }
   }
   
   public static async set(key: StorageKey, value: StorageFileContent[StorageKey]) {
@@ -36,7 +42,7 @@ export class Storage {
       await appendFile(STORAGE_FILE_PATH, '{}')
     }
 
-    const oldData = await this.get()
+    const oldData = await this.getAll()
     const newData = JSON.stringify({
       ...oldData,
       [key]: value
