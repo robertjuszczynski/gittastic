@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { CHANNELS } from '@shared';
+import { CHANNELS, Workspaces } from '@shared';
 
 type WorkspacesContextType = {
   activePath: string | null;
-  workspaces: string[];
+  workspaces: Workspaces;
   openWorkspace: () => Promise<void>;
 };
 
@@ -19,17 +19,17 @@ const WorkspacesContext = createContext<WorkspacesContextType>({
 
 export const WorkspacesProvider = ({ children }: WorkspacesProviderProps) => {
   const [activePath, setActivePath] = useState<string | null>(null);
-  const [workspaces, setWorkspaces] = useState<string[]>([]);
+  const [workspaces, setWorkspaces] = useState<Workspaces>([]);
 
   useEffect(() => {
     window.electron[CHANNELS.GET_WORKSPACES]().then(setWorkspaces);
   }, []);
 
   const openWorkspace = async () => {
-    const path = await window.electron[CHANNELS.OPEN_WORKSPACE]();
-    if (path) {
-      setActivePath(path);
-      setWorkspaces((prev) => prev.includes(path) ? prev : [...prev, path]);
+    const ws = await window.electron[CHANNELS.OPEN_WORKSPACE]();
+    if (ws?.path) {
+      setActivePath(ws.path);
+      setWorkspaces((prev) => prev.includes(ws) ? prev : [...prev, ws]);
     }
   };
 

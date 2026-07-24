@@ -3,13 +3,14 @@ import fs from 'node:fs'
 import { readFile, writeFile, appendFile } from 'node:fs/promises'
 import { app } from 'electron'
 import { logger } from '@main/shared/logger'
+import type { Workspaces } from '@shared'
 
 export const STORAGE_FILE_NAME = 'storage.json'
 export const STORAGE_FILE_PATH = path.join(app.getPath('userData'), STORAGE_FILE_NAME)
 
 type StorageFileContent = Partial<{
   'active-workspace': string
-  'workspaces': string[]
+  'workspaces': Workspaces
 }>
 
 type StorageKey = keyof StorageFileContent;

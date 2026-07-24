@@ -9,7 +9,7 @@ const WorkspacesContainer = () => {
     <>
       <div className='w-44 border-r-2 border-gray-200 h-screen flex flex-col items-center justify-start py-4'>
         {workspaces.map((workspace, index) => (
-          <WorkspacesItem key={index} name={workspace} />
+          <WorkspacesItem key={index} name={workspace.name} />
         ))}
         <button onClick={openWorkspace}>Select workspace</button>
       </div>
