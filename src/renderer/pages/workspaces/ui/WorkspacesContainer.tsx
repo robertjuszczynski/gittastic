@@ -3,15 +3,15 @@ import WorkspacesItem from './WorkspacesItem';
 import { useWorkspaces } from '@renderer/contexts/WorkspacesContext';
 
 const WorkspacesContainer = () => {
-  const { openWorkspace, workspaces } = useWorkspaces();
+  const { openWorkspace, workspaces, activePath } = useWorkspaces();
 
   return (
     <>
-      <div className='w-44 border-r-2 border-gray-200 h-screen flex flex-col items-center justify-start py-4'>
+      <div className='w-56 border-r-2 border-d h-screen flex flex-col items-center justify-start py-4 bg-bg'>
         {workspaces.map((workspace, index) => (
-          <WorkspacesItem key={index} name={workspace.name} />
+          <WorkspacesItem key={index} ws={workspace} isActive={activePath === workspace.path}/>
         ))}
-        <button onClick={openWorkspace}>Select workspace</button>
+        <button onClick={openWorkspace} className='text-neutral-100'>Select workspace</button>
       </div>
     </>
   );

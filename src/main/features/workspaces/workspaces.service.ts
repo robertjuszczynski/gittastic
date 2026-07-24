@@ -12,6 +12,11 @@ export default class WorkspacesService {
     return await Storage.get('workspaces') ?? []
   }
 
+  public static async setActiveWorkspace(ws: Workspace) {
+    await Storage.set('active-workspace', ws)
+    return ws
+  }
+
   public static async openWorkspace (): Promise<Workspace | void> {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openDirectory']
@@ -43,4 +48,5 @@ export default class WorkspacesService {
       return newWorkspace
     }
   }
+
 }
