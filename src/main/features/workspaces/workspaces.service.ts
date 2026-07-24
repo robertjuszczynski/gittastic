@@ -1,9 +1,13 @@
 import { dialog } from 'electron'
-import GitService from '../git/git.service'
+import GitClient from '../git/git.client'
 import { Storage } from '@main/shared/storage.service'
 import type { Workspaces, Workspace } from '@shared'
 
 export default class WorkspacesService {
+  public static async getActiveWorkspace(): Promise<Workspace | undefined> {
+    return await Storage.get('active-workspace')
+  }
+
   public static async getWorkspaces(): Promise<Workspaces> {
     return await Storage.get('workspaces') ?? []
   }
@@ -14,7 +18,7 @@ export default class WorkspacesService {
     })
     const selectedPath = filePaths[0]
 
-    if (!canceled && await GitService.hasGit(selectedPath)) {
+    if (!canceled && await GitClient.hasGit(selectedPath)) {
       const workspaces = await Storage.get('workspaces') ?? []
       let existing = false
       workspaces.forEach(ws => {
@@ -34,7 +38,8 @@ export default class WorkspacesService {
         await Storage.set('workspaces', [...workspaces, newWorkspace])
       }
 
-      await Storage.set('active-workspace', selectedPath)
+      await Storage.set('active-workspace', newWorkspace)
+      GitClient.init(selectedPath)
       return newWorkspace
     }
   }
