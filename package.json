@@ -4,6 +4,7 @@
   "description": "",
   "main": "out/main/index.js",
   "scripts": {
+    "predev": "npx tsc --noEmit -p tsconfig.web.json && npx tsc --noEmit -p tsconfig.node.json",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json",
