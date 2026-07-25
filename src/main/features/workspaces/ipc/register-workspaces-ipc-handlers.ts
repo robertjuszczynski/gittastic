@@ -1,9 +1,9 @@
 import { ipcMain } from 'electron'
 import WorkspacesService from '../workspaces.service'
-import { CHANNELS, type IEvents } from '@shared'
+import { type WORKSPACE_CHANNELS, CHANNELS, type IEvents } from '@shared'
 
 type WorkspacesIpcHandlers = {
-  [K in keyof typeof CHANNELS]: (
+  [K in keyof typeof WORKSPACE_CHANNELS]: (
     event: Electron.IpcMainInvokeEvent,
     args: IEvents[typeof CHANNELS[K]]['args']
   ) => IEvents[typeof CHANNELS[K]]['response']

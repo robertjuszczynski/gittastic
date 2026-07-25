@@ -4,6 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import os from 'node:os'
 import path from 'node:path'
 import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
+import GitService from '@main/features/git/git.service'
+import { Storage } from '@main/shared/storage.service'
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -43,6 +45,9 @@ app.whenReady().then(async () => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  const ws = await Storage.get('active-workspace')
+  if (ws?.path) GitService.init(ws.path)
 
   registerIpcHandlers()
   createWindow()
