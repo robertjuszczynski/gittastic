@@ -6,7 +6,7 @@ type SidebarProps = {
 
 const Sidebar = ({ children }: SidebarProps) => {
   return (
-    <aside className='w-[250px] shrink-0 h-screen overflow-y-auto flex flex-col border-r border-neutral-800 bg-surface'>
+    <aside className='w-62.5 shrink-0 h-screen overflow-y-auto flex flex-col border-r border-neutral-800 bg-surface'>
       {children}
     </aside>
   );

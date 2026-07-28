@@ -1,6 +1,6 @@
 import type { SimpleGit } from 'simple-git'
 import simpleGit from 'simple-git'
-import { GitRawCommits } from 'src/shared/types/git.types'
+import type { GitRawCommits } from 'src/shared/types/git.types'
 
 export default class GitService {
   private static instance: SimpleGit | null = null

@@ -7,6 +7,9 @@ export const WORKSPACE_CHANNELS = {
 
 export const GIT_CHANNELS = {
   GET_COMMITS: 'GET_COMMITS',
+  PULL: 'PULL',
+  PUSH: 'PUSH',
+  FETCH: 'FETCH',
 } as const
 
 export const CHANNELS = {

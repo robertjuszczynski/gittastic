@@ -22,5 +22,16 @@ export interface IEvents {
         args: void;
         response: Promise<GitRawCommits>;
     };
-
+    [CHANNELS.PULL]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.PUSH]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.FETCH]: {
+        args: void;
+        response: Promise<void>;
+    };
 }

@@ -16,6 +16,9 @@ if (process.contextIsolated) {
       [CHANNELS.GET_ACTIVE_WORKSPACE]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_WORKSPACE),
       [CHANNELS.SET_ACTIVE_WORKSPACE]: args => ipcRenderer.invoke(CHANNELS.SET_ACTIVE_WORKSPACE, args),
       [CHANNELS.GET_COMMITS]: () => ipcRenderer.invoke(CHANNELS.GET_COMMITS),
+      [CHANNELS.PULL]: () => ipcRenderer.invoke(CHANNELS.PULL),
+      [CHANNELS.PUSH]: () => ipcRenderer.invoke(CHANNELS.PUSH),
+      [CHANNELS.FETCH]: () => ipcRenderer.invoke(CHANNELS.FETCH),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
   } catch (error) {

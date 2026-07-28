@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { GIT_CHANNELS, type CHANNELS, type IEvents } from '@shared'
-import GitService from '../git.service'
+import GitService, { git } from '../git.service'
 
 type GitIpcHandlers = {
   [K in keyof typeof GIT_CHANNELS]: (
@@ -14,6 +14,18 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.GET_COMMITS]: async () => {
       if (!GitService.isInitialized()) return []
       return await GitService.getRawCommits()
+    },
+    [GIT_CHANNELS.PULL]: async () => {
+      if (!GitService.isInitialized()) return
+      git.pull()
+    },
+    [GIT_CHANNELS.PUSH]: async () => {
+      if (!GitService.isInitialized()) return
+      git.push()
+    },
+    [GIT_CHANNELS.FETCH]: async () => {
+      if (!GitService.isInitialized()) return
+      git.fetch()
     },
   }
 
