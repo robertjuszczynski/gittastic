@@ -9,8 +9,6 @@ import { Storage } from '@main/shared/storage.service'
 
 function createWindow(): void {
   const win = new BrowserWindow({
-    width: 900,
-    height: 670,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -19,6 +17,7 @@ function createWindow(): void {
     },
   })
 
+  win.maximize()
   win.on('ready-to-show', () => win.show())
 
   win.webContents.setWindowOpenHandler((details) => {
