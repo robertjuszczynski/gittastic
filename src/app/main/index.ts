@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, session } from 'electron'
 import { SettingsService } from '@main/features/settings/settings.service'
 import { join } from 'node:path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { electronApp, is } from '@electron-toolkit/utils'
 import os from 'node:os'
 import path from 'node:path'
 import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
@@ -26,6 +26,10 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
+  win.webContents.openDevTools({
+    mode: 'detach'
+  })
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     win.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/app/renderer/index.html`)
   } else {
@@ -41,10 +45,6 @@ app.whenReady().then(async () => {
   )
 
   electronApp.setAppUserModelId('com.gittastic')
-
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
 
   SettingsService.buildMenu()
 
