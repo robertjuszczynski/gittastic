@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { CHANNELS } from '@shared'
-import { useWorkspaces } from '@renderer/contexts/WorkspacesContext'
-import { computeGraphRows, type CommitGraphRow } from '@renderer/utils/computeGraphLanes'
+import React from 'react'
+import { useCommits } from '@renderer/hooks/useCommits'
 import CommitItem from './CommitItem'
 
 const CommitList = () => {
-  const { activePath } = useWorkspaces()
-  const [rows, setRows] = useState<CommitGraphRow[]>([])
-
-  useEffect(() => {
-    if (!activePath) return
-    window.electron[CHANNELS.GET_COMMITS]().then(commits => {
-      setRows(computeGraphRows(commits))
-    })
-  }, [activePath])
+  const { data: rows = [] } = useCommits()
 
   return (
     <>

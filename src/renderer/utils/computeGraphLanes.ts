@@ -16,7 +16,7 @@ export type CommitGraphRow = {
   segments: GraphSegment[]
 }
 
-const COLORS = ['#9d8df1', '#7b9ef0', '#b8a0f0', '#6bbfaa', '#d48bb8', '#8baad4']
+const COLORS = ['#00c8ff', '#7b6bff', '#ff4da6', '#00e5a0', '#ffc84d', '#ff6b6b']
 const col = (i: number) => COLORS[i % COLORS.length]
 
 export function computeGraphRows(commits: GitRawCommit[]): CommitGraphRow[] {
