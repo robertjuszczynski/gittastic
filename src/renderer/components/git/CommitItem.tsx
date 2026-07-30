@@ -67,7 +67,7 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
 
   return (
     <div
-      className='flex items-center hover:bg-surface cursor-pointer'
+      className='flex items-center hover:bg-surface cursor-pointer ml-2'
       style={{ height: ROW_HEIGHT, borderBottom: '1px solid rgba(0,0,0,0.05)' }}
     >
       <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible'>
