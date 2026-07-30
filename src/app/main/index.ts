@@ -1,4 +1,5 @@
 import { app, shell, BrowserWindow, session } from 'electron'
+import { SettingsService } from '@main/features/settings/settings.service'
 import { join } from 'node:path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import os from 'node:os'
@@ -44,6 +45,8 @@ app.whenReady().then(async () => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  SettingsService.buildMenu()
 
   const ws = await Storage.get('active-workspace')
   if (ws?.path) GitService.init(ws.path)
