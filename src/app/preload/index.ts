@@ -19,6 +19,7 @@ if (process.contextIsolated) {
       [CHANNELS.PULL]: () => ipcRenderer.invoke(CHANNELS.PULL),
       [CHANNELS.PUSH]: () => ipcRenderer.invoke(CHANNELS.PUSH),
       [CHANNELS.FETCH]: () => ipcRenderer.invoke(CHANNELS.FETCH),
+      [CHANNELS.GET_STATUS]: () => ipcRenderer.invoke(CHANNELS.GET_STATUS)
   } as const
     contextBridge.exposeInMainWorld('electron', API)
   } catch (error) {

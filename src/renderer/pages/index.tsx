@@ -3,6 +3,7 @@ import WorkspacesContainer from '@renderer/components/workspaces/WorkspacesConta
 import Toolbar from '@renderer/layout/Toolbar';
 import History from '@renderer/layout/History';
 import CommitList from '@renderer/components/git/CommitList';
+import RightPanel from '@renderer/components/panels/RightPanel';
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
         <History>
           <CommitList />
         </History>
+        <RightPanel />
       </div>
     </div>
   );

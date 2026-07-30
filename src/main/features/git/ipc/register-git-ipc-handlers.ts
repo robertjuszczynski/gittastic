@@ -27,6 +27,11 @@ export default function registerGitIpcHandlers() {
       if (!GitService.isInitialized()) return
       git.fetch()
     },
+    [GIT_CHANNELS.GET_STATUS]: async () => {
+      if (!GitService.isInitialized()) return null
+      const status = await GitService.getInstance().status()
+      return JSON.parse(JSON.stringify(status))
+    }
   }
 
   for (const [channel, handler] of Object.entries(handlers)) {

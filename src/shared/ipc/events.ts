@@ -1,3 +1,4 @@
+import type { StatusResult } from 'simple-git'
 import type { GitRawCommits } from '../types/git.types'
 import type { Workspace, Workspaces } from '../types/workspaces.types'
 import type { CHANNELS } from './channels'
@@ -34,4 +35,8 @@ export interface IEvents {
         args: void;
         response: Promise<void>;
     };
+    [CHANNELS.GET_STATUS]: {
+        args: void;
+        response: Promise<StatusResult>
+    }
 }

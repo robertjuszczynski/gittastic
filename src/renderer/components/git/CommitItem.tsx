@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'motion/react'
 import type { CommitGraphRow, GraphSegment } from '@renderer/utils/computeGraphLanes'
+import { useAppStore } from '@renderer/store/useAppStore'
 
 const LANE_WIDTH = 12
 const ROW_HEIGHT = 25
@@ -55,6 +56,8 @@ type CommitItemProps = {
 
 const CommitItem = ({ row, index }: CommitItemProps) => {
   const { commit, lane, color, laneCount, segments } = row
+  const { selectedItem, setSelectedItem } = useAppStore()
+  const isSelected = selectedItem === commit.hash
   const delay = index * 0.012
   const svgWidth = laneCount * LANE_WIDTH
   const cx = laneX(lane)
@@ -67,10 +70,16 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
 
   return (
     <div
-      className='flex items-center hover:bg-surface cursor-pointer ml-2'
-      style={{ height: ROW_HEIGHT, borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+      className='flex items-center hover:bg-surface cursor-pointer'
+      style={{
+        height: ROW_HEIGHT,
+        borderBottom: '1px solid rgba(0,0,0,0.05)',
+        background: isSelected ? 'rgba(27,112,248,0.12)' : undefined,
+        borderLeft: isSelected ? '2px solid #1b70f8' : '2px solid transparent',
+      }}
+      onClick={() => setSelectedItem(commit.hash)}
     >
-      <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible'>
+      <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible ml-2'>
         {segments.map((seg, i) => (
           <path
             key={i}
@@ -98,7 +107,7 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
           </span>
         )}
 
-        <span className='text-[12px] text-neutral-200 flex-1 truncate min-w-0'>{rest}</span>
+        <span className='text-[12px] font-medium text-neutral-200 flex-1 truncate min-w-0'>{rest}</span>
 
 
         <span className='text-[12px] text-neutral-500 shrink-0 max-w-15 truncate'>{firstName}</span>
