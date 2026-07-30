@@ -7,29 +7,29 @@
   --color-black: #000;
   --color-white: #fff;
 
-  --color-text: #e8eaf2;
-  --color-divider: rgba(255, 255, 255, 0.06);
+  --color-text: #111318;
+  --color-divider: rgba(0, 0, 0, 0.07);
 
-  /* Surfaces */
-  --color-bg: #090b10;
-  --color-surface: #10131a;
-  --color-surface-2: #181c26;
+  /* Surfaces — ink on paper */
+  --color-bg: #ffffff;
+  --color-surface: #f5f6fa;
+  --color-surface-2: #eceef5;
 
-  /* Text hierarchy */
-  --color-neutral-100: #e8eaf2;
-  --color-neutral-200: #c4c8d8;
-  --color-neutral-300: #9ea3b8;
-  --color-neutral-400: #7a7f96;
-  --color-neutral-500: #5a5f74;
-  --color-neutral-600: #3e4254;
-  --color-neutral-700: #272b38;
-  --color-neutral-800: #181c26;
-  --color-neutral-900: #10131a;
+  /* Text hierarchy — dark to light (100 = primary text, 900 = near-white) */
+  --color-neutral-100: #111318;
+  --color-neutral-200: #2c3040;
+  --color-neutral-300: #4a4f66;
+  --color-neutral-400: #6b7088;
+  --color-neutral-500: #8e93a8;
+  --color-neutral-600: #b4b8cc;
+  --color-neutral-700: #d4d7e8;
+  --color-neutral-800: #e4e6f2;
+  --color-neutral-900: #f0f1f8;
 
-  /* Futuristic cyan accent */
-  --color-accent: #00c8ff;
-  --color-accent-dim: rgba(0, 200, 255, 0.1);
-  --color-accent-glow: rgba(0, 200, 255, 0.06);
+  /* Blue accent — git client standard */
+  --color-accent: #1b70f8;
+  --color-accent-dim: rgba(27, 112, 248, 0.1);
+  --color-accent-glow: rgba(27, 112, 248, 0.06);
 
   /* All radii → 0 — the pixel art signature */
   --radius-sm: 0px;

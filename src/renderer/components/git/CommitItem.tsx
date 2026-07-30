@@ -2,9 +2,37 @@ import React from 'react'
 import { motion } from 'motion/react'
 import type { CommitGraphRow, GraphSegment } from '@renderer/utils/computeGraphLanes'
 
-const LANE_WIDTH = 20
-const ROW_HEIGHT = 36
-const DOT = 5
+const LANE_WIDTH = 12
+const ROW_HEIGHT = 25
+const DOT = 3
+
+const TYPE_COLORS: Record<string, `#${string}`> = {
+  feat:     '#1b70f8',
+  fix:      '#e53e3e',
+  chore:    '#8e93a8',
+  docs:     '#6b48ff',
+  refactor: '#d97706',
+  style:    '#db2777',
+  test:     '#059669',
+  perf:     '#ea580c',
+  ci:       '#7c3aed',
+  build:    '#64748b',
+  revert:   '#e53e3e',
+}
+
+function parseCommit(message: string) {
+  const match = message.match(/^(\w+)(\([^)]+\))?!?: (.+)/)
+  if (match) return { type: match[1].toLowerCase(), rest: match[3] }
+  return { type: null, rest: message }
+}
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr)
+  const day = d.getDate()
+  const month = d.toLocaleDateString('en', { month: 'short' })
+  const year = String(d.getFullYear()).slice(2)
+  return `${day} ${month} '${year}`
+}
 
 const laneX = (lane: number) => lane * LANE_WIDTH + LANE_WIDTH / 2
 const segY = (pos: 'top' | 'mid' | 'bot') =>
@@ -27,15 +55,20 @@ type CommitItemProps = {
 
 const CommitItem = ({ row, index }: CommitItemProps) => {
   const { commit, lane, color, laneCount, segments } = row
-  const delay = index * 0.02
+  const delay = index * 0.012
   const svgWidth = laneCount * LANE_WIDTH
   const cx = laneX(lane)
   const cy = ROW_HEIGHT / 2
 
+  const { type, rest } = parseCommit(commit.message)
+  const typeColor = type ? (TYPE_COLORS[type] ?? '#8e93a8') : null
+  const firstName = commit.author_name.split(' ')[0]
+
+
   return (
     <div
       className='flex items-center hover:bg-surface cursor-pointer'
-      style={{ height: ROW_HEIGHT, borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+      style={{ height: ROW_HEIGHT, borderBottom: '1px solid rgba(0,0,0,0.05)' }}
     >
       <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible'>
         {segments.map((seg, i) => (
@@ -44,27 +77,33 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
             d={segmentPath(seg)}
             stroke={seg.color}
             strokeWidth={1}
-            strokeOpacity={0.7}
+            strokeOpacity={0.6}
             fill='none'
           />
         ))}
-        {/* square pixel dot — the pixel art signature */}
         <motion.g
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           style={{ transformOrigin: `${cx}px ${cy}px` }}
-          transition={{ duration: 0.15, delay: delay + 0.06, ease: 'backOut' }}
+          transition={{ duration: 0.12, delay: delay + 0.04, ease: 'backOut' }}
         >
-          <rect x={cx - DOT} y={cy - DOT} width={DOT * 2} height={DOT * 2} fill='#090b10' />
-          <rect x={cx - DOT + 1} y={cy - DOT + 1} width={DOT * 2 - 2} height={DOT * 2 - 2} fill={color} />
+          <circle cx={cx} cy={cy} r={DOT} fill='#ffffff' stroke={color} strokeWidth={1.5} />
         </motion.g>
       </svg>
 
-      <div className='flex items-center gap-4 px-3 flex-1 min-w-0'>
-        <span className='text-[11px] font-mono text-neutral-500 shrink-0 tabular-nums'>{commit.hash.slice(0, 7)}</span>
-        <span className='text-[13px] text-neutral-200 flex-1 truncate'>{commit.message}</span>
-        <span className='text-[11px] text-neutral-500 shrink-0'>{commit.author_name}</span>
-        <span className='text-[11px] text-neutral-500 shrink-0 tabular-nums'>{new Date(commit.date).toLocaleDateString()}</span>
+      <div className='flex items-center gap-2 px-2 flex-1 min-w-0 overflow-hidden'>
+        {type && typeColor && (
+          <span className='shrink-0 text-[12px] font-bold font-mono' style={{ color: typeColor }}>
+            {type}
+          </span>
+        )}
+
+        <span className='text-[12px] text-neutral-200 flex-1 truncate min-w-0'>{rest}</span>
+
+
+        <span className='text-[12px] text-neutral-500 shrink-0 max-w-15 truncate'>{firstName}</span>
+        <span className='text-[12px] font-mono text-neutral-600 shrink-0 tabular-nums'>{commit.hash.slice(0, 7)}</span>
+        <span className='text-[12px] text-neutral-600 shrink-0 tabular-nums'>{formatDate(commit.date)}</span>
       </div>
     </div>
   )

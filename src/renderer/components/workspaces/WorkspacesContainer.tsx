@@ -8,7 +8,7 @@ const WorkspacesContainer = () => {
   return (
     <div
       className='w-52 h-full flex flex-col shrink-0 bg-surface'
-      style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ borderRight: '1px solid rgba(0,0,0,0.07)' }}
     >
       <div className='flex-1 flex flex-col overflow-y-auto pt-2'>
         {workspaces.map((workspace, index) => (
@@ -16,7 +16,7 @@ const WorkspacesContainer = () => {
         ))}
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}>
         <button
           onClick={openWorkspace}
           className='w-full text-left text-[12px] text-neutral-500 hover:text-neutral-200 hover:bg-surface-2 px-4 py-3 cursor-default select-none transition-colors'
