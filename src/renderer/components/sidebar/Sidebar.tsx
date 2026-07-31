@@ -14,7 +14,7 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useAppStore, type SectionId } from '@renderer/store/useAppStore'
+import { useSidebarStore, type SectionId } from '@renderer/store/useSidebarStore'
 import SidebarSection from './SidebarSection'
 import ReposSection from './ReposSection'
 import BranchesSection from './BranchesSection'
@@ -69,9 +69,9 @@ const SortableSection = ({ id, onRemove }: { id: SectionId; onRemove: () => void
 }
 
 const Sidebar = () => {
-  const sections = useAppStore(s => s.sections)
-  const setSections = useAppStore(s => s.setSections)
-  const removeSection = useAppStore(s => s.removeSection)
+  const sections = useSidebarStore(s => s.sections)
+  const setSections = useSidebarStore(s => s.setSections)
+  const removeSection = useSidebarStore(s => s.removeSection)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   const handleDragEnd = (e: DragEndEvent) => {

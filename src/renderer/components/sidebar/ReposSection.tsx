@@ -1,11 +1,11 @@
 import React from 'react'
 import { useActivePath, useWorkspaces } from '@renderer/contexts/WorkspacesContext'
-import { useAppStore } from '@renderer/store/useAppStore'
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 
 const ReposSection = () => {
   const { workspaces } = useWorkspaces()
   const { activePath, setActiveWorkspace } = useActivePath()
-  const setSelectedItem = useAppStore(s => s.setSelectedItem)
+  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
   return (
     <div>

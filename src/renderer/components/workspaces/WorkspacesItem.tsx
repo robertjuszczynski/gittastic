@@ -1,11 +1,11 @@
 import { useActivePath } from '@renderer/contexts/WorkspacesContext'
-import { useAppStore } from '@renderer/store/useAppStore';
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 import { Workspace } from '@shared'
 import React from 'react'
 
 const WorkspacesItem = ({ ws, isActive }: { ws: Workspace; isActive: boolean }) => {
   const { setActiveWorkspace } = useActivePath()
-  const setSelectedItem = useAppStore(s => s.setSelectedItem)
+  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
   const handleWorkspaceClick = async () => {
     await setActiveWorkspace(ws)

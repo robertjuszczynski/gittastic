@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCommits } from '@renderer/hooks/useGit'
-import { useAppStore } from '@renderer/store/useAppStore'
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
 
@@ -9,7 +9,7 @@ const ROW_HEIGHT = 25
 
 const CommitList = () => {
   const { data: rows = [] } = useCommits()
-  const selectedItem = useAppStore(s => s.selectedItem)
+  const selectedItem = useSelectionStore(s => s.selectedItem)
   const parentRef = useRef<HTMLDivElement>(null)
 
   const selectedMap = useMemo(

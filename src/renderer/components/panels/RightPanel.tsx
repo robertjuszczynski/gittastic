@@ -1,10 +1,10 @@
 import React from 'react'
-import { useAppStore } from '@renderer/store/useAppStore'
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 import UncommittedPanel from './UncommittedPanel'
 import CommitDiffPanel from './CommitDiffPanel'
 
 const RightPanel = () => {
-  const selectedItem = useAppStore(state => state.selectedItem)
+  const selectedItem = useSelectionStore(s => s.selectedItem)
 
   if (!selectedItem) return null
 

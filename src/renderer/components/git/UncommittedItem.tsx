@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { useStatus } from '@renderer/hooks/useGit'
-import { useAppStore } from '@renderer/store/useAppStore'
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 
 const UncommittedItem = memo(({ isSelected }: { isSelected: boolean }) => {
   const { data: status } = useStatus()
-  const setSelectedItem = useAppStore(s => s.setSelectedItem)
+  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
   const fileCount = status?.files.length ?? 0
   if (fileCount === 0) return null

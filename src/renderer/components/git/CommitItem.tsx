@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { motion } from 'motion/react'
 import type { CommitGraphRow, GraphSegment } from '@renderer/utils/computeGraphLanes'
-import { useAppStore } from '@renderer/store/useAppStore'
+import { useSelectionStore } from '@renderer/store/useSelectionStore'
 
 const LANE_WIDTH = 12
 const ROW_HEIGHT = 25
@@ -57,7 +57,7 @@ type CommitItemProps = {
 
 const CommitItem = ({ row, index, isSelected }: CommitItemProps) => {
   const { commit, lane, color, laneCount, segments } = row
-  const setSelectedItem = useAppStore(s => s.setSelectedItem)
+  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
   const delay = index * 0.012
   const svgWidth = laneCount * LANE_WIDTH
   const cx = laneX(lane)
