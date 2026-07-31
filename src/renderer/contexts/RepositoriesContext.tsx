@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { CHANNELS, Repository, Repositories } from '@shared';
+import { CHANNELS, Repositories } from '@shared';
 
 type ActivePathContextType = {
   activePath: string | null;
-  setActiveRepository: (repo: Repository) => Promise<Repository>;
+  setActivePath: (path: string | null) => void;
 };
 
 type RepositoriesListContextType = {
@@ -13,7 +13,7 @@ type RepositoriesListContextType = {
 
 const ActivePathContext = createContext<ActivePathContextType>({
   activePath: null,
-  setActiveRepository: async (repo) => repo,
+  setActivePath: () => {},
 });
 
 const RepositoriesListContext = createContext<RepositoriesListContextType>({
@@ -44,14 +44,8 @@ export const RepositoriesProvider = ({ children }: RepositoriesProviderProps) =>
     }
   };
 
-  const setActiveRepository = async (repo: Repository): Promise<Repository> => {
-    const result = await window.electron[CHANNELS.SET_ACTIVE_REPOSITORY](repo)
-    setActivePath(result.path)
-    return result
-  }
-
   return (
-    <ActivePathContext.Provider value={{ activePath, setActiveRepository }}>
+    <ActivePathContext.Provider value={{ activePath, setActivePath }}>
       <RepositoriesListContext.Provider value={{ repositories, openRepository }}>
         {children}
       </RepositoriesListContext.Provider>

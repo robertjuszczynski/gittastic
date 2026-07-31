@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useCommits } from '@renderer/hooks/useGit'
+import { useCommits, useStatus } from '@renderer/hooks/useGit'
 import { useSelectionStore } from '@renderer/store/useSelectionStore'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
@@ -9,6 +9,7 @@ const ROW_HEIGHT = 25
 
 const CommitList = () => {
   const { data: rows = [] } = useCommits()
+  const { data: status, isLoading } = useStatus()
   const selectedItem = useSelectionStore(s => s.selectedItem)
   const parentRef = useRef<HTMLDivElement>(null)
 
@@ -25,10 +26,14 @@ const CommitList = () => {
     overscan: 20,
   })
 
+  const fileCount = status?.files.length ?? 0
+
+  if (isLoading) return null
+
   return (
     <div className='w-112.5 shrink-0 flex flex-col border-r border-r-black/[0.07]'>
       <div ref={parentRef} className='h-full overflow-y-auto'>
-        <UncommittedItem isSelected={isUncommitedSelected} />
+        {fileCount !== 0 && <UncommittedItem isSelected={isUncommitedSelected} fileCount={fileCount} />}
         <div className='relative' style={{ height: virtualizer.getTotalSize() }}>
           {virtualizer.getVirtualItems().map(virtualRow => (
             <div

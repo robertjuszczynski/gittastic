@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import type { GitRawCommit } from '@shared'
+import type { GitRawCommit, Repository } from '@shared'
 import { useActivePath } from '@renderer/contexts/RepositoriesContext'
 import type { CommitGraphRow } from '@renderer/utils/computeGraphLanes'
 import GraphWorker from '@renderer/utils/computeGraphLanes.worker?worker'
@@ -74,6 +74,21 @@ export const useStatus = () => {
     },
     enabled: !!activePath,
   })
+}
+
+export const useSetActiveRepository = () => {
+  const { setActivePath } = useActivePath()
+  const queryClient = useQueryClient()
+
+  return async (repo: Repository) => {
+    const result = await window.electron[CHANNELS.SET_ACTIVE_REPOSITORY](repo)
+    await queryClient.prefetchQuery({
+      queryKey: ['git', 'status', result.path],
+      queryFn: () => window.electron[CHANNELS.GET_STATUS](),
+    })
+    setActivePath(result.path)
+    return result
+  }
 }
 
 export const useCheckoutBranch = () => {

@@ -1,10 +1,12 @@
 import React from 'react'
 import { useActivePath, useRepositories } from '@renderer/contexts/RepositoriesContext'
+import { useSetActiveRepository } from '@renderer/hooks/useGit'
 import { useSelectionStore } from '@renderer/store/useSelectionStore'
 
 const ReposSection = () => {
   const { repositories } = useRepositories()
-  const { activePath, setActiveRepository } = useActivePath()
+  const { activePath } = useActivePath()
+  const setActiveRepository = useSetActiveRepository()
   const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
   return (

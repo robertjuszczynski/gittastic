@@ -1,10 +1,10 @@
-import { useActivePath } from '@renderer/contexts/RepositoriesContext'
+import { useSetActiveRepository } from '@renderer/hooks/useGit'
 import { useSelectionStore } from '@renderer/store/useSelectionStore'
 import { Repository } from '@shared'
 import React from 'react'
 
 const RepositoryItem = ({ repo, isActive }: { repo: Repository; isActive: boolean }) => {
-  const { setActiveRepository } = useActivePath()
+  const setActiveRepository = useSetActiveRepository()
   const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
   const handleClick = async () => {
