@@ -1,13 +1,13 @@
 import React from 'react'
 import { useActivePath, useRepositories } from '@renderer/contexts/RepositoriesContext'
 import { useSetActiveRepository } from '@renderer/hooks/useGit'
-import { useSelectionStore } from '@renderer/store/useSelectionStore'
+import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 
 const ReposSection = () => {
   const { repositories } = useRepositories()
   const { activePath } = useActivePath()
   const setActiveRepository = useSetActiveRepository()
-  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
+  const setSelectedCommit = useCommitSelectionStore(s => s.setSelectedCommit)
 
   return (
     <div>
@@ -17,7 +17,7 @@ const ReposSection = () => {
           <div
             key={i}
             className='flex items-center cursor-pointer hover:bg-surface-2 relative h-[26px] pl-[30px]'
-            onClick={async () => { await setActiveRepository(repo); setSelectedItem(null) }}
+            onClick={async () => { await setActiveRepository(repo); setSelectedCommit('uncommitted') }}
           >
             {isActive && (
               <div className='absolute left-0 top-0 bottom-0 w-0.5 bg-accent' />

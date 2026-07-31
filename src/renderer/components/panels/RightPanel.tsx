@@ -1,18 +1,18 @@
 import React from 'react'
-import { useSelectionStore } from '@renderer/store/useSelectionStore'
+import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 import UncommittedPanel from './UncommittedPanel'
 import CommitDiffPanel from './CommitDiffPanel'
 
 const RightPanel = () => {
-  const selectedItem = useSelectionStore(s => s.selectedItem)
+  const selectedCommit = useCommitSelectionStore(s => s.selectedCommit)
 
-  if (!selectedItem) return null
+  if (!selectedCommit) return null
 
   return (
     <div className='flex flex-1 min-h-0 flex-col'>
-      {selectedItem === 'uncommitted'
+      {selectedCommit === 'uncommitted'
         ? <UncommittedPanel />
-        : <CommitDiffPanel hash={selectedItem} />
+        : <CommitDiffPanel hash={selectedCommit} />
       }
     </div>
   )

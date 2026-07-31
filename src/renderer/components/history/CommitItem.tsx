@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { motion } from 'motion/react'
 import type { CommitGraphRow, GraphSegment } from '@renderer/utils/computeGraphLanes'
-import { useSelectionStore } from '@renderer/store/useSelectionStore'
+import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 
 const LANE_WIDTH = 12
 const ROW_HEIGHT = 25
@@ -57,7 +57,7 @@ type CommitItemProps = {
 
 const CommitItem = ({ row, index, isSelected }: CommitItemProps) => {
   const { commit, lane, color, laneCount, segments } = row
-  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
+  const setSelectedCommit = useCommitSelectionStore(s => s.setSelectedCommit)
   const delay = index * 0.012
   const svgWidth = laneCount * LANE_WIDTH
   const cx = laneX(lane)
@@ -73,7 +73,7 @@ const CommitItem = ({ row, index, isSelected }: CommitItemProps) => {
       className={`flex items-center hover:bg-surface cursor-pointer h-6.25 border-b border-b-black/5 border-l-2 ${
         isSelected ? 'bg-[rgba(27,112,248,0.12)] border-l-accent' : 'border-l-transparent'
       }`}
-      onClick={() => setSelectedItem(commit.hash)}
+      onClick={() => setSelectedCommit(commit.hash)}
     >
       <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible ml-2'>
         {segments.map((seg, i) => (

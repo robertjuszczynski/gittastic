@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCommits, useStatus } from '@renderer/hooks/useGit'
-import { useSelectionStore } from '@renderer/store/useSelectionStore'
+import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
 
@@ -10,14 +10,14 @@ const ROW_HEIGHT = 25
 const CommitList = () => {
   const { data: rows = [] } = useCommits()
   const { data: status, isLoading } = useStatus()
-  const selectedItem = useSelectionStore(s => s.selectedItem)
+  const selectedCommit = useCommitSelectionStore(s => s.selectedCommit)
   const parentRef = useRef<HTMLDivElement>(null)
 
   const selectedMap = useMemo(
-    () => Object.fromEntries(rows.map(r => [r.commit.hash, r.commit.hash === selectedItem])),
-    [rows, selectedItem]
+    () => Object.fromEntries(rows.map(r => [r.commit.hash, r.commit.hash === selectedCommit])),
+    [rows, selectedCommit]
   )
-  const isUncommitedSelected = selectedItem === 'uncommitted'
+  const isUncommitedSelected = selectedCommit === 'uncommitted'
 
   const virtualizer = useVirtualizer({
     count: rows.length,

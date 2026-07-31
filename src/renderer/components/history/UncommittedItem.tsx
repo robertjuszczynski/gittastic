@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { useSelectionStore } from '@renderer/store/useSelectionStore'
+import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 
 type UncommitedItem = {
   isSelected: boolean,
@@ -7,7 +7,7 @@ type UncommitedItem = {
 }
 
 const UncommittedItem = memo(({ isSelected, fileCount }: UncommitedItem) => {
-  const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
+  const setSelectedCommit = useCommitSelectionStore(s => s.setSelectedCommit)
 
   return (
     <div
@@ -18,7 +18,7 @@ const UncommittedItem = memo(({ isSelected, fileCount }: UncommitedItem) => {
         background: isSelected ? 'rgba(27,112,248,0.12)' : undefined,
         borderLeft: isSelected ? '2px solid #1b70f8' : '2px solid transparent',
       }}
-      onClick={() => setSelectedItem('uncommitted')}
+      onClick={() => setSelectedCommit('uncommitted')}
     >
       <span className='text-[12px] text-neutral-300 flex-1'>Uncommitted changes</span>
       <span className='text-[11px] text-neutral-500 font-mono'>{fileCount} file{fileCount !== 1 ? 's' : ''}</span>
