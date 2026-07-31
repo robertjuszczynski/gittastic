@@ -1,10 +1,10 @@
 import React from 'react'
-import { useGitBranches } from '@renderer/hooks/useGitBranches'
+import { useBranches } from '@renderer/hooks/useGit'
 import BranchItem from './BranchItem'
 import BranchFolder from './BranchFolder'
 
 const BranchesSection = () => {
-  const { data: branches = [], isLoading, isError, error } = useGitBranches()
+  const { data: branches = [], isLoading, isError, error } = useBranches()
   if (isLoading) return <div className='px-3 py-1 text-[11px] text-neutral-600'>Loading...</div>
   if (isError) return <div className='px-3 py-1 text-[11px] text-red-500'>{String(error)}</div>
 

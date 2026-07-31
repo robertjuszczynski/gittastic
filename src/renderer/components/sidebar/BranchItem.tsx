@@ -1,6 +1,6 @@
 import React from 'react'
 import type { GitBranch } from '@shared'
-import { useCheckoutBranch } from '@renderer/hooks/useGitBranches'
+import { useCheckoutBranch } from '@renderer/hooks/useGit'
 import BranchIcon from '@renderer/components/icons/BranchIcon'
 
 type BranchItemProps = {

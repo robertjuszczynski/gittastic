@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
-import { useGitStatus } from '@renderer/hooks/useGitStatus'
+import { useStatus } from '@renderer/hooks/useGit'
 import { useAppStore } from '@renderer/store/useAppStore'
 
 const UncommittedItem = memo(({ isSelected }: { isSelected: boolean }) => {
-  const { data: status } = useGitStatus()
+  const { data: status } = useStatus()
   const setSelectedItem = useAppStore(s => s.setSelectedItem)
 
   const fileCount = status?.files.length ?? 0

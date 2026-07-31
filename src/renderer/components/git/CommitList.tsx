@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useGitCommits } from '@renderer/hooks/useGitCommits'
+import { useCommits } from '@renderer/hooks/useGit'
 import { useAppStore } from '@renderer/store/useAppStore'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
@@ -8,7 +8,7 @@ import UncommittedItem from './UncommittedItem'
 const ROW_HEIGHT = 25
 
 const CommitList = () => {
-  const { data: rows = [] } = useGitCommits()
+  const { data: rows = [] } = useCommits()
   const selectedItem = useAppStore(s => s.selectedItem)
   const parentRef = useRef<HTMLDivElement>(null)
 

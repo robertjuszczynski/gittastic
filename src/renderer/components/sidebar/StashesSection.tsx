@@ -1,8 +1,8 @@
 import React from 'react'
-import { useGitStashes } from '@renderer/hooks/useGitStashes'
+import { useStashes } from '@renderer/hooks/useGit'
 
 const StashesSection = () => {
-  const { data: stashes = [] } = useGitStashes()
+  const { data: stashes = [] } = useStashes()
 
   if (stashes.length === 0) {
     return <div className='px-3 py-1 text-[11px] text-neutral-600'>No stashes</div>
