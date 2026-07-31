@@ -1,23 +1,29 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { CHANNELS, Workspace, Workspaces } from '@shared';
 
-type WorkspacesContextType = {
+type ActivePathContextType = {
   activePath: string | null;
-  workspaces: Workspaces;
-  openWorkspace: () => Promise<void>;
   setActiveWorkspace: (ws: Workspace) => Promise<Workspace>;
 };
+
+type WorkspacesListContextType = {
+  workspaces: Workspaces;
+  openWorkspace: () => Promise<void>;
+};
+
+const ActivePathContext = createContext<ActivePathContextType>({
+  activePath: null,
+  setActiveWorkspace: async (ws) => ws,
+});
+
+const WorkspacesListContext = createContext<WorkspacesListContextType>({
+  workspaces: [],
+  openWorkspace: async () => {},
+});
 
 type WorkspacesProviderProps = {
   children: React.ReactNode;
 };
-
-const WorkspacesContext = createContext<WorkspacesContextType>({
-  activePath: null,
-  workspaces: [],
-  openWorkspace: async () => {},
-  setActiveWorkspace: async (ws: Workspace) => ws,
-});
 
 export const WorkspacesProvider = ({ children }: WorkspacesProviderProps) => {
   const [activePath, setActivePath] = useState<string | null>(null);
@@ -45,12 +51,13 @@ export const WorkspacesProvider = ({ children }: WorkspacesProviderProps) => {
   }
 
   return (
-    <WorkspacesContext.Provider value={{ activePath, workspaces, openWorkspace, setActiveWorkspace }}>
-      {children}
-    </WorkspacesContext.Provider>
+    <ActivePathContext.Provider value={{ activePath, setActiveWorkspace }}>
+      <WorkspacesListContext.Provider value={{ workspaces, openWorkspace }}>
+        {children}
+      </WorkspacesListContext.Provider>
+    </ActivePathContext.Provider>
   );
 };
 
-export const useWorkspaces = () => useContext(WorkspacesContext);
-
-export default WorkspacesContext;
+export const useActivePath = () => useContext(ActivePathContext);
+export const useWorkspaces = () => useContext(WorkspacesListContext);

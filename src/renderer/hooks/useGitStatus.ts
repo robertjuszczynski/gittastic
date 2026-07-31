@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useWorkspaces } from '@renderer/contexts/WorkspacesContext'
+import { useActivePath } from '@renderer/contexts/WorkspacesContext'
 
 export const useGitStatus = () => {
-  const { activePath } = useWorkspaces()
+  const { activePath } = useActivePath()
 
   return useQuery({
     queryKey: ['git', 'status', activePath],

@@ -15,11 +15,15 @@ if (process.contextIsolated) {
       [CHANNELS.GET_WORKSPACES]: () => ipcRenderer.invoke(CHANNELS.GET_WORKSPACES),
       [CHANNELS.GET_ACTIVE_WORKSPACE]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_WORKSPACE),
       [CHANNELS.SET_ACTIVE_WORKSPACE]: args => ipcRenderer.invoke(CHANNELS.SET_ACTIVE_WORKSPACE, args),
-      [CHANNELS.GET_COMMITS]: () => ipcRenderer.invoke(CHANNELS.GET_COMMITS),
+      [CHANNELS.GET_COMMITS]: (args) => ipcRenderer.invoke(CHANNELS.GET_COMMITS, args),
+      [CHANNELS.GET_BRANCHES]: () => ipcRenderer.invoke(CHANNELS.GET_BRANCHES),
+      [CHANNELS.GET_STASHES]: () => ipcRenderer.invoke(CHANNELS.GET_STASHES),
+      [CHANNELS.CHECKOUT_BRANCH]: (args) => ipcRenderer.invoke(CHANNELS.CHECKOUT_BRANCH, args),
+      [CHANNELS.CREATE_BRANCH]: (args) => ipcRenderer.invoke(CHANNELS.CREATE_BRANCH, args),
       [CHANNELS.PULL]: () => ipcRenderer.invoke(CHANNELS.PULL),
       [CHANNELS.PUSH]: () => ipcRenderer.invoke(CHANNELS.PUSH),
       [CHANNELS.FETCH]: () => ipcRenderer.invoke(CHANNELS.FETCH),
-      [CHANNELS.GET_STATUS]: () => ipcRenderer.invoke(CHANNELS.GET_STATUS)
+      [CHANNELS.GET_STATUS]: () => ipcRenderer.invoke(CHANNELS.GET_STATUS),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
   } catch (error) {

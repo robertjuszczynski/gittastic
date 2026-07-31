@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { motion } from 'motion/react'
 import type { CommitGraphRow, GraphSegment } from '@renderer/utils/computeGraphLanes'
 import { useAppStore } from '@renderer/store/useAppStore'
@@ -52,12 +52,12 @@ function segmentPath(seg: GraphSegment): string {
 type CommitItemProps = {
   row: CommitGraphRow
   index: number
+  isSelected: boolean
 }
 
-const CommitItem = ({ row, index }: CommitItemProps) => {
+const CommitItem = ({ row, index, isSelected }: CommitItemProps) => {
   const { commit, lane, color, laneCount, segments } = row
-  const { selectedItem, setSelectedItem } = useAppStore()
-  const isSelected = selectedItem === commit.hash
+  const setSelectedItem = useAppStore(s => s.setSelectedItem)
   const delay = index * 0.012
   const svgWidth = laneCount * LANE_WIDTH
   const cx = laneX(lane)
@@ -70,13 +70,9 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
 
   return (
     <div
-      className='flex items-center hover:bg-surface cursor-pointer'
-      style={{
-        height: ROW_HEIGHT,
-        borderBottom: '1px solid rgba(0,0,0,0.05)',
-        background: isSelected ? 'rgba(27,112,248,0.12)' : undefined,
-        borderLeft: isSelected ? '2px solid #1b70f8' : '2px solid transparent',
-      }}
+      className={`flex items-center hover:bg-surface cursor-pointer h-6.25 border-b border-b-black/5 border-l-2 ${
+        isSelected ? 'bg-[rgba(27,112,248,0.12)] border-l-accent' : 'border-l-transparent'
+      }`}
       onClick={() => setSelectedItem(commit.hash)}
     >
       <svg width={svgWidth} height={ROW_HEIGHT} className='shrink-0 overflow-visible ml-2'>
@@ -99,17 +95,13 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
           <circle cx={cx} cy={cy} r={DOT} fill='#ffffff' stroke={color} strokeWidth={1.5} />
         </motion.g>
       </svg>
-
       <div className='flex items-center gap-2 px-2 flex-1 min-w-0 overflow-hidden'>
         {type && typeColor && (
           <span className='shrink-0 text-[12px] font-bold font-mono' style={{ color: typeColor }}>
             {type}
           </span>
         )}
-
         <span className='text-[12px] font-medium text-neutral-200 flex-1 truncate min-w-0'>{rest}</span>
-
-
         <span className='text-[12px] text-neutral-500 shrink-0 max-w-15 truncate'>{firstName}</span>
         <span className='text-[12px] font-mono text-neutral-600 shrink-0 tabular-nums'>{commit.hash.slice(0, 7)}</span>
         <span className='text-[12px] text-neutral-600 shrink-0 tabular-nums'>{formatDate(commit.date)}</span>
@@ -118,4 +110,4 @@ const CommitItem = ({ row, index }: CommitItemProps) => {
   )
 }
 
-export default CommitItem
+export default memo(CommitItem)

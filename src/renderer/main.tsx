@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createHashRouter, RouterProvider } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -14,13 +13,11 @@ const router = createHashRouter([
 ])
 
 createRoot(document.getElementById('app')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <WorkspacesProvider>
-        <ModalProvider>
-          <RouterProvider router={router} />
-        </ModalProvider>
-      </WorkspacesProvider>
-    </QueryClientProvider>
-  </StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <WorkspacesProvider>
+      <ModalProvider>
+        <RouterProvider router={router} />
+      </ModalProvider>
+    </WorkspacesProvider>
+  </QueryClientProvider>
 )

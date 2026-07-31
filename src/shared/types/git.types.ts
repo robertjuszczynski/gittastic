@@ -7,3 +7,13 @@ export type GitRawCommit = {
 }
 
 export type GitRawCommits = GitRawCommit[]
+
+export type GitBranch = {
+  name: string;
+  current: boolean;
+}
+
+export type GitStash = {
+  index: number;
+  message: string;
+}

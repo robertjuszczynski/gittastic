@@ -4,7 +4,7 @@ import UncommittedPanel from './UncommittedPanel'
 import CommitDiffPanel from './CommitDiffPanel'
 
 const RightPanel = () => {
-  const selectedItem = useAppStore(s => s.selectedItem)
+  const selectedItem = useAppStore(state => state.selectedItem)
 
   if (!selectedItem) return null
 

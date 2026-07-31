@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useGitStatus } from '@renderer/hooks/useGitStatus'
 import { useAppStore } from '@renderer/store/useAppStore'
 
-const UncommittedItem = () => {
+const UncommittedItem = memo(({ isSelected }: { isSelected: boolean }) => {
   const { data: status } = useGitStatus()
-  const { selectedItem, setSelectedItem } = useAppStore()
+  const setSelectedItem = useAppStore(s => s.setSelectedItem)
 
   const fileCount = status?.files.length ?? 0
   if (fileCount === 0) return null
-
-  const isSelected = selectedItem === 'uncommitted'
 
   return (
     <div
@@ -22,11 +20,10 @@ const UncommittedItem = () => {
       }}
       onClick={() => setSelectedItem('uncommitted')}
     >
-      <span className='text-[11px] font-bold text-[#1b70f8] font-mono'>uncommitted</span>
       <span className='text-[12px] text-neutral-300 flex-1'>Uncommitted changes</span>
       <span className='text-[11px] text-neutral-500 font-mono'>{fileCount} file{fileCount !== 1 ? 's' : ''}</span>
     </div>
   )
-}
+})
 
 export default UncommittedItem
