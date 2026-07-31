@@ -1,6 +1,6 @@
 import React from 'react';
 import Toolbar from '@renderer/layout/Toolbar';
-import CommitList from '@renderer/components/git/CommitList';
+import CommitList from '@renderer/components/history/CommitList';
 import RightPanel from '@renderer/components/panels/RightPanel';
 import Sidebar from '@renderer/components/sidebar/Sidebar';
 
