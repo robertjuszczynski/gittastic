@@ -1,6 +1,6 @@
 import React from 'react';
 
-const WorkspacesModal = () => {
+const RepositoriesModal = () => {
   return (
     <div>
       Test
@@ -8,4 +8,4 @@ const WorkspacesModal = () => {
   );
 }
 
-export default WorkspacesModal;
+export default RepositoriesModal;

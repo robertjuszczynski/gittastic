@@ -1,23 +1,23 @@
-import { useActivePath } from '@renderer/contexts/WorkspacesContext'
+import { useActivePath } from '@renderer/contexts/RepositoriesContext'
 import { useSelectionStore } from '@renderer/store/useSelectionStore'
-import { Workspace } from '@shared'
+import { Repository } from '@shared'
 import React from 'react'
 
-const WorkspacesItem = ({ ws, isActive }: { ws: Workspace; isActive: boolean }) => {
-  const { setActiveWorkspace } = useActivePath()
+const RepositoryItem = ({ repo, isActive }: { repo: Repository; isActive: boolean }) => {
+  const { setActiveRepository } = useActivePath()
   const setSelectedItem = useSelectionStore(s => s.setSelectedItem)
 
-  const handleWorkspaceClick = async () => {
-    await setActiveWorkspace(ws)
+  const handleClick = async () => {
+    await setActiveRepository(repo)
     setSelectedItem(null)
   }
- 
+
   return (
     <div
       className={`relative flex items-center px-4 py-2 cursor-default select-none transition-colors ${
         isActive ? 'bg-surface-2' : 'hover:bg-surface-2'
       }`}
-      onClick={handleWorkspaceClick}
+      onClick={handleClick}
     >
       {isActive && (
         <div
@@ -25,10 +25,10 @@ const WorkspacesItem = ({ ws, isActive }: { ws: Workspace; isActive: boolean }) 
         />
       )}
       <span className={`text-[13px] truncate ${isActive ? 'text-accent' : 'text-neutral-300'}`}>
-        {ws.name}
+        {repo.name}
       </span>
     </div>
   )
 }
 
-export default WorkspacesItem
+export default RepositoryItem

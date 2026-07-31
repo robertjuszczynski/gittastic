@@ -48,8 +48,8 @@ app.whenReady().then(async () => {
 
   SettingsService.buildMenu()
 
-  const ws = await Storage.get('active-workspace')
-  if (ws?.path) GitService.init(ws.path)
+  const repo = await Storage.get('active-repository')
+  if (repo?.path) GitService.init(repo.path)
 
   registerIpcHandlers()
   createWindow()

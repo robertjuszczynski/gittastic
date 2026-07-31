@@ -1,24 +1,24 @@
 import type { StatusResult } from 'simple-git'
 import type { GitBranch, GitRawCommits, GitStash } from '../types/git.types'
-import type { Workspace, Workspaces } from '../types/workspaces.types'
+import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
 
 export interface IEvents {
-    [CHANNELS.OPEN_WORKSPACE]: {
+    [CHANNELS.OPEN_REPOSITORY]: {
         args: void,
-        response?: Promise<Workspace | void>;
+        response?: Promise<Repository | void>;
     };
-    [CHANNELS.GET_WORKSPACES]: {
+    [CHANNELS.GET_REPOSITORIES]: {
         args: void,
-        response: Promise<Workspaces>;
+        response: Promise<Repositories>;
     };
-    [CHANNELS.GET_ACTIVE_WORKSPACE]: {
+    [CHANNELS.GET_ACTIVE_REPOSITORY]: {
         args: void,
-        response: Promise<Workspace | undefined>;
+        response: Promise<Repository | undefined>;
     };
-    [CHANNELS.SET_ACTIVE_WORKSPACE]: {
-        args: Workspace
-        response: Promise<Workspace>;
+    [CHANNELS.SET_ACTIVE_REPOSITORY]: {
+        args: Repository
+        response: Promise<Repository>;
     };
     [CHANNELS.GET_COMMITS]: {
         args: { limit?: number; skip?: number };

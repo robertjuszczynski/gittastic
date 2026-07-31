@@ -11,10 +11,10 @@ export type TElectronAPI = {
 if (process.contextIsolated) {
   try {
     const API: TElectronAPI = {
-      [CHANNELS.OPEN_WORKSPACE]: () => ipcRenderer.invoke(CHANNELS.OPEN_WORKSPACE),
-      [CHANNELS.GET_WORKSPACES]: () => ipcRenderer.invoke(CHANNELS.GET_WORKSPACES),
-      [CHANNELS.GET_ACTIVE_WORKSPACE]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_WORKSPACE),
-      [CHANNELS.SET_ACTIVE_WORKSPACE]: args => ipcRenderer.invoke(CHANNELS.SET_ACTIVE_WORKSPACE, args),
+      [CHANNELS.OPEN_REPOSITORY]: () => ipcRenderer.invoke(CHANNELS.OPEN_REPOSITORY),
+      [CHANNELS.GET_REPOSITORIES]: () => ipcRenderer.invoke(CHANNELS.GET_REPOSITORIES),
+      [CHANNELS.GET_ACTIVE_REPOSITORY]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_REPOSITORY),
+      [CHANNELS.SET_ACTIVE_REPOSITORY]: args => ipcRenderer.invoke(CHANNELS.SET_ACTIVE_REPOSITORY, args),
       [CHANNELS.GET_COMMITS]: (args) => ipcRenderer.invoke(CHANNELS.GET_COMMITS, args),
       [CHANNELS.GET_BRANCHES]: () => ipcRenderer.invoke(CHANNELS.GET_BRANCHES),
       [CHANNELS.GET_STASHES]: () => ipcRenderer.invoke(CHANNELS.GET_STASHES),

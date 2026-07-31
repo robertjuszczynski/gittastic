@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Home from './pages'
 import './app.css'
 import { ModalProvider } from './contexts/ModalContext'
-import { WorkspacesProvider } from './contexts/WorkspacesContext'
+import { RepositoriesProvider } from './contexts/RepositoriesContext'
 
 const queryClient = new QueryClient()
 
@@ -14,10 +14,10 @@ const router = createHashRouter([
 
 createRoot(document.getElementById('app')!).render(
   <QueryClientProvider client={queryClient}>
-    <WorkspacesProvider>
+    <RepositoriesProvider>
       <ModalProvider>
         <RouterProvider router={router} />
       </ModalProvider>
-    </WorkspacesProvider>
+    </RepositoriesProvider>
   </QueryClientProvider>
 )
