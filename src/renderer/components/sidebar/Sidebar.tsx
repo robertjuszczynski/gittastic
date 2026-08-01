@@ -16,7 +16,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { useSidebarStore, type SectionId } from '@renderer/store/useSidebarStore'
 import SidebarSection from './SidebarSection'
-import ReposSection from './ReposSection'
+import RepositoriesSection from './RepositoriesSection'
 import BranchesSection from './BranchesSection'
 import StashesSection from './StashesSection'
 
@@ -27,7 +27,7 @@ const SECTION_LABELS: Record<SectionId, string> = {
 }
 
 const SECTION_CONTENT: Record<SectionId, React.ReactNode> = {
-  repos: <ReposSection />,
+  repos: <RepositoriesSection />,
   branches: <BranchesSection />,
   stashes: <StashesSection />,
 }

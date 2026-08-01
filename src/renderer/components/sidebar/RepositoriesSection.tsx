@@ -3,7 +3,7 @@ import { useActivePath, useRepositories } from '@renderer/contexts/RepositoriesC
 import { useSetActiveRepository } from '@renderer/hooks/useGit'
 import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 
-const ReposSection = () => {
+const RepositoriesSection = () => {
   const { repositories } = useRepositories()
   const { activePath } = useActivePath()
   const setActiveRepository = useSetActiveRepository()
@@ -16,7 +16,7 @@ const ReposSection = () => {
         return (
           <div
             key={i}
-            className='flex items-center cursor-pointer hover:bg-surface-2 relative h-[26px] pl-[30px]'
+            className='flex items-center cursor-pointer hover:bg-surface-2 relative h-6.5 pl-7.5'
             onClick={async () => { await setActiveRepository(repo); setSelectedCommit('uncommitted') }}
           >
             {isActive && (
@@ -34,4 +34,4 @@ const ReposSection = () => {
   )
 }
 
-export default ReposSection
+export default RepositoriesSection
