@@ -1,4 +1,5 @@
 import React from 'react'
+import { CommitChanges, DiffView } from '@renderer/components/changes'
 
 type CommitDiffPanelProps = {
   hash: string
@@ -6,10 +7,11 @@ type CommitDiffPanelProps = {
 
 const CommitDiffPanel = ({ hash }: CommitDiffPanelProps) => {
   return (
-    <div className='flex flex-1 min-h-0 h-full' style={{ background: 'rgba(107,72,255,0.06)' }}>
-      <div className='px-3 py-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider'>
-        Diff — {hash.slice(0, 7)}
+    <div className='flex flex-1 min-h-0 h-full'>
+      <div className='flex flex-col w-64 shrink-0 border-r border-r-black/[0.07]'>
+        <CommitChanges hash={hash} />
       </div>
+      <DiffView />
     </div>
   )
 }

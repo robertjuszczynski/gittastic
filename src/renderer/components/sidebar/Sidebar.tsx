@@ -84,7 +84,7 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className='shrink-0 h-screen overflow-y-auto flex flex-col border-neutral-800 bg-surface'>
+    <aside className='shrink-0 h-full overflow-y-auto flex flex-col border-neutral-800 bg-surface'>
       <div
         className='w-56 h-full flex flex-col shrink-0 bg-surface overflow-y-auto mt-1 border-r border-r-white/[0.08]'
       >

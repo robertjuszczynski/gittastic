@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { CHANNELS, Repositories } from '@shared';
+import { useSetStagedAndUnstaged } from '@renderer/hooks/useGit';
 
 type ActivePathContextType = {
   activePath: string | null;
@@ -28,11 +29,16 @@ type RepositoriesProviderProps = {
 export const RepositoriesProvider = ({ children }: RepositoriesProviderProps) => {
   const [activePath, setActivePath] = useState<string | null>(null);
   const [repositories, setRepositories] = useState<Repositories>([]);
+  const mapStatus = useSetStagedAndUnstaged();
 
   useEffect(() => {
     window.electron[CHANNELS.GET_REPOSITORIES]().then(setRepositories);
-    window.electron[CHANNELS.GET_ACTIVE_REPOSITORY]().then((result) => {
-      if (result?.path) setActivePath(result.path)
+    window.electron[CHANNELS.GET_ACTIVE_REPOSITORY]().then(async (result) => {
+      if (result?.path) {
+        setActivePath(result.path);
+        const status = await window.electron[CHANNELS.GET_STATUS]();
+        mapStatus(status);
+      }
     }).catch(() => {})
   }, []);
 

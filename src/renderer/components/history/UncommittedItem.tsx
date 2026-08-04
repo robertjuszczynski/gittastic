@@ -1,19 +1,18 @@
 import React, { memo } from 'react'
 import { useCommitSelectionStore } from '@renderer/store/useCommitSelectionStore'
 
-type UncommitedItem = {
-  isSelected: boolean,
+type UncommittedItemProps = {
+  isSelected: boolean
   fileCount: number
 }
 
-const UncommittedItem = memo(({ isSelected, fileCount }: UncommitedItem) => {
+const UncommittedItem = memo(({ isSelected, fileCount }: UncommittedItemProps) => {
   const setSelectedCommit = useCommitSelectionStore(s => s.setSelectedCommit)
 
   return (
     <div
-      className='flex items-center gap-2 px-3 cursor-pointer'
+      className='flex items-center gap-2 px-3 cursor-pointer h-12'
       style={{
-        height: 25,
         borderBottom: '1px solid rgba(0,0,0,0.05)',
         background: isSelected ? 'rgba(27,112,248,0.12)' : undefined,
         borderLeft: isSelected ? '2px solid #1b70f8' : '2px solid transparent',

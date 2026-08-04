@@ -32,7 +32,7 @@ const CommitList = () => {
 
   return (
     <div className='w-112.5 shrink-0 flex flex-col border-r border-r-black/[0.07]'>
-      <div ref={parentRef} className='h-full overflow-y-auto'>
+      <div ref={parentRef} className='h-full overflow-y-auto scrollable'>
         {fileCount !== 0 && <UncommittedItem isSelected={isUncommitedSelected} fileCount={fileCount} />}
         <div className='relative' style={{ height: virtualizer.getTotalSize() }}>
           {virtualizer.getVirtualItems().map(virtualRow => (
