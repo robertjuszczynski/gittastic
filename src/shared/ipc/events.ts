@@ -1,5 +1,5 @@
 import type { StatusResult } from 'simple-git'
-import type { GitBranch, GitRawCommits, GitStash } from '../types/git.types'
+import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
 
@@ -32,6 +32,34 @@ export interface IEvents {
         args: void;
         response: Promise<GitStash[]>;
     };
+    [CHANNELS.STAGE_FILE]: {
+        args: string;
+        response: Promise<void>;
+    };
+    [CHANNELS.UNSTAGE_FILE]: {
+        args: string;
+        response: Promise<void>;
+    };
+    [CHANNELS.STAGE_ALL]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.UNSTAGE_ALL]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.COMMIT]: {
+        args: { message: string; description?: string };
+        response: Promise<void>;
+    };
+    [CHANNELS.GET_USER]: {
+        args: void;
+        response: Promise<GitUser>;
+    };
+    [CHANNELS.GET_COMMIT_FILES]: {
+        args: string;
+        response: Promise<FileChange[]>;
+    };
     [CHANNELS.CHECKOUT_BRANCH]: {
         args: string;
         response: Promise<void>;
@@ -55,5 +83,17 @@ export interface IEvents {
     [CHANNELS.GET_STATUS]: {
         args: void;
         response: Promise<StatusResult>;
+    };
+    [CHANNELS.GET_FILE_DIFF]: {
+        args: { path: string; hash?: string };
+        response: Promise<FileDiff>;
+    };
+    [CHANNELS.STAGE_LINE]: {
+        args: { path: string; lineNumber: number; isAddition: boolean };
+        response: Promise<void>;
+    };
+    [CHANNELS.UNSTAGE_LINE]: {
+        args: { path: string; lineNumber: number; isAddition: boolean };
+        response: Promise<void>;
     };
 }

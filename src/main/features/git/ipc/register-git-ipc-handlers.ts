@@ -20,6 +20,36 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.GET_STASHES]: async () => {
       return await GitService.getStashes()
     },
+    [GIT_CHANNELS.GET_COMMIT_FILES]: async (_, hash) => {
+      return await GitService.getCommitFiles(hash)
+    },
+    [GIT_CHANNELS.STAGE_ALL]: async () => {
+      await GitService.stageAll()
+    },
+    [GIT_CHANNELS.UNSTAGE_ALL]: async () => {
+      await GitService.unstageAll()
+    },
+    [GIT_CHANNELS.STAGE_LINE]: async (_, args) => {
+      await GitService.setLineStagedState(args.path, args.lineNumber, args.isAddition, true)
+    },
+    [GIT_CHANNELS.UNSTAGE_LINE]: async (_, args) => {
+      await GitService.setLineStagedState(args.path, args.lineNumber, args.isAddition, false)
+    },
+    [GIT_CHANNELS.GET_FILE_DIFF]: async (_, args) => {
+      return await GitService.getFileDiff(args.path, args.hash)
+    },
+    [GIT_CHANNELS.COMMIT]: async (_, args) => {
+      await GitService.commit(args.message, args.description)
+    },
+    [GIT_CHANNELS.GET_USER]: async () => {
+      return await GitService.getUser()
+    },
+    [GIT_CHANNELS.STAGE_FILE]: async (_, path) => {
+      await GitService.stageFile(path)
+    },
+    [GIT_CHANNELS.UNSTAGE_FILE]: async (_, path) => {
+      await GitService.unstageFile(path)
+    },
     [GIT_CHANNELS.CHECKOUT_BRANCH]: async (_, name) => {
       await GitService.checkoutBranch(name)
     },

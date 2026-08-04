@@ -52,3 +52,24 @@
 * {
   -webkit-font-smoothing: antialiased;
 }
+
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-700);
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-600);
+}
+
+/* Diff viewer - add width to diff-container parent, to make container scrollable */
+div:has(> table[class$="diff-container"]) {
+  width: 200px;
+}
