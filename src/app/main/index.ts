@@ -50,6 +50,8 @@ app.whenReady().then(async () => {
 
   const repo = await Storage.get('active-repository')
   if (repo?.path) GitService.init(repo.path)
+  
+  await session.defaultSession.loadExtension(reactDevToolsPath)
 
   registerIpcHandlers()
   createWindow()
@@ -58,7 +60,6 @@ app.whenReady().then(async () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  await session.defaultSession.loadExtension(reactDevToolsPath)
 })
 
 app.on('window-all-closed', () => {
