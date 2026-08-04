@@ -20,6 +20,11 @@ export default defineConfig([
   {
     files: ['**/*.{ts,mts,cts,tsx}'],
     extends: [tseslint.configs.recommended],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',

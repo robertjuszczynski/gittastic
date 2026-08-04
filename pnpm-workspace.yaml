@@ -5,3 +5,5 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - eslint@10.7.0
 nodeLinker: hoisted
+patchedDependencies:
+  react-diff-viewer-continued: patches/react-diff-viewer-continued.patch
