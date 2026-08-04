@@ -1,4 +1,4 @@
-import ModalContext from '@renderer/contexts/ModalContext';
+import ModalContext from './ModalContext';
 import React, { useContext } from 'react';
 
 type ModalProps = {
