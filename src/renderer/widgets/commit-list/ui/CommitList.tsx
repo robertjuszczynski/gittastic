@@ -5,10 +5,12 @@ import { useStatus } from '@renderer/entities/git-file/api/useStatus'
 import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
+import { ResizableBox } from 'react-resizable';
 
 const ROW_HEIGHT = 25
 
 const CommitList = () => {
+  const height = window.innerHeight - 52;
   const { data: rows = [] } = useCommits()
   const { data: status, isLoading } = useStatus()
   const selectedCommit = useCommitSelectionStore(s => s.selectedCommit)
@@ -32,7 +34,13 @@ const CommitList = () => {
   if (isLoading) return null
 
   return (
-    <div className='w-112.5 shrink-0 flex flex-col border-r border-r-black/[0.07]'>
+    <ResizableBox
+      width={450} 
+      height={height} 
+      resizeHandles={['e']}
+      handleSize={[4, 4]}
+      className='shrink-0 flex flex-col border-r border-r-black/[0.07]'
+    >
       <div ref={parentRef} className='h-full overflow-y-auto scrollable'>
         {fileCount !== 0 && <UncommittedItem isSelected={isUncommitedSelected} fileCount={fileCount} />}
         <div className='relative' style={{ height: virtualizer.getTotalSize() }}>
@@ -47,7 +55,7 @@ const CommitList = () => {
           ))}
         </div>
       </div>
-    </div>
+    </ResizableBox>
   )
 }
 

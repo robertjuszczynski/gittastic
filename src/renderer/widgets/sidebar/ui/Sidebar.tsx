@@ -1,4 +1,5 @@
 import React from 'react'
+import { ResizableBox } from 'react-resizable'
 import {
   DndContext,
   closestCenter,
@@ -84,19 +85,21 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className='shrink-0 h-full overflow-y-auto flex flex-col border-neutral-800 bg-surface'>
-      <div
-        className='w-56 h-full flex flex-col shrink-0 bg-surface overflow-y-auto mt-1 border-r border-r-white/[0.08]'
-      >
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={sections} strategy={verticalListSortingStrategy}>
-            {sections.map(id => (
-              <SortableSection key={id} id={id} onRemove={() => removeSection(id)} />
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
-    </aside>
+    <ResizableBox
+      width={224}
+      height={window.innerHeight - 52}
+      resizeHandles={['e']}
+      handleSize={[4, 4]}
+      className='shrink-0 flex flex-col bg-surface overflow-y-auto border-r border-r-white/[0.08]'
+    >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={sections} strategy={verticalListSortingStrategy}>
+          {sections.map(id => (
+            <SortableSection key={id} id={id} onRemove={() => removeSection(id)} />
+          ))}
+        </SortableContext>
+      </DndContext>
+    </ResizableBox>
   )
 }
 

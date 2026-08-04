@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'react-resizable/css/styles.css';
 
 @theme {
   --font-sans: ui-sans-serif, -apple-system, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
@@ -67,6 +68,26 @@
 
 .scrollable::-webkit-scrollbar-thumb:hover {
   background: var(--color-neutral-600);
+}
+
+.react-resizable-handle {
+  opacity: 0;
+  transition: opacity 0.15s;
+  background-image: none;
+}
+
+.react-resizable-handle-e {
+  width: 4px;
+  height: 100%;
+  top: 0;
+  right: 0;
+  transform: unset;
+  margin-top: unset;
+  cursor: ew-resize;
+}
+
+.react-resizable:hover .react-resizable-handle {
+  opacity: 1;
 }
 
 /* Diff viewer - add width to diff-container parent, to make container scrollable */
