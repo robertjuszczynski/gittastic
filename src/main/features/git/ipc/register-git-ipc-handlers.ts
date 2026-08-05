@@ -29,6 +29,12 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.UNSTAGE_ALL]: async () => {
       await GitService.unstageAll()
     },
+    [GIT_CHANNELS.STAGE_FOLDER]: async (_, path) => {
+      await GitService.stageFolder(path)
+    },
+    [GIT_CHANNELS.UNSTAGE_FOLDER]: async (_, path) => {
+      await GitService.unstageFolder(path)
+    },
     [GIT_CHANNELS.STAGE_LINE]: async (_, args) => {
       await GitService.setLineStagedState(args.path, args.lineNumber, args.isAddition, true)
     },
@@ -68,6 +74,18 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.GET_STATUS]: async () => {
       const status = await GitService.getInstance().status()
       return JSON.parse(JSON.stringify(status))
+    },
+    [GIT_CHANNELS.STASH]: async () => {
+      await GitService.stash()
+    },
+    [GIT_CHANNELS.POP_STASH]: async () => {
+      await GitService.popStash()
+    },
+    [GIT_CHANNELS.UNDO]: async () => {
+      await GitService.undo()
+    },
+    [GIT_CHANNELS.REDO]: async () => {
+      await GitService.redo()
     },
   }
 

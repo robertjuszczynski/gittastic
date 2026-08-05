@@ -88,6 +88,7 @@ const Sidebar = () => {
     <ResizableBox
       width={224}
       height={window.innerHeight - 52}
+      minConstraints={[160, window.innerHeight - 52]}
       resizeHandles={['e']}
       handleSize={[4, 4]}
       className='shrink-0 flex flex-col bg-surface overflow-y-auto border-r border-r-white/[0.08]'

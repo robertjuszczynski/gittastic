@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueries, useQueryClient } from '@tanstack/react-query'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued'
 import { diffArrays } from 'diff'
 
 const DiffType = { DEFAULT: 0, ADDED: 1, REMOVED: 2, CHANGED: 3 } as const
 import { CHANNELS } from '@shared'
+import type { FileDiff } from '@shared'
 import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
 import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
 import { getFileExtensionFromPath } from '@renderer/shared/lib'
@@ -40,7 +41,6 @@ function computeStagedLines(
   const indexLines = splitLines(indexed)
   const wtLines = splitLines(workingTree)
 
-  // Positional matching: diff(index, wt) — unchanged lines are staged WT positions
   const stagedWtPositions = new Set<number>()
   let wtPos = 0
   for (const part of diffArrays(indexLines, wtLines)) {
@@ -51,7 +51,6 @@ function computeStagedLines(
     }
   }
 
-  // diff(head, index) — removed HEAD lines are staged removals
   const stagedHeadRemovals = new Set<number>()
   let headPos = 0
   for (const part of diffArrays(headLines, indexLines)) {
@@ -62,7 +61,6 @@ function computeStagedLines(
     }
   }
 
-  // Map HEAD→WT diff to additions/removals
   headPos = 0
   wtPos = 0
   for (const part of diffArrays(headLines, wtLines)) {
@@ -85,16 +83,54 @@ function computeStagedLines(
   return { additions, removals }
 }
 
+type FileDiffViewProps = {
+  filePath: string
+  diff: FileDiff
+  isUncommitted: boolean
+  onStageLine: (path: string, lineNumber: number, isAddition: boolean, isCurrentlyStaged: boolean) => void
+  stagedLines: { additions: Set<number>; removals: Set<number> }
+}
+
+const FileDiffView = ({ filePath, diff, isUncommitted, onStageLine, stagedLines }: FileDiffViewProps) => {
+  const renderGutter = useCallback(({ lineNumber, type, additionalLineNumber }: {
+    lineNumber: number
+    type: number
+    additionalLineNumber?: number
+  }) => {
+    if (type !== DiffType.ADDED && type !== DiffType.REMOVED) return <></>
+    const isAddition = type === DiffType.ADDED
+    const targetLine = isAddition ? (additionalLineNumber ?? lineNumber) : lineNumber
+    const isStaged = isAddition
+      ? stagedLines.additions.has(targetLine)
+      : stagedLines.removals.has(targetLine)
+    return (
+      <StageCheckbox isStaged={isStaged} onClick={() => onStageLine(filePath, targetLine, isAddition, isStaged)} className='relative top-0.75' />
+    )
+  }, [filePath, onStageLine, stagedLines])
+
+  return (
+    <ReactDiffViewer
+      oldValue={diff.original ?? ''}
+      newValue={diff.modified ?? ''}
+      splitView={false}
+      compareMethod={getCompareMethod(filePath)}
+      styles={diffStyles}
+      renderLineGutter={isUncommitted ? renderGutter : undefined}
+    />
+  )
+}
 
 const DiffView = () => {
   const selectedFile = useChangesStore(s => s.selectedFile)
   const selectedHash = useChangesStore(s => s.selectedHash)
+  const selectedFolder = useChangesStore(s => s.selectedFolder)
   const staged = useChangesStore(s => s.staged)
   const unstaged = useChangesStore(s => s.unstaged)
   const { activePath } = useActivePath()
   const queryClient = useQueryClient()
   const isUncommitted = !selectedHash
 
+  // Single file mode
   const { data: diff, isLoading } = useQuery({
     queryKey: ['git', 'file-diff', activePath, selectedFile, selectedHash, staged, unstaged],
     queryFn: () => window.electron[CHANNELS.GET_FILE_DIFF]({ path: selectedFile!, hash: selectedHash ?? undefined }),
@@ -113,20 +149,15 @@ const DiffView = () => {
     return result
   }, [diff])
 
-  const handleStageLine = useCallback(async (lineNumber: number, isAddition: boolean) => {
-    if (!selectedFile) return
-    const isCurrentlyStaged = isAddition
-      ? stagedLines.additions.has(lineNumber)
-      : stagedLines.removals.has(lineNumber)
-
+  const handleStageLine = useCallback(async (path: string, lineNumber: number, isAddition: boolean, isCurrentlyStaged: boolean) => {
     if (isCurrentlyStaged) {
-      await window.electron[CHANNELS.UNSTAGE_LINE]({ path: selectedFile, lineNumber, isAddition })
+      await window.electron[CHANNELS.UNSTAGE_LINE]({ path, lineNumber, isAddition })
     } else {
-      await window.electron[CHANNELS.STAGE_LINE]({ path: selectedFile, lineNumber, isAddition })
+      await window.electron[CHANNELS.STAGE_LINE]({ path, lineNumber, isAddition })
     }
     queryClient.invalidateQueries({ queryKey: ['git', 'file-diff'] })
     queryClient.invalidateQueries({ queryKey: ['git', 'status'] })
-  }, [selectedFile, queryClient, stagedLines])
+  }, [queryClient])
 
   const renderGutter = useCallback(({ lineNumber, type, additionalLineNumber }: {
     lineNumber: number
@@ -134,17 +165,90 @@ const DiffView = () => {
     additionalLineNumber?: number
   }) => {
     if (type !== DiffType.ADDED && type !== DiffType.REMOVED) return <></>
-
     const isAddition = type === DiffType.ADDED
     const targetLine = isAddition ? (additionalLineNumber ?? lineNumber) : lineNumber
     const isStaged = isAddition
       ? stagedLines.additions.has(targetLine)
       : stagedLines.removals.has(targetLine)
+    return (
+      <StageCheckbox isStaged={isStaged} onClick={() => handleStageLine(selectedFile!, targetLine, isAddition, isStaged)} className='relative top-0.75' />
+    )
+  }, [handleStageLine, stagedLines, selectedFile])
+
+  // Folder mode
+  const folderFiles = useMemo(() => {
+    if (!selectedFolder) return []
+    const seen = new Set<string>()
+    return [...staged, ...unstaged].filter(f => {
+      if (!f.path.startsWith(selectedFolder + '/')) return false
+      if (seen.has(f.path)) return false
+      seen.add(f.path)
+      return true
+    })
+  }, [selectedFolder, staged, unstaged])
+
+  const folderDiffResults = useQueries({
+    queries: folderFiles.map(f => ({
+      queryKey: ['git', 'file-diff', activePath, f.path, null, staged, unstaged],
+      queryFn: () => window.electron[CHANNELS.GET_FILE_DIFF]({ path: f.path }),
+      enabled: !!activePath && !!selectedFolder,
+    }))
+  })
+
+  const folderStagedLinesMap = useMemo(() => {
+    const map = new Map<string, { additions: Set<number>; removals: Set<number> }>()
+    folderFiles.forEach((f, i) => {
+      const d = folderDiffResults[i]?.data
+      if (d?.indexed != null && d.indexed !== '') {
+        map.set(f.path, computeStagedLines(d.original, d.indexed, d.modified))
+      } else {
+        map.set(f.path, { additions: new Set(), removals: new Set() })
+      }
+    })
+    return map
+  }, [folderFiles, folderDiffResults])
+
+  if (selectedFolder && !selectedFile) {
+    if (folderFiles.length === 0) {
+      return (
+        <div className='flex-1 flex items-center justify-center text-neutral-600 text-[12px]'>
+          No changed files in this folder
+        </div>
+      )
+    }
 
     return (
-      <StageCheckbox isStaged={isStaged} onClick={() => handleStageLine(targetLine, isAddition)} className='relative top-0.75' />
+      <div className='flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden'>
+        <div className='px-3 py-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider shrink-0'>
+          {selectedFolder}/
+        </div>
+        <div className='flex-1 overflow-auto' style={{ minHeight: 0 }}>
+          {folderFiles.map((file, i) => {
+            const result = folderDiffResults[i]
+            const fileStagedLines = folderStagedLinesMap.get(file.path) ?? { additions: new Set<number>(), removals: new Set<number>() }
+            return (
+              <div key={file.path}>
+                <div className='px-3 py-1.5 text-[11px] text-neutral-400 bg-surface border-t border-black/[0.07] sticky top-0'>
+                  {file.path}
+                </div>
+                {result?.isLoading ? (
+                  <div className='px-3 py-2 text-[11px] text-neutral-600'>Loading...</div>
+                ) : result?.data ? (
+                  <FileDiffView
+                    filePath={file.path}
+                    diff={result.data}
+                    isUncommitted={isUncommitted}
+                    onStageLine={handleStageLine}
+                    stagedLines={fileStagedLines}
+                  />
+                ) : null}
+              </div>
+            )
+          })}
+        </div>
+      </div>
     )
-  }, [handleStageLine, stagedLines])
+  }
 
   if (!selectedFile) {
     return (

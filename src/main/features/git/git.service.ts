@@ -292,6 +292,30 @@ export default class GitService {
     await git.reset(['--', path])
   }
 
+  public static async stageFolder(path: string): Promise<void> {
+    await git.add(path)
+  }
+
+  public static async unstageFolder(path: string): Promise<void> {
+    await git.reset(['--', path])
+  }
+
+  public static async stash(): Promise<void> {
+    await git.stash()
+  }
+
+  public static async popStash(): Promise<void> {
+    await git.stash(['pop'])
+  }
+
+  public static async undo(): Promise<void> {
+    await git.reset(['--soft', 'HEAD~1'])
+  }
+
+  public static async redo(): Promise<void> {
+    await git.raw(['reset', '--soft', 'HEAD@{1}'])
+  }
+
   public static async checkoutBranch(name: string): Promise<void> {
     await git.checkout(name)
   }

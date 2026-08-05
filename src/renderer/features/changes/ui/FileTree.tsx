@@ -4,6 +4,8 @@ import type { FileChange } from '@shared'
 import ChevronDownIcon from '@renderer/shared/ui/icons/ChevronDownIcon'
 import FolderIcon from '@renderer/shared/ui/icons/FolderIcon'
 import ChangeItem from './ChangeItem'
+import StageCheckbox from './StageCheckbox'
+import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
 
 type TreeNode = {
   name: string
@@ -35,6 +37,13 @@ function buildTree(files: FileChange[]): TreeNode {
   return root
 }
 
+function getAllFilePaths(node: TreeNode): string[] {
+  return [
+    ...node.files.map(f => f.path),
+    ...node.children.flatMap(getAllFilePaths),
+  ]
+}
+
 type FolderNodeProps = {
   node: TreeNode
   depth: number
@@ -44,25 +53,51 @@ type FolderNodeProps = {
 
 const FolderNode = ({ node, depth, isStaged, hash }: FolderNodeProps) => {
   const [isOpen, setIsOpen] = useState(true)
+  const selectedFolder = useChangesStore(s => s.selectedFolder)
+  const setSelectedFolder = useChangesStore(s => s.setSelectedFolder)
+  const stageFolder = useChangesStore(s => s.stageFolder)
+  const unstageFolder = useChangesStore(s => s.unstageFolder)
+  const unstaged = useChangesStore(s => s.unstaged)
+
+  const allPaths = getAllFilePaths(node)
+  const isSelected = selectedFolder === node.fullPath
+  const isPartial = isStaged === true && allPaths.some(p => unstaged.some(f => f.path === p))
+
+  const handleRowClick = () => {
+    setSelectedFolder(node.fullPath)
+  }
+
+  const handleCheckboxClick = () => {
+    if (isStaged) {
+      unstageFolder(node.fullPath)
+    } else {
+      stageFolder(node.fullPath)
+    }
+  }
 
   return (
     <div>
       <div
-        className='flex items-center gap-1 cursor-pointer hover:bg-surface-2 select-none h-[22px]'
+        className={`flex items-center gap-1 cursor-pointer select-none h-[22px] ${isSelected ? 'bg-accent/6 text-accent' : 'hover:bg-surface-2'}`}
         style={{ paddingLeft: depth * 12 + 12 }}
-        onClick={() => setIsOpen(v => !v)}
+        onClick={handleRowClick}
       >
         <motion.span
           animate={{ rotate: isOpen ? 0 : -90 }}
           transition={{ duration: 0.12 }}
           className='text-neutral-500 flex items-center'
+          onClick={e => { e.stopPropagation(); setIsOpen(v => !v) }}
         >
           <ChevronDownIcon size={10} />
         </motion.span>
-        <span className='text-neutral-400 flex items-center'>
-          <FolderIcon open={isOpen} />
-        </span>
-        <span className='text-[12px] text-neutral-300 ml-0.5'>{node.name}</span>
+        {isStaged !== undefined ? (
+          <StageCheckbox isStaged={!!isStaged} isPartial={isPartial} onClick={handleCheckboxClick} />
+        ) : (
+          <span className='text-neutral-400 flex items-center'>
+            <FolderIcon open={isOpen} />
+          </span>
+        )}
+        <span className={`text-[12px] ml-0.5 ${isSelected ? 'text-accent' : 'text-neutral-300'}`}>{node.name}</span>
       </div>
 
       <AnimatePresence initial={false}>

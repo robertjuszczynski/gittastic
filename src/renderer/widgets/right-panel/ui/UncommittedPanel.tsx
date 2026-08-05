@@ -12,6 +12,7 @@ const UncommittedPanel = () => {
       <ResizableBox
         width={256}
         height={height}
+        minConstraints={[180, height]}
         resizeHandles={['e']}
         handleSize={[4, 4]}
         className='height-transition flex flex-col shrink-0 border-r border-r-black/[0.07]'

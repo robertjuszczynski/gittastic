@@ -48,6 +48,14 @@ export interface IEvents {
         args: void;
         response: Promise<void>;
     };
+    [CHANNELS.STAGE_FOLDER]: {
+        args: string;
+        response: Promise<void>;
+    };
+    [CHANNELS.UNSTAGE_FOLDER]: {
+        args: string;
+        response: Promise<void>;
+    };
     [CHANNELS.COMMIT]: {
         args: { message: string; description?: string };
         response: Promise<void>;
@@ -94,6 +102,22 @@ export interface IEvents {
     };
     [CHANNELS.UNSTAGE_LINE]: {
         args: { path: string; lineNumber: number; isAddition: boolean };
+        response: Promise<void>;
+    };
+    [CHANNELS.STASH]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.POP_STASH]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.UNDO]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.REDO]: {
+        args: void;
         response: Promise<void>;
     };
 }

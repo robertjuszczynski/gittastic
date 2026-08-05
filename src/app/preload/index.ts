@@ -34,6 +34,12 @@ if (process.contextIsolated) {
       [CHANNELS.PUSH]: () => ipcRenderer.invoke(CHANNELS.PUSH),
       [CHANNELS.FETCH]: () => ipcRenderer.invoke(CHANNELS.FETCH),
       [CHANNELS.GET_STATUS]: () => ipcRenderer.invoke(CHANNELS.GET_STATUS),
+      [CHANNELS.STAGE_FOLDER]: (args) => ipcRenderer.invoke(CHANNELS.STAGE_FOLDER, args),
+      [CHANNELS.UNSTAGE_FOLDER]: (args) => ipcRenderer.invoke(CHANNELS.UNSTAGE_FOLDER, args),
+      [CHANNELS.STASH]: () => ipcRenderer.invoke(CHANNELS.STASH),
+      [CHANNELS.POP_STASH]: () => ipcRenderer.invoke(CHANNELS.POP_STASH),
+      [CHANNELS.UNDO]: () => ipcRenderer.invoke(CHANNELS.UNDO),
+      [CHANNELS.REDO]: () => ipcRenderer.invoke(CHANNELS.REDO),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 

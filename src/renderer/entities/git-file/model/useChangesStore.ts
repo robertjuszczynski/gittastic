@@ -25,12 +25,16 @@ type ChangesStore = {
   unstaged: FileChange[]
   selectedFile: string | null
   selectedHash: string | null
+  selectedFolder: string | null
   setStagedAndUnstaged: (staged: FileChange[], unstaged: FileChange[]) => void
   setSelectedFile: (path: string | null, hash?: string | null) => void
+  setSelectedFolder: (path: string | null) => void
   stageFile: (path: string) => Promise<void>
   unstageFile: (path: string) => Promise<void>
   stageAll: () => Promise<void>
   unstageAll: () => Promise<void>
+  stageFolder: (path: string) => Promise<void>
+  unstageFolder: (path: string) => Promise<void>
 }
 
 export const useChangesStore = create<ChangesStore>()((set) => ({
@@ -38,8 +42,10 @@ export const useChangesStore = create<ChangesStore>()((set) => ({
   unstaged: [],
   selectedFile: null,
   selectedHash: null,
+  selectedFolder: null,
   setStagedAndUnstaged: (staged, unstaged) => set({ staged, unstaged }),
-  setSelectedFile: (path, hash) => set({ selectedFile: path, selectedHash: hash ?? null }),
+  setSelectedFile: (path, hash) => set({ selectedFile: path, selectedHash: hash ?? null, selectedFolder: null }),
+  setSelectedFolder: (path) => set({ selectedFolder: path, selectedFile: null, selectedHash: null }),
   stageFile: async path => {
     await window.electron[CHANNELS.STAGE_FILE](path)
     const { staged, unstaged } = await fetchStagedAndUnstaged()
@@ -57,6 +63,16 @@ export const useChangesStore = create<ChangesStore>()((set) => ({
   },
   unstageAll: async () => {
     await window.electron[CHANNELS.UNSTAGE_ALL]()
+    const { staged, unstaged } = await fetchStagedAndUnstaged()
+    set({ staged, unstaged })
+  },
+  stageFolder: async path => {
+    await window.electron[CHANNELS.STAGE_FOLDER](path)
+    const { staged, unstaged } = await fetchStagedAndUnstaged()
+    set({ staged, unstaged })
+  },
+  unstageFolder: async path => {
+    await window.electron[CHANNELS.UNSTAGE_FOLDER](path)
     const { staged, unstaged } = await fetchStagedAndUnstaged()
     set({ staged, unstaged })
   },
