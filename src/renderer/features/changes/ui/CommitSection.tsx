@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useGitUser, useCommit } from '@renderer/entities/commit/api/useCommitActions'
 import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
 
+
 const CommitSection = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
