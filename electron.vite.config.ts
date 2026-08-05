@@ -6,6 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   main: {
     build: {
+      rollupOptions: {
+        external: ['node-pty'],
+      },
       lib: {
         entry: resolve('src/app/main/index.ts')
       }

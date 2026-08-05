@@ -86,6 +86,24 @@
   cursor: ew-resize;
 }
 
+.height-transition {
+  transition: height 0.18s ease-in-out;
+}
+
+.terminal-dragging .height-transition {
+  transition: none;
+}
+
+.react-resizable-handle-n {
+  height: 4px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: unset;
+  margin-left: unset;
+  cursor: ns-resize;
+}
+
 .react-resizable:hover .react-resizable-handle {
   opacity: 1;
 }

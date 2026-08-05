@@ -1,4 +1,5 @@
 import React, { useRef, useMemo } from 'react'
+import { useContentHeight } from '@renderer/shared/lib/useContentHeight'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCommits } from '@renderer/entities/commit/api/useCommits'
 import { useStatus } from '@renderer/entities/git-file/api/useStatus'
@@ -10,7 +11,7 @@ import { ResizableBox } from 'react-resizable';
 const ROW_HEIGHT = 25
 
 const CommitList = () => {
-  const height = window.innerHeight - 52;
+  const height = useContentHeight()
   const { data: rows = [] } = useCommits()
   const { data: status, isLoading } = useStatus()
   const selectedCommit = useCommitSelectionStore(s => s.selectedCommit)
@@ -35,11 +36,11 @@ const CommitList = () => {
 
   return (
     <ResizableBox
-      width={450} 
-      height={height} 
+      width={450}
+      height={height}
       resizeHandles={['e']}
       handleSize={[4, 4]}
-      className='shrink-0 flex flex-col border-r border-r-black/[0.07]'
+      className='height-transition shrink-0 flex flex-col border-r border-r-black/[0.07]'
     >
       <div ref={parentRef} className='h-full overflow-y-auto scrollable'>
         {fileCount !== 0 && <UncommittedItem isSelected={isUncommitedSelected} fileCount={fileCount} />}

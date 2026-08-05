@@ -2,6 +2,7 @@ allowBuilds:
   esbuild: false
   electron: true
   '@swc/core': true
+  node-pty: true
 minimumReleaseAgeExclude:
   - eslint@10.7.0
 nodeLinker: hoisted

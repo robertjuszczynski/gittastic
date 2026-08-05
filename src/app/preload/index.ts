@@ -1,5 +1,5 @@
 import type { IEvents } from '@shared'
-import { CHANNELS } from '@shared'
+import { CHANNELS, TERMINAL_CHANNELS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
 
 type TOptionalArgs<T> = T extends void ? [] : [args: T];
@@ -36,6 +36,18 @@ if (process.contextIsolated) {
       [CHANNELS.GET_STATUS]: () => ipcRenderer.invoke(CHANNELS.GET_STATUS),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
+
+    contextBridge.exposeInMainWorld('terminalAPI', {
+      create: () => ipcRenderer.invoke(TERMINAL_CHANNELS.TERMINAL_CREATE),
+      destroy: () => ipcRenderer.invoke(TERMINAL_CHANNELS.TERMINAL_DESTROY),
+      sendInput: (data: string) => ipcRenderer.send(TERMINAL_CHANNELS.TERMINAL_INPUT, data),
+      resize: (cols: number, rows: number) => ipcRenderer.send(TERMINAL_CHANNELS.TERMINAL_RESIZE, { cols, rows }),
+      onOutput: (callback: (data: string) => void) => {
+        const listener = (_: Electron.IpcRendererEvent, data: string) => callback(data)
+        ipcRenderer.on(TERMINAL_CHANNELS.TERMINAL_OUTPUT, listener)
+        return () => ipcRenderer.removeListener(TERMINAL_CHANNELS.TERMINAL_OUTPUT, listener)
+      },
+    })
   } catch (error) {
     console.error(error)
   }

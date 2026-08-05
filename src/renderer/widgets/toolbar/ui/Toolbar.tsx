@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
+import { useTerminalStore } from '@renderer/widgets/terminal'
 import {
   ArrowDownToLine,
   ArrowUpToLine,
@@ -18,17 +19,19 @@ const ToolbarButton = ({
   icon: Icon,
   label,
   onClick,
+  active = false,
 }: {
   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>
   label: string
   onClick: () => void
+  active?: boolean
 }) => (
   <button
     onClick={onClick}
-    className='flex flex-col items-center justify-center gap-[5px] px-4 h-full text-neutral-400 hover:text-neutral-200 hover:bg-surface-2 active:scale-[0.96] transition-[background-color,color,transform] duration-100 cursor-default select-none outline-none group'
+    className={`flex flex-col items-center justify-center gap-[5px] px-4 h-full hover:text-neutral-200 hover:bg-surface-2 active:scale-[0.96] transition-[background-color,color,transform] duration-100 cursor-default select-none outline-none group ${active ? 'text-neutral-200' : 'text-neutral-400'}`}
   >
     <Icon size={18} strokeWidth={1.6} />
-    <span className='text-[10px] font-medium text-neutral-500 group-hover:text-neutral-400 leading-none'>
+    <span className={`text-[10px] font-medium leading-none ${active ? 'text-neutral-300' : 'text-neutral-500 group-hover:text-neutral-400'}`}>
       {label}
     </span>
   </button>
@@ -40,6 +43,8 @@ const Separator = () => (
 
 const Toolbar = () => {
   const queryClient = useQueryClient()
+  const toggleTerminal = useTerminalStore((s) => s.toggle)
+  const isTerminalOpen = useTerminalStore((s) => s.isOpen)
 
   return (
     <div
@@ -77,7 +82,12 @@ const Toolbar = () => {
         <ToolbarButton icon={Undo2} label='Undo' onClick={() => {}} />
         <ToolbarButton icon={Redo2} label='Redo' onClick={() => {}} />
         <Separator />
-        <ToolbarButton icon={Terminal} label='Terminal' onClick={() => {}} />
+        <ToolbarButton
+          icon={Terminal}
+          label='Terminal'
+          onClick={toggleTerminal}
+          active={isTerminalOpen}
+        />
       </div>
     </div>
   )
