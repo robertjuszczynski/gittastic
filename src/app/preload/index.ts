@@ -1,6 +1,6 @@
 import type { IEvents } from '@shared'
 import { CHANNELS, TERMINAL_CHANNELS } from '@shared'
-import { contextBridge, ipcRenderer, clipboard } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 
 type TOptionalArgs<T> = T extends void ? [] : [args: T];
 
@@ -44,9 +44,6 @@ if (process.contextIsolated) {
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 
-    contextBridge.exposeInMainWorld('clipboardAPI', {
-      readText: () => clipboard.readText(),
-      writeText: (text: string) => clipboard.writeText(text),
     })
 
     contextBridge.exposeInMainWorld('gitEventsAPI', {
