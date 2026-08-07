@@ -141,6 +141,35 @@
   opacity: 1;
 }
 
+/* Prism syntax highlighting */
+.token.comment { color: #8e93a8; font-style: italic; }
+.token.keyword,
+.token.tag { color: #d73a49; }
+.token.string,
+.token.attr-value { color: #036a54; }
+.token.number,
+.token.boolean { color: #005cc5; }
+.token.function { color: #6f42c1; }
+.token.class-name { color: #6f42c1; font-weight: 600; }
+.token.operator,
+.token.punctuation { color: #24292e; }
+.token.regex { color: #e36209; }
+.token.builtin { color: #005cc5; }
+
+:root.dark .token.comment { color: #6a737d; }
+:root.dark .token.keyword,
+:root.dark .token.tag { color: #f97583; }
+:root.dark .token.string,
+:root.dark .token.attr-value { color: #9ecbff; }
+:root.dark .token.number,
+:root.dark .token.boolean { color: #79b8ff; }
+:root.dark .token.function { color: #b392f0; }
+:root.dark .token.class-name { color: #b392f0; }
+:root.dark .token.operator,
+:root.dark .token.punctuation { color: #e1e4e8; }
+:root.dark .token.regex { color: #ffab70; }
+:root.dark .token.builtin { color: #79b8ff; }
+
 /* Diff viewer - add width to diff-container parent, to make container scrollable */
 div:has(> table[class$="diff-container"]) {
   width: 200px;
