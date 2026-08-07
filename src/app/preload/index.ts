@@ -49,7 +49,7 @@ if (process.contextIsolated) {
       [CHANNELS.POP_STASH]: () => ipcRenderer.invoke(CHANNELS.POP_STASH),
       [CHANNELS.UNDO]: () => ipcRenderer.invoke(CHANNELS.UNDO),
       [CHANNELS.REDO]: () => ipcRenderer.invoke(CHANNELS.REDO),
-      [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke('file-context-menu', args)
+      [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke(CHANNELS.OPEN_FILE_CONTEXT_MENU, args)
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 

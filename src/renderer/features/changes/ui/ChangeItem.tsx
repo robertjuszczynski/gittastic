@@ -1,5 +1,5 @@
 import React from 'react'
-import type { FileChange } from '@shared'
+import { CHANNELS, type FileChange } from '@shared'
 import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
 import StatusBadge from './StatusBadge'
 import StageCheckbox from './StageCheckbox'
@@ -30,7 +30,7 @@ const ChangeItem = ({ change, isStaged, depth = 0, hash }: ChangeItemProps) => {
       onClick={() => setSelectedFile(change.path, hash)}
       onContextMenu={e => {
         e.preventDefault()
-        window.electron['OPEN_FILE_CONTEXT_MENU']({ path: change.path })
+        window.electron[CHANNELS.OPEN_FILE_CONTEXT_MENU]({ path: change.path, status: change.status })
       }}
     >
       {isStaged !== undefined && (

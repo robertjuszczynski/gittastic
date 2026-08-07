@@ -1,5 +1,5 @@
 import type { StatusResult } from 'simple-git'
-import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff } from '../types/git.types'
+import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
 
@@ -121,7 +121,7 @@ export interface IEvents {
         response: Promise<void>;
     };
     [CHANNELS.OPEN_FILE_CONTEXT_MENU]: {
-        args: { path: string },
+        args: { path: string, status: FileChangeStatus },
         response: Promise<void>
     }
 }
