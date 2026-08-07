@@ -12,10 +12,15 @@ interface GitEventsAPI {
   onStatusChanged: (callback: () => void) => () => void
 }
 
+interface AppEventsAPI {
+  onAppDidBecomeActive: (callback: () => void) => () => void
+}
+
 declare global {
   interface Window {
     electron: TElectronAPI
     terminalAPI: TerminalAPI
     gitEventsAPI: GitEventsAPI
+    appEventsAPI: AppEventsAPI
   }
 }

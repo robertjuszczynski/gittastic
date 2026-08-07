@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import { useTerminalStore } from '@renderer/widgets/terminal'
@@ -86,6 +86,13 @@ const Toolbar = () => {
   const canUndo = (commitsData?.length ?? 0) > 0
 
   const invalidateGit = () => queryClient.invalidateQueries({ queryKey: ['git'] })
+
+  useEffect(() => {
+    window.appEventsAPI.onAppDidBecomeActive(() => {
+      console.log('App did become active, invalidating git queries')
+      invalidateGit()
+    })
+  }, [queryClient])
 
   const handlePush = async () => {
     await window.electron[CHANNELS.PUSH]()

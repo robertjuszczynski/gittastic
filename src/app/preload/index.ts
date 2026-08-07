@@ -8,6 +8,12 @@ export type TElectronAPI = {
     [K in keyof typeof CHANNELS]: (...args: TOptionalArgs<IEvents[typeof CHANNELS[K]]['args']>) => IEvents[typeof CHANNELS[K]]['response'];
 };
 
+const  listenTo = (event: string, callback: () => void) => {
+  const listener = () => callback()
+  ipcRenderer.on(event, listener)
+  return () => ipcRenderer.removeListener(event, listener)
+}
+
 if (process.contextIsolated) {
   try {
     const API: TElectronAPI = {
@@ -44,14 +50,12 @@ if (process.contextIsolated) {
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 
+    contextBridge.exposeInMainWorld('gitEventsAPI', {
+      onStatusChanged: (callback: () => void) => listenTo('git-status-changed', callback)
     })
 
-    contextBridge.exposeInMainWorld('gitEventsAPI', {
-      onStatusChanged: (callback: () => void) => {
-        const listener = () => callback()
-        ipcRenderer.on('git-status-changed', listener)
-        return () => ipcRenderer.removeListener('git-status-changed', listener)
-      },
+    contextBridge.exposeInMainWorld('appEventsAPI', {
+      onAppDidBecomeActive: (callback: () => void) => listenTo('app-did-become-active', callback)
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {

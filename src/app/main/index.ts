@@ -8,7 +8,7 @@ import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
 import GitService from '@main/features/git/git.service'
 import { Storage } from '@main/shared/storage.service'
 
-function createWindow(): void {
+function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
@@ -37,6 +37,8 @@ function createWindow(): void {
   } else {
     win.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return win
 }
 
 app.whenReady().then(async () => {
@@ -56,12 +58,15 @@ app.whenReady().then(async () => {
   await session.defaultSession.loadExtension(reactDevToolsPath)
 
   registerIpcHandlers()
-  createWindow()
+  const win = createWindow()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
+  app.on('did-become-active', () => {
+    win.webContents.send('app-did-become-active')
+  })
 })
 
 app.on('window-all-closed', () => {
