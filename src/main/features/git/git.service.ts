@@ -7,6 +7,7 @@ import { diffArrays, type ArrayChange } from 'diff'
 import type { GitBranch, GitRawCommits, GitStash, FileChange, FileChangeStatus, FileDiff, GitUser } from 'src/shared/types/git.types'
 import { splitLines } from '@main/utils'
 import { createHash } from 'crypto'
+import fs from 'node:fs'
 
 export const git = new Proxy({} as SimpleGit, {
     get: (_, prop) => GitService.getInstance()[prop as keyof SimpleGit]
@@ -328,6 +329,13 @@ export default class GitService {
 
   public static async createBranch(name: string): Promise<void> {
     await git.checkoutLocalBranch(name)
+  }
+
+  public static async removeUntrackedFile(absolutePath: string): Promise<void> {
+    await fs.unlink(absolutePath, function(err){
+        if(err) return console.log(err)
+        console.log('file deleted successfully')
+   })
   }
 }
 

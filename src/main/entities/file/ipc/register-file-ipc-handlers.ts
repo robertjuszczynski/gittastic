@@ -12,6 +12,7 @@ export default function registerFileIpcHandlers() {
 
     const absolutePath = GitService.basePath ? join(GitService.basePath, path) : path
     const canDiscard = status !== 'added' && status !== 'untracked'
+    const isUntrackedFile = status === 'untracked'
 
     const menu = Menu.buildFromTemplate(buildMenuTemplate([
       { label: 'Open', click: () => shell.openPath(absolutePath) },
@@ -27,6 +28,14 @@ export default function registerFileIpcHandlers() {
           sendToRenderer(event.sender, MAIN_EVENTS.GIT_STATUS_CHANGED)
         },
       },
+      {
+        label: 'Remove untracked file',
+        visible: isUntrackedFile,
+        click: async () => {
+          await GitService.removeUntrackedFile(path)
+          sendToRenderer(event.sender, MAIN_EVENTS.GIT_STATUS_CHANGED)
+        }
+      }
     ]))
 
     menu.popup({ window: win })
