@@ -26,7 +26,7 @@ const ChangeItem = ({ change, isStaged, depth = 0, hash }: ChangeItemProps) => {
       className={`flex items-center gap-1.5 h-5.5 cursor-pointer text-[12px] pr-3 ${
         isSelected ? 'bg-accent/6 text-accent' : 'text-neutral-300 hover:bg-surface-2'
       }`}
-      style={{ paddingLeft: depth * 12 + 12 }}
+      style={{ paddingLeft: depth === 0 ? 12 :depth * 20 + 26 }}
       onClick={() => setSelectedFile(change.path, hash)}
       onContextMenu={e => {
         e.preventDefault()

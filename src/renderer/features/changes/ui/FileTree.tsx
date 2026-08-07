@@ -79,7 +79,7 @@ const FolderNode = ({ node, depth, isStaged, hash }: FolderNodeProps) => {
     <div>
       <div
         className={`flex items-center gap-1 cursor-pointer select-none h-[22px] ${isSelected ? 'bg-accent/6 text-accent' : 'hover:bg-surface-2'}`}
-        style={{ paddingLeft: depth * 12 + 12 }}
+        style={{ paddingLeft: depth * 20 + 12 }}
         onClick={handleRowClick}
       >
         <motion.span
@@ -126,11 +126,11 @@ type TreeChildrenProps = {
 
 const TreeChildren = ({ node, depth, isStaged, hash }: TreeChildrenProps) => (
   <>
-    {node.children.map(child => (
-      <FolderNode key={child.fullPath} node={child} depth={depth} isStaged={isStaged} hash={hash} />
-    ))}
     {node.files.map(file => (
       <ChangeItem key={file.path} change={file} isStaged={isStaged} depth={depth} hash={hash} />
+    ))}
+    {node.children.map(child => (
+      <FolderNode key={child.fullPath} node={child} depth={depth} isStaged={isStaged} hash={hash} />
     ))}
   </>
 )
