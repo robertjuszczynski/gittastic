@@ -7,6 +7,8 @@ import path from 'node:path'
 import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
 import GitService from '@main/features/git/git.service'
 import { Storage } from '@main/shared/storage.service'
+import { sendToRenderer } from '@main/shared/send-to-renderer'
+import { MAIN_EVENTS } from '@shared'
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -65,7 +67,7 @@ app.whenReady().then(async () => {
   })
 
   app.on('did-become-active', () => {
-    win.webContents.send('app-did-become-active')
+    sendToRenderer(win.webContents, MAIN_EVENTS.APP_DID_BECOME_ACTIVE)
   })
 })
 

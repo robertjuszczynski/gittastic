@@ -1,6 +1,8 @@
 import { ipcMain, Menu, shell, clipboard, BrowserWindow } from 'electron'
 import { join } from 'path'
 import GitService from '@main/features/git/git.service'
+import { sendToRenderer } from '@main/shared/send-to-renderer'
+import { MAIN_EVENTS } from '@shared'
 
 export default function registerFileIpcHandlers() {
   ipcMain.handle('file-context-menu', async (event, { path }: { path: string }) => {
@@ -28,7 +30,7 @@ export default function registerFileIpcHandlers() {
         label: 'Discard Changes',
         click: async () => {
           await GitService.discardFile(path)
-          event.sender.send('git-status-changed')
+          sendToRenderer(event.sender, MAIN_EVENTS.GIT_STATUS_CHANGED)
         },
       },
     ])

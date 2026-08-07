@@ -1,5 +1,5 @@
-import type { IEvents } from '@shared'
-import { CHANNELS, TERMINAL_CHANNELS } from '@shared'
+import type { IEvents, TMainEvents } from '@shared'
+import { CHANNELS, TERMINAL_CHANNELS, MAIN_EVENTS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
 
 type TOptionalArgs<T> = T extends void ? [] : [args: T];
@@ -8,8 +8,11 @@ export type TElectronAPI = {
     [K in keyof typeof CHANNELS]: (...args: TOptionalArgs<IEvents[typeof CHANNELS[K]]['args']>) => IEvents[typeof CHANNELS[K]]['response'];
 };
 
-const  listenTo = (event: string, callback: () => void) => {
-  const listener = () => callback()
+function listenTo<K extends keyof TMainEvents>(
+  event: K,
+  callback: TMainEvents[K] extends void ? () => void : (data: TMainEvents[K]) => void
+) {
+  const listener = (_: Electron.IpcRendererEvent, data: TMainEvents[K]) => (callback as any)(data)
   ipcRenderer.on(event, listener)
   return () => ipcRenderer.removeListener(event, listener)
 }
@@ -51,11 +54,11 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', API)
 
     contextBridge.exposeInMainWorld('gitEventsAPI', {
-      onStatusChanged: (callback: () => void) => listenTo('git-status-changed', callback)
+      onStatusChanged: (callback: () => void) => listenTo(MAIN_EVENTS.GIT_STATUS_CHANGED, callback)
     })
 
     contextBridge.exposeInMainWorld('appEventsAPI', {
-      onAppDidBecomeActive: (callback: () => void) => listenTo('app-did-become-active', callback)
+      onAppDidBecomeActive: (callback: () => void) => listenTo(MAIN_EVENTS.APP_DID_BECOME_ACTIVE, callback)
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {
