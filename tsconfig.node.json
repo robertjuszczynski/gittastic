@@ -1,9 +1,9 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["electron.vite.config.*", "src/app/main/**/*", "src/app/preload/**/*", "src/main/**/*", "src/shared/**/*"],
+  "include": ["eslint.config.mts", "electron.vite.config.*", "src/app/main/**/*", "src/app/preload/**/*", "src/main/**/*", "src/shared/**/*"],
   "compilerOptions": {
     "composite": true,
-    "types": ["electron-vite/node"],
+    "types": ["electron-vite/node", "node"],
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
     "paths": {
