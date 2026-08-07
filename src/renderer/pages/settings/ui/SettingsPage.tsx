@@ -1,7 +1,20 @@
 import React, { useState } from 'react'
-import AiSettingsPage from './AiSettingsPage'
+import AiSettingsPage from '@renderer/widgets/settings/ui/AiSettings'
+import GeneralSettings from '@renderer/widgets/settings/ui/GeneralSettings'
 
-const tabs = [{ id: 'ai', label: 'AI', component: <AiSettingsPage /> }] as const
+const tabs = [{ 
+  id: 'ai', 
+  label: 'AI', 
+  component: <AiSettingsPage />
+}, {
+  id: 'general', 
+  label: 'General', 
+  component: <GeneralSettings />
+}, {
+  id: 'git', 
+  label: 'Git', 
+  component: <div>Git page</div>
+}] as const
 
 type TabId = (typeof tabs)[number]['id']
 

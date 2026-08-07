@@ -2,6 +2,7 @@ import type { StatusResult } from 'simple-git'
 import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
+import type { Theme } from '../types/theme.types'
 
 export interface IEvents {
     [CHANNELS.OPEN_REPOSITORY]: {
@@ -123,5 +124,13 @@ export interface IEvents {
     [CHANNELS.OPEN_FILE_CONTEXT_MENU]: {
         args: { path: string, status: FileChangeStatus },
         response: Promise<void>
-    }
+    };
+    [CHANNELS.SELECT_THEME]: {
+        args: Theme,
+        response: Promise<boolean>
+    },
+    [CHANNELS.GET_THEME]: {
+        args: void,
+        response: Promise<{ isDark: boolean; theme: Theme }>
+    },
 }

@@ -49,7 +49,9 @@ if (process.contextIsolated) {
       [CHANNELS.POP_STASH]: () => ipcRenderer.invoke(CHANNELS.POP_STASH),
       [CHANNELS.UNDO]: () => ipcRenderer.invoke(CHANNELS.UNDO),
       [CHANNELS.REDO]: () => ipcRenderer.invoke(CHANNELS.REDO),
-      [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke(CHANNELS.OPEN_FILE_CONTEXT_MENU, args)
+      [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke(CHANNELS.OPEN_FILE_CONTEXT_MENU, args),
+      [CHANNELS.SELECT_THEME]: (args) => ipcRenderer.invoke(CHANNELS.SELECT_THEME, args),
+      [CHANNELS.GET_THEME]: () => ipcRenderer.invoke(CHANNELS.GET_THEME),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 
@@ -58,7 +60,8 @@ if (process.contextIsolated) {
     })
 
     contextBridge.exposeInMainWorld('appEventsAPI', {
-      onAppDidBecomeActive: (callback: () => void) => listenTo(MAIN_EVENTS.APP_DID_BECOME_ACTIVE, callback)
+      onAppDidBecomeActive: (callback: () => void) => listenTo(MAIN_EVENTS.APP_DID_BECOME_ACTIVE, callback),
+      onThemeUpdated: (callback: (isDark: boolean) => void) => listenTo(MAIN_EVENTS.THEME_UPDATED, callback),
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {

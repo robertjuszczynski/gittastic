@@ -6,6 +6,14 @@ import { ModalProvider } from '@renderer/shared/ui/ModalContext'
 import { router } from './router'
 import './styles.css'
 
+window.electron.GET_THEME().then(({ isDark }) => {
+  document.documentElement.classList.toggle('dark', isDark)
+})
+
+window.appEventsAPI.onThemeUpdated((isDark) => {
+  document.documentElement.classList.toggle('dark', isDark)
+})
+
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('app')!).render(

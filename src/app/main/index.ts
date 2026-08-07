@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session } from 'electron'
+import { app, shell, BrowserWindow, session, nativeTheme } from 'electron'
 import { SettingsService } from '@main/features/settings/settings.service'
 import { join } from 'node:path'
 import { electronApp, is } from '@electron-toolkit/utils'
@@ -16,6 +16,7 @@ function createWindow(): BrowserWindow {
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 16, y: 18 },
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#0d0e11' : '#ffffff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
@@ -54,8 +55,12 @@ app.whenReady().then(async () => {
 
   SettingsService.buildMenu()
 
-  const repo = await Storage.get('active-repository')
+  const [repo, theme] = await Promise.all([
+    Storage.get('active-repository'),
+    Storage.get('theme'),
+  ])
   if (repo?.path) GitService.init(repo.path)
+  if (theme) await SettingsService.applyTheme(theme)
   
   await session.defaultSession.loadExtension(reactDevToolsPath)
 

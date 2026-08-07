@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import { readFile, writeFile, appendFile } from 'node:fs/promises'
 import { app } from 'electron'
 import { logger } from '@main/shared/logger'
-import type { Repository, Repositories } from '@shared'
+import type { Repository, Repositories, Theme } from '@shared'
 
 export const STORAGE_FILE_NAME = 'storage.json'
 export const STORAGE_FILE_PATH = path.join(app.getPath('userData'), STORAGE_FILE_NAME)
@@ -11,6 +11,7 @@ export const STORAGE_FILE_PATH = path.join(app.getPath('userData'), STORAGE_FILE
 type StorageFileContent = Partial<{
   'active-repository': Repository
   'repositories': Repositories
+  'theme': Theme
 }>
 
 type StorageKey = keyof StorageFileContent;

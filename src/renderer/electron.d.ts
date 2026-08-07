@@ -14,6 +14,7 @@ interface GitEventsAPI {
 
 interface AppEventsAPI {
   onAppDidBecomeActive: (callback: () => void) => () => void
+  onThemeUpdated: (callback: (isDark: boolean) => void) => () => void
 }
 
 declare global {

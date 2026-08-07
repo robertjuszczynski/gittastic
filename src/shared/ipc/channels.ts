@@ -45,10 +45,16 @@ export const CONTEXT_MENU_CHANNELS = {
   OPEN_FILE_CONTEXT_MENU: 'OPEN_FILE_CONTEXT_MENU'
 } as const
 
+export const SETTINGS_CHANNELS = {
+  SELECT_THEME: 'SELECT_THEME',
+  GET_THEME: 'GET_THEME',
+} as const
+
 export const CHANNELS = {
   ...REPOSITORY_CHANNELS,
   ...GIT_CHANNELS,
-  ...CONTEXT_MENU_CHANNELS
+  ...CONTEXT_MENU_CHANNELS,
+  ...SETTINGS_CHANNELS
 } as const
 
 export type TChannelKeys = keyof typeof CHANNELS;
