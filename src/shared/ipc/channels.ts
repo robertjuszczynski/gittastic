@@ -41,9 +41,14 @@ export const TERMINAL_CHANNELS = {
   TERMINAL_OUTPUT: 'TERMINAL_OUTPUT',
 } as const
 
+export const CONTEXT_MENU_CHANNELS = {
+  OPEN_FILE_CONTEXT_MENU: 'OPEN_FILE_CONTEXT_MENU'
+} as const
+
 export const CHANNELS = {
   ...REPOSITORY_CHANNELS,
   ...GIT_CHANNELS,
+  ...CONTEXT_MENU_CHANNELS
 } as const
 
 export type TChannelKeys = keyof typeof CHANNELS;

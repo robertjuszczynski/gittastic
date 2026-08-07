@@ -13,10 +13,15 @@ interface ClipboardAPI {
   writeText: (text: string) => void
 }
 
+interface GitEventsAPI {
+  onStatusChanged: (callback: () => void) => () => void
+}
+
 declare global {
   interface Window {
     electron: TElectronAPI
     terminalAPI: TerminalAPI
     clipboardAPI: ClipboardAPI
+    gitEventsAPI: GitEventsAPI
   }
 }

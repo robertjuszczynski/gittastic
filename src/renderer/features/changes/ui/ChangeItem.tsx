@@ -28,6 +28,10 @@ const ChangeItem = ({ change, isStaged, depth = 0, hash }: ChangeItemProps) => {
       }`}
       style={{ paddingLeft: depth * 12 + 12 }}
       onClick={() => setSelectedFile(change.path, hash)}
+      onContextMenu={e => {
+        e.preventDefault()
+        window.electron['OPEN_FILE_CONTEXT_MENU']({ path: change.path })
+      }}
     >
       {isStaged !== undefined && (
         <StageCheckbox

@@ -14,9 +14,11 @@ export const git = new Proxy({} as SimpleGit, {
 
 export default class GitService {
   private static instance: SimpleGit | null = null
+  public static basePath: string | null = null
 
   public static init(path: string): void {
     this.instance = simpleGit(path)
+    this.basePath = path
   }
 
   public static getInstance(): SimpleGit {
@@ -290,6 +292,10 @@ export default class GitService {
 
   public static async unstageFile(path: string): Promise<void> {
     await git.reset(['--', path])
+  }
+
+  public static async discardFile(path: string): Promise<void> {
+    await git.checkout(['--', path])
   }
 
   public static async stageFolder(path: string): Promise<void> {

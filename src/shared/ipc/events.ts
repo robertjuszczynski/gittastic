@@ -120,4 +120,8 @@ export interface IEvents {
         args: void;
         response: Promise<void>;
     };
+    [CHANNELS.OPEN_FILE_CONTEXT_MENU]: {
+        args: { path: string },
+        response: Promise<void>
+    }
 }

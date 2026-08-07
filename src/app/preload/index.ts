@@ -40,12 +40,21 @@ if (process.contextIsolated) {
       [CHANNELS.POP_STASH]: () => ipcRenderer.invoke(CHANNELS.POP_STASH),
       [CHANNELS.UNDO]: () => ipcRenderer.invoke(CHANNELS.UNDO),
       [CHANNELS.REDO]: () => ipcRenderer.invoke(CHANNELS.REDO),
+      [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke('file-context-menu', args)
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 
     contextBridge.exposeInMainWorld('clipboardAPI', {
       readText: () => clipboard.readText(),
       writeText: (text: string) => clipboard.writeText(text),
+    })
+
+    contextBridge.exposeInMainWorld('gitEventsAPI', {
+      onStatusChanged: (callback: () => void) => {
+        const listener = () => callback()
+        ipcRenderer.on('git-status-changed', listener)
+        return () => ipcRenderer.removeListener('git-status-changed', listener)
+      },
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {
