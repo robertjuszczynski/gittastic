@@ -24,7 +24,10 @@ export default defineConfig({
   preload: {
     build: {
       lib: {
-        entry: resolve('src/app/preload/index.ts')
+        entry: {
+          index: resolve('src/app/preload/index.ts'),
+          onboarding: resolve('src/app/preload/onboarding-preload.ts'),
+        }
       }
     },
     resolve: {
@@ -37,13 +40,17 @@ export default defineConfig({
     root: resolve('src'),
     build: {
       rollupOptions: {
-        input: resolve('src/app/renderer/index.html'),
+        input: {
+          main: resolve('src/app/renderer/index.html'),
+          onboarding: resolve('src/onboarding/renderer/index.html'),
+        },
       },
     },
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer'),
+        '@onboarding': resolve('src/onboarding/renderer'),
         '@shared': resolve('src/shared'),
       },
     },
