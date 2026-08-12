@@ -1,4 +1,4 @@
-import { app, session, ipcMain } from 'electron'
+import { app, session, ipcMain, BrowserWindow } from 'electron'
 import { SettingsService } from '@main/features/settings/settings.service'
 import { electronApp } from '@electron-toolkit/utils'
 import os from 'node:os'
@@ -10,6 +10,9 @@ import { sendToRenderer } from '@main/shared/send-to-renderer'
 import { MAIN_EVENTS } from '@shared'
 import { createMainWindow } from './windows/main.window'
 import { createOnboardingWindow } from './windows/onboarding.window'
+
+let mainWin: BrowserWindow | null = null                                                                             
+let onboardingWin: BrowserWindow | null = null
 
 const reactDevToolsPath = path.join(
   os.homedir(),
@@ -32,20 +35,27 @@ app.whenReady().then(async () => {
 
   registerIpcHandlers()
 
-  const onboardingWin = createOnboardingWindow()
+  onboardingWin = createOnboardingWindow()
 
   ipcMain.handle('ONBOARDING_COMPLETE', () => {
-    const mainWin = createMainWindow()
-    onboardingWin.close()
+    mainWin = createMainWindow()
+    onboardingWin?.close()
+    onboardingWin = null
 
     app.on('did-become-active', () => {
-      sendToRenderer(mainWin.webContents, MAIN_EVENTS.APP_DID_BECOME_ACTIVE)
+      sendToRenderer(mainWin!.webContents, MAIN_EVENTS.APP_DID_BECOME_ACTIVE)
     })
   })
 
-  app.on('activate', () => {
-    if (app.isReady()) createOnboardingWindow()
-  })
+  app.on('activate', () => {                                                                                                     
+    if (mainWin && !mainWin.isDestroyed()) {                                                                                     
+      mainWin.show()                                                                                                             
+    } else if (onboardingWin && !onboardingWin.isDestroyed()) {                                                                  
+      onboardingWin.show()                                                                                                       
+    } else {                                                                                                                     
+      onboardingWin = createOnboardingWindow()                                                                                   
+    }                                                                                                                            
+  })     
 })
 
 app.on('window-all-closed', () => {
