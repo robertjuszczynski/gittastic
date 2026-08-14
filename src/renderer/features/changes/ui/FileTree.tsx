@@ -64,7 +64,7 @@ const FolderNode = ({ node, depth, isStaged, hash }: FolderNodeProps) => {
   const isPartial = isStaged === true && allPaths.some(p => unstaged.some(f => f.path === p))
 
   const handleRowClick = () => {
-    setSelectedFolder(node.fullPath)
+    setSelectedFolder(node.fullPath, hash)
   }
 
   const handleCheckboxClick = () => {

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { CHANNELS } from '@shared'
 import type { FileChange } from '@shared'
 import { mapFileStatus } from '@renderer/shared/lib'
+import { devtools } from 'zustand/middleware'
 
 async function fetchStagedAndUnstaged() {
   const status = await window.electron[CHANNELS.GET_STATUS]()
@@ -26,9 +27,10 @@ type ChangesStore = {
   selectedFile: string | null
   selectedHash: string | null
   selectedFolder: string | null
+  selectedFolderHash: string | null
   setStagedAndUnstaged: (staged: FileChange[], unstaged: FileChange[]) => void
   setSelectedFile: (path: string | null, hash?: string | null) => void
-  setSelectedFolder: (path: string | null) => void
+  setSelectedFolder: (path: string | null, hash?: string | null) => void
   stageFile: (path: string) => Promise<void>
   unstageFile: (path: string) => Promise<void>
   stageAll: () => Promise<void>
@@ -37,15 +39,17 @@ type ChangesStore = {
   unstageFolder: (path: string) => Promise<void>
 }
 
-export const useChangesStore = create<ChangesStore>()((set) => ({
+export const useChangesStore = create<ChangesStore>()(
+  devtools((set) => ({
   staged: [],
   unstaged: [],
   selectedFile: null,
   selectedHash: null,
   selectedFolder: null,
+  selectedFolderHash: null,
   setStagedAndUnstaged: (staged, unstaged) => set({ staged, unstaged }),
-  setSelectedFile: (path, hash) => set({ selectedFile: path, selectedHash: hash ?? null, selectedFolder: null }),
-  setSelectedFolder: (path) => set({ selectedFolder: path, selectedFile: null, selectedHash: null }),
+  setSelectedFile: (path, hash) => set({ selectedFile: path, selectedHash: hash ?? null, selectedFolder: null, selectedFolderHash: null }),
+  setSelectedFolder: (path, hash) => set({ selectedFolder: path, selectedFile: null, selectedHash: null, selectedFolderHash: hash ?? null }),
   stageFile: async path => {
     await window.electron[CHANNELS.STAGE_FILE](path)
     const { staged, unstaged } = await fetchStagedAndUnstaged()
@@ -76,4 +80,4 @@ export const useChangesStore = create<ChangesStore>()((set) => ({
     const { staged, unstaged } = await fetchStagedAndUnstaged()
     set({ staged, unstaged })
   },
-}))
+})))

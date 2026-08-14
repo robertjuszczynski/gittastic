@@ -12,6 +12,7 @@ const DiffView = () => {
   const selectedFile = useChangesStore(s => s.selectedFile)
   const selectedHash = useChangesStore(s => s.selectedHash)
   const selectedFolder = useChangesStore(s => s.selectedFolder)
+  const selectedFolderHash = useChangesStore(s => s.selectedFolderHash)
   const staged = useChangesStore(s => s.staged)
   const unstaged = useChangesStore(s => s.unstaged)
   const { activePath } = useActivePath()
@@ -50,13 +51,20 @@ const DiffView = () => {
     queryClient.invalidateQueries({ queryKey: ['git', 'status'] })
   }, [queryClient])
 
+  const { data: commitFolderFiles = [] } = useQuery({
+    queryKey: ['git', 'commit-files', activePath, selectedFolderHash],
+    queryFn: () => window.electron[CHANNELS.GET_COMMIT_FILES](selectedFolderHash!),
+    enabled: !!activePath && !!selectedFolderHash,
+  })
+
   if (selectedFolder && !selectedFile) {
     return (
       <FolderDiffView
         selectedFolder={selectedFolder}
-        staged={staged}
-        unstaged={unstaged}
-        isUncommitted={isUncommitted}
+        staged={selectedFolderHash ? commitFolderFiles : staged}
+        unstaged={selectedFolderHash ? [] : unstaged}
+        isUncommitted={!selectedFolderHash}
+        hash={selectedFolderHash}
         onStageLine={handleStageLine}
       />
     )

@@ -11,10 +11,11 @@ type FolderDiffViewProps = {
   staged: FileChange[]
   unstaged: FileChange[]
   isUncommitted: boolean
+  hash?: string | null
   onStageLine: (path: string, lineNumber: number, isAddition: boolean, isCurrentlyStaged: boolean) => void
 }
 
-const FolderDiffView = ({ selectedFolder, staged, unstaged, isUncommitted, onStageLine }: FolderDiffViewProps) => {
+const FolderDiffView = ({ selectedFolder, staged, unstaged, isUncommitted, hash, onStageLine }: FolderDiffViewProps) => {
   const { activePath } = useActivePath()
 
   const folderFiles = useMemo(() => {
@@ -29,8 +30,8 @@ const FolderDiffView = ({ selectedFolder, staged, unstaged, isUncommitted, onSta
 
   const folderDiffResults = useQueries({
     queries: folderFiles.map(f => ({
-      queryKey: ['git', 'file-diff', activePath, f.path, null, staged, unstaged],
-      queryFn: () => window.electron[CHANNELS.GET_FILE_DIFF]({ path: f.path }),
+      queryKey: ['git', 'file-diff', activePath, f.path, hash ?? null, staged, unstaged],
+      queryFn: () => window.electron[CHANNELS.GET_FILE_DIFF]({ path: f.path, hash: hash ?? undefined }),
       enabled: !!activePath,
     }))
   })

@@ -19,6 +19,11 @@ const reactDevToolsPath = path.join(
   '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/7.0.1_0'
 )
 
+const reduxDevToolsPath = path.join(
+  os.homedir(),
+  '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.10_0'
+)
+
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.gittastic')
 
@@ -32,6 +37,7 @@ app.whenReady().then(async () => {
   if (theme) await SettingsService.applyTheme(theme)
 
   await session.defaultSession.loadExtension(reactDevToolsPath)
+  await session.defaultSession.loadExtension(reduxDevToolsPath)
 
   registerIpcHandlers()
 
