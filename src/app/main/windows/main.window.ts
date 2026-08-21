@@ -9,6 +9,8 @@ export function createMainWindow(): BrowserWindow {
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 16, y: 18 },
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#0d0e11' : '#ffffff',
+    minWidth: 900,
+    minHeight: 560,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,

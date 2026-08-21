@@ -11,7 +11,7 @@ const HomePage = () => {
   const terminalHeight = useTerminalStore((s) => s.height)
 
   return (
-    <div className='h-screen w-screen flex flex-col bg-bg'>
+    <div className='h-screen w-screen flex flex-col bg-bg overflow-hidden'>
       <Toolbar />
       <div className='flex flex-1 min-h-0'>
         <Sidebar />
