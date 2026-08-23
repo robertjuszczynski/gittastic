@@ -4,16 +4,31 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RepositoriesProvider } from '@renderer/entities/repository/model/RepositoriesContext'
 import { ModalProvider } from '@renderer/shared/ui/ModalContext'
 import { CommandPalette, registerCommands } from '@renderer/widgets/command-palette'
+import { useThemeStore } from '@renderer/features/theme'
 import { router } from './router'
 import './styles.css'
 
-window.electron.GET_THEME().then(({ isDark }) => {
-  document.documentElement.classList.toggle('dark', isDark)
-})
+async function initTheme() {
+  const { setActiveTheme, setAvailableThemes, updateCustomThemes } = useThemeStore.getState()
 
-window.appEventsAPI.onThemeUpdated((isDark) => {
-  document.documentElement.classList.toggle('dark', isDark)
-})
+  const [themes, activeTheme] = await Promise.all([
+    window.electron.GET_THEMES(),
+    window.electron.GET_ACTIVE_THEME(),
+  ])
+
+  setAvailableThemes(themes)
+  setActiveTheme(activeTheme)
+
+  window.appEventsAPI.onThemeUpdated((theme) => {
+    setActiveTheme(theme)
+  })
+
+  window.appEventsAPI.onCustomThemesChanged((customThemes) => {
+    updateCustomThemes(customThemes)
+  })
+}
+
+initTheme()
 
 registerCommands([
   {
