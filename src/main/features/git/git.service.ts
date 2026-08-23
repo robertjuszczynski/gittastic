@@ -82,6 +82,11 @@ export default class GitService {
     return { name, email }
   }
 
+  public static async setUser(name: string, email: string): Promise<void> {
+    await simpleGit().addConfig('user.name', name, false, 'global')
+    await simpleGit().addConfig('user.email', email, false, 'global')
+  }
+
   public static async getCommitFiles(hash: string): Promise<FileChange[]> {
     const STATUS_MAP: Record<string, FileChangeStatus> = {
       M: 'modified', A: 'added', D: 'deleted', R: 'renamed',

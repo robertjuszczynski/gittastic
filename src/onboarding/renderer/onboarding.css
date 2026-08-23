@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, -apple-system, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Fira Code", Menlo, monospace;
+  --color-*: initial;
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-bg: #ffffff;
+  --color-surface: #f5f6fa;
+  --color-surface-2: #eceef5;
+
+  --color-text: #111318;
+  --color-text-secondary: #4a4f66;
+  --color-text-muted: #8e93a8;
+
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-divider: rgba(0, 0, 0, 0.07);
+
+  --color-neutral-100: #111318;
+  --color-neutral-200: #2c3040;
+  --color-neutral-300: #4a4f66;
+  --color-neutral-400: #6b7088;
+  --color-neutral-500: #8e93a8;
+  --color-neutral-600: #b4b8cc;
+  --color-neutral-700: #d4d7e8;
+  --color-neutral-800: #e4e6f2;
+  --color-neutral-900: #f0f1f8;
+
+  --color-accent: #1b70f8;
+  --color-accent-dim: rgba(27, 112, 248, 0.1);
+  --color-accent-glow: rgba(27, 112, 248, 0.06);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+}
+
+:root.dark {
+  --color-bg: #0d0e11;
+  --color-surface: #161820;
+  --color-surface-2: #1e2028;
+
+  --color-text: #e2e4f0;
+  --color-text-secondary: #9ea3bc;
+  --color-text-muted: #525770;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-divider: rgba(255, 255, 255, 0.06);
+
+  --color-neutral-100: #e2e4f0;
+  --color-neutral-200: #c4c8dc;
+  --color-neutral-300: #9ea3bc;
+  --color-neutral-400: #787d96;
+  --color-neutral-500: #525770;
+  --color-neutral-600: #3a3e52;
+  --color-neutral-700: #272b3a;
+  --color-neutral-800: #1e2028;
+  --color-neutral-900: #161820;
+
+  --color-accent: #4f8ef7;
+  --color-accent-dim: rgba(79, 142, 247, 0.12);
+  --color-accent-glow: rgba(79, 142, 247, 0.06);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+}

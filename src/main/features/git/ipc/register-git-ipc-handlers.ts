@@ -50,6 +50,9 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.GET_USER]: async () => {
       return await GitService.getUser()
     },
+    [GIT_CHANNELS.SET_GIT_USER]: async (_, args) => {
+      await GitService.setUser(args.name, args.email)
+    },
     [GIT_CHANNELS.STAGE_FILE]: async (_, path) => {
       await GitService.stageFile(path)
     },

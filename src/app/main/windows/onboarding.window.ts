@@ -6,11 +6,11 @@ export function createOnboardingWindow(): BrowserWindow {
   const win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
-    width: 600,
-    height: 400,
+    width: 400,
+    height: 500,
     resizable: false,
     titleBarStyle: 'hidden',
-    trafficLightPosition: { x: 16, y: 18 },
+    trafficLightPosition: { x: 16, y: 13 },
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#0d0e11' : '#ffffff',
     webPreferences: {
       preload: join(__dirname, '../preload/onboarding.js'),

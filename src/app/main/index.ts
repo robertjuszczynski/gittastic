@@ -1,67 +1,84 @@
-import { app, session, ipcMain, BrowserWindow } from 'electron'
+import { app, type BrowserWindow } from 'electron'
 import { SettingsService } from '@main/features/settings/settings.service'
 import { electronApp } from '@electron-toolkit/utils'
-import os from 'node:os'
-import path from 'node:path'
 import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
 import GitService from '@main/features/git/git.service'
 import { Storage } from '@main/shared/storage.service'
 import { sendToRenderer } from '@main/shared/send-to-renderer'
-import { MAIN_EVENTS } from '@shared'
+import { MAIN_EVENTS, ONBOARDING_EVENT_CHANNELS } from '@shared'
 import { createMainWindow } from './windows/main.window'
 import { createOnboardingWindow } from './windows/onboarding.window'
 
-let mainWin: BrowserWindow | null = null                                                                             
+const RESET_ONBOARDING = true // set to true during dev to always show onboarding
+
+let mainWin: BrowserWindow | null = null
 let onboardingWin: BrowserWindow | null = null
+let onboardingDone = false
 
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/7.0.1_0'
-)
+function switchToMainWindow() {
+  mainWin = createMainWindow()
+  onboardingWin?.close()
+  onboardingWin = null
+  app.on('did-become-active', () => {
+    sendToRenderer(mainWin!.webContents, MAIN_EVENTS.APP_DID_BECOME_ACTIVE)
+  })
+}
 
-const reduxDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.10_0'
-)
+app.setAsDefaultProtocolClient('gittastic')
 
 app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.gittastic')
 
   SettingsService.buildMenu()
 
-  const [repo, theme] = await Promise.all([
+  const [repo, theme, onboardingCompleted] = await Promise.all([
     Storage.get('active-repository'),
     Storage.get('theme'),
+    Storage.get('onboarding-completed'),
   ])
   if (repo?.path) GitService.init(repo.path)
   if (theme) await SettingsService.applyTheme(theme)
 
-  await session.defaultSession.loadExtension(reactDevToolsPath)
-  await session.defaultSession.loadExtension(reduxDevToolsPath)
+  registerIpcHandlers({
+    getOnboardingWin: () => onboardingWin,
+    setOnboardingDone: () => { onboardingDone = true },
+    switchToMainWindow,
+  })
 
-  registerIpcHandlers()
-
-  onboardingWin = createOnboardingWindow()
-
-  ipcMain.handle('ONBOARDING_COMPLETE', () => {
+  if (onboardingCompleted && !RESET_ONBOARDING) {
+    onboardingDone = true
     mainWin = createMainWindow()
-    onboardingWin?.close()
-    onboardingWin = null
-
     app.on('did-become-active', () => {
       sendToRenderer(mainWin!.webContents, MAIN_EVENTS.APP_DID_BECOME_ACTIVE)
     })
-  })
+  } else {
+    onboardingWin = createOnboardingWindow()
+  }
 
-  app.on('activate', () => {                                                                                                     
-    if (mainWin && !mainWin.isDestroyed()) {                                                                                     
-      mainWin.show()                                                                                                             
-    } else if (onboardingWin && !onboardingWin.isDestroyed()) {                                                                  
-      onboardingWin.show()                                                                                                       
-    } else {                                                                                                                     
-      onboardingWin = createOnboardingWindow()                                                                                   
-    }                                                                                                                            
-  })     
+  app.on('activate', () => {
+    if (mainWin && !mainWin.isDestroyed()) {
+      mainWin.show()
+    } else if (onboardingWin && !onboardingWin.isDestroyed()) {
+      onboardingWin.show()
+    } else if (onboardingDone) {
+      mainWin = createMainWindow()
+    } else {
+      onboardingWin = createOnboardingWindow()
+    }
+  })
+})
+
+app.on('open-url', (event, url) => {
+  event.preventDefault()
+  try {
+    const parsed = new URL(url)
+    if (parsed.pathname === '/oauth/callback') {
+      const code = parsed.searchParams.get('code')
+      if (code && onboardingWin && !onboardingWin.isDestroyed()) {
+        onboardingWin.webContents.send(ONBOARDING_EVENT_CHANNELS.ONBOARDING_GITHUB_AUTH_RESULT, { code })
+      }
+    }
+  } catch {}
 })
 
 app.on('window-all-closed', () => {

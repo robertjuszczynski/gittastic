@@ -65,6 +65,10 @@ export interface IEvents {
         args: void;
         response: Promise<GitUser>;
     };
+    [CHANNELS.SET_GIT_USER]: {
+        args: GitUser;
+        response: Promise<void>;
+    };
     [CHANNELS.GET_COMMIT_FILES]: {
         args: string;
         response: Promise<FileChange[]>;

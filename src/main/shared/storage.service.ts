@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import { readFile, writeFile, appendFile } from 'node:fs/promises'
 import { app } from 'electron'
 import { logger } from '@main/shared/logger'
-import type { Repository, Repositories, Theme } from '@shared'
+import type { Repository, Repositories, Theme, TGitProvider, GitUser, FeatureName } from '@shared'
 
 export const STORAGE_FILE_NAME = 'storage.json'
 export const STORAGE_FILE_PATH = path.join(app.getPath('userData'), STORAGE_FILE_NAME)
@@ -12,6 +12,11 @@ type StorageFileContent = Partial<{
   'active-repository': Repository
   'repositories': Repositories
   'theme': Theme
+  'onboarding-completed': boolean
+  'features': Record<FeatureName, boolean>
+  'git-provider': TGitProvider | null
+  'git-provider-token': string
+  'git-user': GitUser
 }>
 
 type StorageKey = keyof StorageFileContent;

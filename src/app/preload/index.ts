@@ -1,8 +1,7 @@
 import type { IEvents, TMainEvents } from '@shared'
 import { CHANNELS, TERMINAL_CHANNELS, MAIN_EVENTS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
-
-type TOptionalArgs<T> = T extends void ? [] : [args: T];
+import { type TOptionalArgs } from '@shared'
 
 export type TElectronAPI = {
     [K in keyof typeof CHANNELS]: (...args: TOptionalArgs<IEvents[typeof CHANNELS[K]]['args']>) => IEvents[typeof CHANNELS[K]]['response'];
@@ -36,6 +35,7 @@ if (process.contextIsolated) {
       [CHANNELS.UNSTAGE_LINE]: (args) => ipcRenderer.invoke(CHANNELS.UNSTAGE_LINE, args),
       [CHANNELS.COMMIT]: (args) => ipcRenderer.invoke(CHANNELS.COMMIT, args),
       [CHANNELS.GET_USER]: () => ipcRenderer.invoke(CHANNELS.GET_USER),
+      [CHANNELS.SET_GIT_USER]: (args) => ipcRenderer.invoke(CHANNELS.SET_GIT_USER, args),
       [CHANNELS.GET_COMMIT_FILES]: (args) => ipcRenderer.invoke(CHANNELS.GET_COMMIT_FILES, args),
       [CHANNELS.CHECKOUT_BRANCH]: (args) => ipcRenderer.invoke(CHANNELS.CHECKOUT_BRANCH, args),
       [CHANNELS.CREATE_BRANCH]: (args) => ipcRenderer.invoke(CHANNELS.CREATE_BRANCH, args),
