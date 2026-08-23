@@ -12,8 +12,12 @@ type SettingsIpcHandlers = {
 
 export default function registerSettingsIpcHandlers() {
   const handlers: SettingsIpcHandlers = {
-    [CHANNELS.SELECT_THEME]: (_, args) => SettingsService.setTheme(args),
-    [CHANNELS.GET_THEME]: () => SettingsService.getTheme(),
+    [CHANNELS.GET_THEMES]: () => Promise.resolve(SettingsService.getThemes()),
+    [CHANNELS.GET_ACTIVE_THEME]: () => Promise.resolve(SettingsService.getActiveTheme()),
+    [CHANNELS.SET_THEME]: (_, args) => SettingsService.setTheme(args),
+    [CHANNELS.IMPORT_THEME]: () => SettingsService.importTheme(),
+    [CHANNELS.OPEN_THEMES_FOLDER]: () => SettingsService.openThemesFolder(),
+    [CHANNELS.DELETE_CUSTOM_THEME]: (_, args) => SettingsService.deleteCustomTheme(args),
   }
 
   for (const [channel, handler] of Object.entries(handlers)) {

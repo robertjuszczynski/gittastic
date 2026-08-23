@@ -32,13 +32,12 @@ app.whenReady().then(async () => {
 
   SettingsService.buildMenu()
 
-  const [repo, theme, onboardingCompleted] = await Promise.all([
+  const [repo, onboardingCompleted] = await Promise.all([
     Storage.get('active-repository'),
-    Storage.get('theme'),
     Storage.get('onboarding-completed'),
   ])
   if (repo?.path) GitService.init(repo.path)
-  if (theme) await SettingsService.applyTheme(theme)
+  await SettingsService.initialize()
 
   registerIpcHandlers({
     getOnboardingWin: () => onboardingWin,
