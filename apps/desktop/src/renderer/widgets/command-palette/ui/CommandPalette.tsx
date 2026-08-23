@@ -33,7 +33,7 @@ export function CommandPalette() {
 
   useEffect(() => {
     const onKeyDown = (e: globalThis.KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.code === 'KeyP') {
         e.preventDefault()
         useCommandPaletteStore.getState().toggle()
       }
@@ -129,7 +129,7 @@ export function CommandPalette() {
               />
             </div>
 
-            <div ref={resultsRef} className='max-h-[400px] overflow-y-auto py-1'>
+            <div ref={resultsRef} className='max-h-[400px] overflow-y-auto pt-1'>
               {orderedResults.length === 0 ? (
                 <p className='px-4 py-8 text-center text-sm text-neutral-500'>No commands found</p>
               ) : groups ? (
