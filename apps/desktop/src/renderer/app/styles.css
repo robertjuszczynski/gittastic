@@ -8,20 +8,16 @@
   --color-black: #000;
   --color-white: #fff;
 
-  /* Surfaces */
+  /* Theme variables — values injected at runtime by the theme system (src/renderer/shared/lib/theme/inject.ts).
+     Defaults below are fallbacks only; they are overridden immediately on startup. */
   --color-bg: #ffffff;
   --color-surface: #f5f6fa;
   --color-surface-2: #eceef5;
-
-  /* Text hierarchy */
   --color-text: #111318;
   --color-text-secondary: #4a4f66;
   --color-text-muted: #8e93a8;
-
-  /* Borders */
   --color-border: rgba(0, 0, 0, 0.08);
   --color-divider: rgba(0, 0, 0, 0.07);
-
   --color-neutral-100: #111318;
   --color-neutral-200: #2c3040;
   --color-neutral-300: #4a4f66;
@@ -31,13 +27,9 @@
   --color-neutral-700: #d4d7e8;
   --color-neutral-800: #e4e6f2;
   --color-neutral-900: #f0f1f8;
-
-  /* Accent */
   --color-accent: #1b70f8;
   --color-accent-dim: rgba(27, 112, 248, 0.1);
   --color-accent-glow: rgba(27, 112, 248, 0.06);
-
-  /* Diff semantic */
   --color-add: #1a7f4b;
   --color-add-bg: rgba(26, 127, 75, 0.08);
   --color-remove: #c93a3a;
@@ -49,38 +41,6 @@
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
-}
-
-:root.dark {
-    --color-bg: #0d0e11;
-    --color-surface: #161820;
-    --color-surface-2: #1e2028;
-
-    --color-text: #e2e4f0;
-    --color-text-secondary: #9ea3bc;
-    --color-text-muted: #525770;
-
-    --color-border: rgba(255, 255, 255, 0.08);
-    --color-divider: rgba(255, 255, 255, 0.06);
-
-    --color-neutral-100: #e2e4f0;
-    --color-neutral-200: #c4c8dc;
-    --color-neutral-300: #9ea3bc;
-    --color-neutral-400: #787d96;
-    --color-neutral-500: #525770;
-    --color-neutral-600: #3a3e52;
-    --color-neutral-700: #272b3a;
-    --color-neutral-800: #1e2028;
-    --color-neutral-900: #161820;
-
-    --color-accent: #4f8ef7;
-    --color-accent-dim: rgba(79, 142, 247, 0.12);
-    --color-accent-glow: rgba(79, 142, 247, 0.06);
-
-    --color-add: #3db87a;
-    --color-add-bg: rgba(61, 184, 122, 0.1);
-    --color-remove: #f07070;
-    --color-remove-bg: rgba(240, 112, 112, 0.1);
 }
 
 * {
@@ -156,19 +116,19 @@
 .token.regex { color: #e36209; }
 .token.builtin { color: #005cc5; }
 
-:root.dark .token.comment { color: #6a737d; }
-:root.dark .token.keyword,
-:root.dark .token.tag { color: #f97583; }
-:root.dark .token.string,
-:root.dark .token.attr-value { color: #9ecbff; }
-:root.dark .token.number,
-:root.dark .token.boolean { color: #79b8ff; }
-:root.dark .token.function { color: #b392f0; }
-:root.dark .token.class-name { color: #b392f0; }
-:root.dark .token.operator,
-:root.dark .token.punctuation { color: #e1e4e8; }
-:root.dark .token.regex { color: #ffab70; }
-:root.dark .token.builtin { color: #79b8ff; }
+:root[data-theme="dark"] .token.comment { color: #6a737d; }
+:root[data-theme="dark"] .token.keyword,
+:root[data-theme="dark"] .token.tag { color: #f97583; }
+:root[data-theme="dark"] .token.string,
+:root[data-theme="dark"] .token.attr-value { color: #9ecbff; }
+:root[data-theme="dark"] .token.number,
+:root[data-theme="dark"] .token.boolean { color: #79b8ff; }
+:root[data-theme="dark"] .token.function { color: #b392f0; }
+:root[data-theme="dark"] .token.class-name { color: #b392f0; }
+:root[data-theme="dark"] .token.operator,
+:root[data-theme="dark"] .token.punctuation { color: #e1e4e8; }
+:root[data-theme="dark"] .token.regex { color: #ffab70; }
+:root[data-theme="dark"] .token.builtin { color: #79b8ff; }
 
 /* Diff viewer - add width to diff-container parent, to make container scrollable */
 div:has(> table[class$="diff-container"]) {

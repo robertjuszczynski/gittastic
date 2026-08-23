@@ -119,6 +119,7 @@ export interface ThemeDefinition {
   id: ThemeId
   name: string
   tokens: ThemeTokens
+  isDark?: boolean
   isCustom?: boolean
   filePath?: string
 }

@@ -3,6 +3,7 @@ import type { ThemeDefinition } from '../types/theme.types'
 export const gitasticGlassmorphism: ThemeDefinition = {
   id: 'gitastic-glassmorphism',
   name: 'Gitastic Glassmorphism',
+  isDark: true,
   tokens: {
     colors: {
       bg: '#0a0b1a',

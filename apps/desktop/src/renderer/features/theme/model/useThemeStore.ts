@@ -16,7 +16,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
   availableThemes: [],
 
   setActiveTheme: (theme) => {
-    injectTheme(theme.tokens)
+    injectTheme(theme)
     set({ activeTheme: theme })
   },
 

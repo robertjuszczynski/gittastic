@@ -3,6 +3,7 @@ import type { ThemeDefinition } from '../types/theme.types'
 export const gitasticDark: ThemeDefinition = {
   id: 'gitastic-dark',
   name: 'Gitastic Dark',
+  isDark: true,
   tokens: {
     colors: {
       bg: '#0d0e11',
