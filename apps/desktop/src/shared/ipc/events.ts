@@ -2,7 +2,7 @@ import type { StatusResult } from 'simple-git'
 import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
-import type { Theme } from '../types/theme.types'
+import type { ThemeDefinition, ThemeId } from '../types/theme.types'
 
 export interface IEvents {
     [CHANNELS.OPEN_REPOSITORY]: {
@@ -129,12 +129,28 @@ export interface IEvents {
         args: { path: string, status: FileChangeStatus },
         response: Promise<void>
     };
-    [CHANNELS.SELECT_THEME]: {
-        args: Theme,
-        response: Promise<boolean>
-    },
-    [CHANNELS.GET_THEME]: {
-        args: void,
-        response: Promise<{ isDark: boolean; theme: Theme }>
-    },
+    [CHANNELS.GET_THEMES]: {
+        args: void;
+        response: Promise<ThemeDefinition[]>;
+    };
+    [CHANNELS.GET_ACTIVE_THEME]: {
+        args: void;
+        response: Promise<ThemeDefinition>;
+    };
+    [CHANNELS.SET_THEME]: {
+        args: ThemeId;
+        response: Promise<ThemeDefinition>;
+    };
+    [CHANNELS.IMPORT_THEME]: {
+        args: void;
+        response: Promise<ThemeDefinition | null>;
+    };
+    [CHANNELS.OPEN_THEMES_FOLDER]: {
+        args: void;
+        response: Promise<void>;
+    };
+    [CHANNELS.DELETE_CUSTOM_THEME]: {
+        args: ThemeId;
+        response: Promise<void>;
+    };
 }

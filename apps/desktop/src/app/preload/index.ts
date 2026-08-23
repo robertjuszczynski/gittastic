@@ -1,4 +1,4 @@
-import type { IEvents, TMainEvents } from '@shared'
+import type { IEvents, TMainEvents, ThemeDefinition } from '@shared'
 import { CHANNELS, TERMINAL_CHANNELS, MAIN_EVENTS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
 import { type TOptionalArgs } from '@shared'
@@ -50,8 +50,12 @@ if (process.contextIsolated) {
       [CHANNELS.UNDO]: () => ipcRenderer.invoke(CHANNELS.UNDO),
       [CHANNELS.REDO]: () => ipcRenderer.invoke(CHANNELS.REDO),
       [CHANNELS.OPEN_FILE_CONTEXT_MENU]: (args) => ipcRenderer.invoke(CHANNELS.OPEN_FILE_CONTEXT_MENU, args),
-      [CHANNELS.SELECT_THEME]: (args) => ipcRenderer.invoke(CHANNELS.SELECT_THEME, args),
-      [CHANNELS.GET_THEME]: () => ipcRenderer.invoke(CHANNELS.GET_THEME),
+      [CHANNELS.GET_THEMES]: () => ipcRenderer.invoke(CHANNELS.GET_THEMES),
+      [CHANNELS.GET_ACTIVE_THEME]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_THEME),
+      [CHANNELS.SET_THEME]: (args) => ipcRenderer.invoke(CHANNELS.SET_THEME, args),
+      [CHANNELS.IMPORT_THEME]: () => ipcRenderer.invoke(CHANNELS.IMPORT_THEME),
+      [CHANNELS.OPEN_THEMES_FOLDER]: () => ipcRenderer.invoke(CHANNELS.OPEN_THEMES_FOLDER),
+      [CHANNELS.DELETE_CUSTOM_THEME]: (args) => ipcRenderer.invoke(CHANNELS.DELETE_CUSTOM_THEME, args),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 
@@ -61,7 +65,8 @@ if (process.contextIsolated) {
 
     contextBridge.exposeInMainWorld('appEventsAPI', {
       onAppDidBecomeActive: (callback: () => void) => listenTo(MAIN_EVENTS.APP_DID_BECOME_ACTIVE, callback),
-      onThemeUpdated: (callback: (isDark: boolean) => void) => listenTo(MAIN_EVENTS.THEME_UPDATED, callback),
+      onThemeUpdated: (callback: (theme: ThemeDefinition) => void) => listenTo(MAIN_EVENTS.THEME_UPDATED, callback),
+      onCustomThemesChanged: (callback: (themes: ThemeDefinition[]) => void) => listenTo(MAIN_EVENTS.CUSTOM_THEMES_CHANGED, callback),
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {
