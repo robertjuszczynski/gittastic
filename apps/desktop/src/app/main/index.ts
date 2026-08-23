@@ -9,7 +9,7 @@ import { MAIN_EVENTS, ONBOARDING_EVENT_CHANNELS } from '@shared'
 import { createMainWindow } from './windows/main.window'
 import { createOnboardingWindow } from './windows/onboarding.window'
 
-const RESET_ONBOARDING = true // set to true during dev to always show onboarding
+const RESET_ONBOARDING = false // set to true during dev to always show onboarding
 
 let mainWin: BrowserWindow | null = null
 let onboardingWin: BrowserWindow | null = null

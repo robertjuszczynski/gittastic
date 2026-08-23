@@ -8,6 +8,7 @@ import { useStashes } from '@renderer/features/stashes/api/useStashes'
 import {
   ArrowDownToLine,
   ArrowUpToLine,
+  Command,
   Package,
   PackageOpen,
   RefreshCcw,
@@ -17,6 +18,7 @@ import {
   Undo2,
 } from 'lucide-react'
 import BranchIcon from '@renderer/shared/ui/icons/BranchIcon'
+import { useCommandPaletteStore } from '@renderer/widgets/command-palette'
 
 const isMac = navigator.userAgent.includes('Mac')
 
@@ -70,6 +72,7 @@ const Toolbar = () => {
   const queryClient = useQueryClient()
   const toggleTerminal = useTerminalStore((s) => s.toggle)
   const isTerminalOpen = useTerminalStore((s) => s.isOpen)
+  const openPalette = useCommandPaletteStore((s) => s.open)
   const { data: status } = useStatus()
   const { activePath } = useActivePath()
   const { repositories } = useRepositories()
@@ -135,7 +138,7 @@ const Toolbar = () => {
         <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={handlePopStash} />
       </div>
 
-      <div className='flex-1 flex items-center justify-center' style={drag}>
+      <div className='flex-1 flex items-center justify-center gap-2' style={drag}>
         <div className='flex items-center gap-2.5 px-3 py-[7px] bg-surface-2 rounded-lg border border-white/[0.05] select-none' style={noDrag}>
           <span className='text-[12px] font-semibold text-neutral-200 tracking-tight'>{repoName}</span>
           <div className='w-px h-3.5 bg-neutral-700' />
@@ -144,6 +147,15 @@ const Toolbar = () => {
             <span>{branchName}</span>
           </div>
         </div>
+        <button
+          onClick={openPalette}
+          title='Quick Actions (⌘⇧P)'
+          className='flex items-center gap-1.5 px-2.5 py-[7px] bg-surface-2 rounded-lg border border-white/[0.05] text-neutral-500 hover:text-neutral-300 hover:bg-surface-3 transition-colors cursor-default select-none'
+          style={noDrag}
+        >
+          <Command size={13} strokeWidth={1.6} />
+          <span className='text-[11px] font-medium'>Actions</span>
+        </button>
       </div>
 
       <div className='flex items-stretch' style={noDrag}>

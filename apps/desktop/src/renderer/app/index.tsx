@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RepositoriesProvider } from '@renderer/entities/repository/model/RepositoriesContext'
 import { ModalProvider } from '@renderer/shared/ui/ModalContext'
+import { CommandPalette, registerCommands } from '@renderer/widgets/command-palette'
 import { router } from './router'
 import './styles.css'
 
@@ -14,6 +15,16 @@ window.appEventsAPI.onThemeUpdated((isDark) => {
   document.documentElement.classList.toggle('dark', isDark)
 })
 
+registerCommands([
+  {
+    id: 'placeholder.example',
+    label: 'Example placeholder',
+    description: 'Replace this with real commands',
+    section: 'General',
+    execute: () => {},
+  },
+])
+
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('app')!).render(
@@ -22,6 +33,7 @@ createRoot(document.getElementById('app')!).render(
       <ModalProvider>
         <RouterProvider router={router} />
       </ModalProvider>
+      <CommandPalette />
     </RepositoriesProvider>
   </QueryClientProvider>
 )
