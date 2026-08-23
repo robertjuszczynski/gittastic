@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import AiSettingsPage from '@renderer/widgets/settings/ui/AiSettings'
+import AppearanceSettings from '@renderer/widgets/settings/ui/AppearanceSettings'
 import GeneralSettings from '@renderer/widgets/settings/ui/GeneralSettings'
 import FeaturesSettings from '@renderer/widgets/settings/ui/FeaturesSettings'
 import GitSettings from '@renderer/widgets/settings/ui/GitSettings'
 
 const tabs = [{
+  id: 'appearance',
+  label: 'Appearance',
+  component: <AppearanceSettings />
+}, {
   id: 'ai',
   label: 'AI',
   component: <AiSettingsPage />
@@ -25,7 +30,7 @@ const tabs = [{
 type TabId = (typeof tabs)[number]['id']
 
 const SettingsPage = () => {
-  const [active, setActive] = useState<TabId>('ai')
+  const [active, setActive] = useState<TabId>('appearance')
 
   const content = tabs.find((t) => t.id === active)?.component
 
@@ -44,7 +49,7 @@ const SettingsPage = () => {
           </button>
         ))}
       </nav>
-      <main className='flex-1 p-6'>{content}</main>
+      <main className='flex-1 p-6 overflow-y-auto'>{content}</main>
     </div>
   )
 }

@@ -5,7 +5,14 @@ import { gitasticGlassmorphism } from './gitastic-glassmorphism'
 
 export { gitasticLight, gitasticDark, gitasticGlassmorphism }
 
+export const systemTheme: ThemeDefinition = {
+  id: 'system',
+  name: 'Follow System',
+  tokens: gitasticLight.tokens,
+}
+
 export const BUILT_IN_THEMES: ThemeDefinition[] = [
+  systemTheme,
   gitasticLight,
   gitasticDark,
   gitasticGlassmorphism,
