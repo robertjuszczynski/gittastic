@@ -4,6 +4,7 @@
     "src/renderer/env.d.ts",
     "src/renderer/**/*",
     "src/renderer/**/*.tsx",
+    "src/onboarding/**/*",
     "src/app/preload/*.d.ts",
     "src/shared/**/*"
 , "src/main/utils/split-lanes.ts"  ],
@@ -13,7 +14,9 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@renderer/*": ["src/renderer/*"],
-      "@shared": ["src/shared/index.ts"]
+      "@onboarding/*": ["src/onboarding/renderer/*"],
+      "@shared": ["src/shared/index.ts"],
+      "@shared/*": ["src/shared/*"]
     }
   }
 }
