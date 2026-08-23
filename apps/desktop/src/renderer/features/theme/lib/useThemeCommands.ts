@@ -2,12 +2,11 @@ import { useEffect } from 'react'
 import { Palette } from 'lucide-react'
 import React from 'react'
 import { useThemeStore } from '../model/useThemeStore'
-import { useCommandPaletteStore } from '@renderer/widgets/command-palette'
+import { registerCommands } from '@renderer/widgets/command-palette'
 
 export function useThemeCommands() {
   const availableThemes = useThemeStore(s => s.availableThemes)
   const switchTheme = useThemeStore(s => s.switchTheme)
-  const { registerCommands } = useCommandPaletteStore()
 
   useEffect(() => {
     const themeCommands = availableThemes.map(theme => ({
@@ -39,11 +38,10 @@ export function useThemeCommands() {
         label: 'Import Theme…',
         section: 'Appearance',
         execute: async () => {
-          const { setAvailableThemes, updateCustomThemes } = useThemeStore.getState()
           const imported = await window.electron.IMPORT_THEME()
           if (imported) {
             const themes = await window.electron.GET_THEMES()
-            setAvailableThemes(themes)
+            useThemeStore.getState().setAvailableThemes(themes)
           }
         },
         keywords: ['import', 'theme', 'custom', 'json'],
@@ -51,5 +49,5 @@ export function useThemeCommands() {
     ]
 
     return registerCommands([...themeCommands, ...utilCommands])
-  }, [availableThemes, switchTheme, registerCommands])
+  }, [availableThemes, switchTheme])
 }
