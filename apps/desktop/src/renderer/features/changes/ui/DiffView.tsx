@@ -91,7 +91,7 @@ const DiffView = () => {
       <div className='px-3 py-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider shrink-0'>
         {selectedFile}
       </div>
-      <div className='flex-1 overflow-auto' style={{ minHeight: 0 }}>
+      <div className='flex-1 overflow-auto min-h-0'>
         {isTooLarge && !forceShow ? (
           <div className='h-full flex flex-col items-center justify-center gap-4'>
             <div className='flex flex-col items-center gap-1'>

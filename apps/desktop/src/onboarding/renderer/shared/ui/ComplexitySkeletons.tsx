@@ -11,7 +11,7 @@ const sk = {
 }
 
 export const SimpleSkeleton = () => (
-  <svg viewBox="0 0 148 84" style={{ display: 'block', width: '100%', height: 'auto' }}>
+  <svg viewBox="0 0 148 84" className='block w-full h-auto'>
     <rect width="148" height="84" fill={sk.bg} />
     <rect width="30" height="84" fill={sk.sidebar} />
     <rect x="6" y="10" width="18" height="2.5" rx="1" fill={sk.dim} />
@@ -40,7 +40,7 @@ export const SimpleSkeleton = () => (
 )
 
 export const MediumSkeleton = () => (
-  <svg viewBox="0 0 148 84" style={{ display: 'block', width: '100%', height: 'auto' }}>
+  <svg viewBox="0 0 148 84" className='block w-full h-auto'>
     <rect width="148" height="84" fill={sk.bg} />
     <rect width="20" height="84" fill={sk.sidebar} />
     {[7, 18, 29, 40, 51, 62].map((y) => (
@@ -79,7 +79,7 @@ export const MediumSkeleton = () => (
 )
 
 export const AdvancedSkeleton = () => (
-  <svg viewBox="0 0 148 84" style={{ display: 'block', width: '100%', height: 'auto' }}>
+  <svg viewBox="0 0 148 84" className='block w-full h-auto'>
     <rect width="148" height="84" fill={sk.bg} />
     <rect width="16" height="84" fill={sk.sidebar} />
     {[5, 14, 23, 32, 41, 50, 59, 68, 77].map((y) => (

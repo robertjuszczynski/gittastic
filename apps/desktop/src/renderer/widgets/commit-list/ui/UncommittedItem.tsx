@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import { cn } from '@renderer/shared/lib'
 
 type UncommittedItemProps = {
   isSelected: boolean
@@ -11,12 +12,10 @@ const UncommittedItem = memo(({ isSelected, fileCount }: UncommittedItemProps) =
 
   return (
     <div
-      className='flex items-center gap-2 px-3 cursor-pointer h-12'
-      style={{
-        borderBottom: '1px solid rgba(0,0,0,0.05)',
-        background: isSelected ? 'rgba(27,112,248,0.12)' : undefined,
-        borderLeft: isSelected ? '2px solid #1b70f8' : '2px solid transparent',
-      }}
+      className={cn(
+        'flex items-center gap-2 px-3 cursor-pointer h-12 border-b border-b-black/5 border-l-2',
+        isSelected ? 'bg-[rgba(27,112,248,0.12)] border-l-accent' : 'border-l-transparent'
+      )}
       onClick={() => setSelectedCommit('uncommitted')}
     >
       <span className='text-[12px] text-neutral-300 flex-1'>Uncommitted changes</span>

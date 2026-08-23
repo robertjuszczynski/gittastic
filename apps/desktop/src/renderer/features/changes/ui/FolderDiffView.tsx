@@ -62,7 +62,7 @@ const FolderDiffView = ({ selectedFolder, staged, unstaged, isUncommitted, hash,
       <div className='px-3 py-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider shrink-0'>
         {selectedFolder}/
       </div>
-      <div className='flex-1 overflow-auto' style={{ minHeight: 0 }}>
+      <div className='flex-1 overflow-auto min-h-0'>
         {folderFiles.map((file, i) => {
           const result = folderDiffResults[i]
           const fileStagedLines = folderStagedLinesMap.get(file.path) ?? { additions: new Set<number>(), removals: new Set<number>() }

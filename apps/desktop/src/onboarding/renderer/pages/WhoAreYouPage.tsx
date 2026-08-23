@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { cn } from '@renderer/shared/lib'
 
 function DotGrid() {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -30,7 +31,7 @@ function DotGrid() {
     draw()
     return () => cancelAnimationFrame(raf)
   }, [])
-  return <canvas ref={ref} style={{ width: '100%', height: '100%', display: 'block' }} />
+  return <canvas ref={ref} className='w-full h-full block' />
 }
 
 type TWhoAreYouPageProps = {
@@ -41,22 +42,22 @@ type TWhoAreYouPageProps = {
 }
 
 const WhoAreYouPage = ({ name, email, errors, onChange }: TWhoAreYouPageProps) => (
-  <div style={{ display: 'flex', height: '100%' }}>
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 28px 0 32px' }}>
-      <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--color-text)', marginBottom: 8 }}>
+  <div className='flex h-full'>
+    <div className='flex-1 flex flex-col justify-center px-8 pr-7'>
+      <h1 className='text-[22px] font-bold tracking-[-0.03em] text-text mb-2'>
         Who are you?
       </h1>
-      <p style={{ fontSize: 13, color: 'var(--color-text-muted)', lineHeight: 1.6, marginBottom: 22 }}>
+      <p className='text-[13px] text-text-muted leading-[1.6] mb-[22px]'>
         This is used to attribute your commits, same as git config user.name/email.
       </p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className='flex flex-col gap-[14px]'>
         {([
           { key: 'name' as const, label: 'Name', placeholder: 'Your name', type: 'text', value: name },
           { key: 'email' as const, label: 'Email', placeholder: 'you@example.com', type: 'email', value: email },
         ]).map(({ key, label, placeholder, type, value }) => (
           <div key={key}>
-            <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            <label className='block text-[11px] font-medium text-text-secondary mb-[5px] uppercase tracking-[0.07em]'>
               {label}
             </label>
             <input
@@ -64,31 +65,23 @@ const WhoAreYouPage = ({ name, email, errors, onChange }: TWhoAreYouPageProps) =
               placeholder={placeholder}
               value={value}
               onChange={(e) => onChange(key, e.target.value)}
-              style={{
-                width: '100%',
-                height: 34,
-                padding: '0 10px',
-                borderRadius: 6,
-                border: errors[key] ? '1px solid #c93a3a' : '1px solid var(--color-border)',
-                background: 'var(--color-surface)',
-                color: 'var(--color-text)',
-                fontSize: 13,
-                outline: 'none',
-                boxSizing: 'border-box',
-                WebkitAppRegion: 'no-drag' as any,
-              }}
+              className={cn(
+                'w-full h-[34px] px-[10px] rounded-[6px] border bg-surface text-text text-[13px] outline-none box-border',
+                errors[key] ? 'border-[#c93a3a]' : 'border-border'
+              )}
+              style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
               onFocus={(e) => { e.target.style.borderColor = 'var(--color-accent)' }}
               onBlur={(e) => { e.target.style.borderColor = errors[key] ? '#c93a3a' : 'var(--color-border)' }}
             />
             {errors[key] && (
-              <p style={{ fontSize: 11, color: '#c93a3a', marginTop: 4 }}>{errors[key]}</p>
+              <p className='text-[11px] text-[#c93a3a] mt-1'>{errors[key]}</p>
             )}
           </div>
         ))}
       </div>
     </div>
 
-    <div style={{ flex: 1, overflow: 'hidden' }}>
+    <div className='flex-1 overflow-hidden'>
       <DotGrid />
     </div>
   </div>

@@ -82,14 +82,11 @@ const Terminal = () => {
       resizeHandles={['n']}
     >
       <div
-        className='flex flex-col border-l border-l-black/[0.07]'
-        style={{ height, background: 'var(--color-surface)' }}
+        className='flex flex-col border-l border-l-black/[0.07] bg-surface'
+        style={{ height }}
       >
-        <div
-          className='flex items-center px-3 h-8 shrink-0 border-b select-none'
-          style={{ borderColor: 'var(--color-divider)' }}
-        >
-          <span className='text-[11px] font-medium' style={{ color: 'var(--color-neutral-400)' }}>Terminal</span>
+        <div className='flex items-center px-3 h-8 shrink-0 border-b border-b-divider select-none'>
+          <span className='text-[11px] font-medium text-neutral-400'>Terminal</span>
         </div>
         <div ref={containerRef} className='flex-1 min-h-0 px-1 py-1' />
       </div>

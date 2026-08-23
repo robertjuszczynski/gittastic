@@ -126,10 +126,10 @@ const Toolbar = () => {
 
   return (
     <div
-      className='flex items-stretch px-1 shrink-0 bg-surface'
-      style={{ height: 52, borderBottom: '1px solid rgba(0,0,0,0.07)', ...drag }}
+      className='flex items-stretch px-1 shrink-0 bg-surface h-[52px] border-b border-b-black/[0.07]'
+      style={drag}
     >
-      <div className='flex items-stretch' style={{ paddingLeft: isMac ? 76 : 0, ...noDrag }}>
+      <div className={`flex items-stretch ${isMac ? 'pl-[76px]' : ''}`} style={noDrag}>
         <ToolbarButton icon={RefreshCcw} label='Fetch' onClick={() => { window.electron[CHANNELS.FETCH](); invalidateGit() }} />
         <ToolbarButton icon={ArrowDownToLine} label='Pull' onClick={() => { window.electron[CHANNELS.PULL](); invalidateGit() }} />
         <ToolbarButton icon={ArrowUpToLine} label='Push' badge={ahead || undefined} onClick={handlePush} />
@@ -138,7 +138,7 @@ const Toolbar = () => {
         <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={handlePopStash} />
       </div>
 
-      <div className='flex-1 flex items-center justify-center gap-2' style={drag}>
+      <div className='flex-1 flex items-center justify-center' style={drag}>
         <div className='flex items-center gap-2.5 px-3 py-[7px] bg-surface-2 rounded-lg border border-white/[0.05] select-none' style={noDrag}>
           <span className='text-[12px] font-semibold text-neutral-200 tracking-tight'>{repoName}</span>
           <div className='w-px h-3.5 bg-neutral-700' />
@@ -147,20 +147,13 @@ const Toolbar = () => {
             <span>{branchName}</span>
           </div>
         </div>
-        <button
-          onClick={openPalette}
-          title='Quick Actions (⌘⇧P)'
-          className='flex items-center gap-1.5 px-2.5 py-[7px] bg-surface-2 rounded-lg border border-white/[0.05] text-neutral-500 hover:text-neutral-300 hover:bg-surface-3 transition-colors cursor-default select-none'
-          style={noDrag}
-        >
-          <Command size={13} strokeWidth={1.6} />
-          <span className='text-[11px] font-medium'>Actions</span>
-        </button>
       </div>
 
       <div className='flex items-stretch' style={noDrag}>
         <ToolbarButton icon={Undo2} label='Undo' disabled={!canUndo} onClick={handleUndo} />
         <ToolbarButton icon={Redo2} label='Redo' disabled={!canRedo} onClick={handleRedo} />
+        <Separator />
+        <ToolbarButton icon={Command} label='Quick Actions' onClick={openPalette} />
         <Separator />
         <ToolbarButton icon={RefreshCw} label='Refresh' onClick={invalidateGit} />
         <Separator />

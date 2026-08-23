@@ -6,6 +6,7 @@ import BitbucketIcon from '@onboarding/shared/ui/icons/BitbucketIcon'
 import AzureIcon from '@onboarding/shared/ui/icons/AzureIcon'
 import ChevronRightIcon from '@onboarding/shared/ui/icons/ChevronRightIcon'
 import CheckIcon from '@onboarding/shared/ui/icons/CheckIcon'
+import { cn } from '@renderer/shared/lib'
 
 type TProviderConfig = {
   id: TGitProvider
@@ -49,17 +50,17 @@ const ConnectProviderPage = ({ provider, onChange }: TConnectProviderPageProps) 
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 32px' }}>
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)', marginBottom: 8, letterSpacing: '-0.03em' }}>
+    <div className='flex flex-col justify-center h-full px-8'>
+      <div className='mb-5'>
+        <h1 className='text-[22px] font-bold text-text mb-2 tracking-[-0.03em]'>
           Connect your git provider
         </h1>
-        <p style={{ fontSize: 13, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+        <p className='text-[13px] text-text-muted leading-[1.6]'>
           Link an account so Gittastic can see your repos, or skip and add them locally.
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className='flex flex-col gap-2'>
         {providers.map(({ id, label, color, icon, available }) => {
           const isConnected = connected === id
           return (
@@ -67,58 +68,34 @@ const ConnectProviderPage = ({ provider, onChange }: TConnectProviderPageProps) 
               key={id}
               onClick={available ? (id === 'github' ? handleGitHub : undefined) : undefined}
               disabled={!available}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '10px 14px',
-                borderRadius: 8,
-                border: isConnected ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
-                background: isConnected ? 'var(--color-accent-dim)' : 'var(--color-surface)',
-                cursor: available ? 'pointer' : 'default',
-                opacity: available ? 1 : 0.5,
-                transition: 'border-color 0.12s ease, background 0.12s ease',
-                WebkitAppRegion: 'no-drag' as any,
-                width: '100%',
-                textAlign: 'left',
-              }}
+              className={cn(
+                'flex items-center gap-3 px-[14px] py-[10px] rounded-[8px] border text-left w-full transition-[border-color,background] duration-[120ms] ease-linear',
+                isConnected ? 'border-accent bg-accent-dim' : 'border-border bg-surface',
+                available ? 'cursor-pointer' : 'cursor-default opacity-50'
+              )}
+              style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
             >
-              <div style={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                background: color,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                flexShrink: 0,
-              }}>
+              <div
+                className='w-[28px] h-[28px] rounded-[6px] flex items-center justify-center text-white shrink-0'
+                style={{ background: color }}
+              >
                 {icon}
               </div>
-              <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: isConnected ? 'var(--color-accent)' : 'var(--color-text)' }}>
+              <span className={cn('flex-1 text-[13px] font-medium', isConnected ? 'text-accent' : 'text-text')}>
                 {label}
               </span>
               {!available && (
-                <span style={{
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: 'var(--color-text-muted)',
-                  background: 'var(--color-surface-2)',
-                  padding: '2px 6px',
-                  borderRadius: 4,
-                  letterSpacing: '0.04em',
-                }}>
+                <span className='text-[10px] font-medium text-text-muted bg-surface-2 px-[6px] py-[2px] rounded-[4px] tracking-[0.04em]'>
                   Coming soon
                 </span>
               )}
               {available && isConnected && (
-                <span style={{ color: 'var(--color-accent)', display: 'flex', alignItems: 'center' }}>
+                <span className='text-accent flex items-center'>
                   <CheckIcon />
                 </span>
               )}
               {available && !isConnected && (
-                <span style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}>
+                <span className='text-text-muted flex items-center'>
                   <ChevronRightIcon />
                 </span>
               )}

@@ -33,7 +33,7 @@ const FileDiffView = ({ filePath, diff, isUncommitted, onStageLine, stagedLines 
 
   const highlightSyntax = (str) => (
     <pre
-      style={{ display: 'inline' }}
+      className='inline'
       dangerouslySetInnerHTML={{
         __html: Prism.highlight(str, Prism.languages.typescript ?? Prism.languages.javascript, 'typescript'),
       }}

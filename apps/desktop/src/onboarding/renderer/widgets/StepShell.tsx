@@ -1,6 +1,7 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import StepDots from './StepDots'
+import { cn } from '@renderer/shared/lib'
 
 interface StepShellProps {
   step: number
@@ -18,30 +19,16 @@ interface StepShellProps {
 }
 
 const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLabel, nextDisabled, onBack, onSkip, onNext, children }: StepShellProps) => (
-  <div style={{
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    background: 'var(--color-bg)',
-    color: 'var(--color-text)',
-    fontFamily: 'var(--font-sans)',
-    userSelect: 'none',
-    overflow: 'hidden',
-  }}>
+  <div
+    className='h-screen flex flex-col bg-bg text-text font-sans select-none overflow-hidden'
+  >
     {/* Header — drag region, dots at traffic-light height, back button below */}
-    <div style={{
-      height: 58,
-      flexShrink: 0,
-      position: 'relative',
-      WebkitAppRegion: 'drag' as any,
-    }}>
+    <div
+      className='h-[58px] shrink-0 relative'
+      style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+    >
       {/* Step dots — same vertical position as macOS traffic lights */}
-      <div style={{
-        position: 'absolute',
-        left: '50%',
-        top: 20,
-        transform: 'translateX(-50%)',
-      }}>
+      <div className='absolute left-1/2 top-5 -translate-x-1/2'>
         <StepDots current={step} total={total} />
       </div>
 
@@ -55,22 +42,8 @@ const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLa
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             onClick={onBack}
-            style={{
-              position: 'absolute',
-              left: 10,
-              top: 44,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 30,
-              height: 26,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--color-text-muted)',
-              borderRadius: 4,
-              WebkitAppRegion: 'no-drag' as any,
-            }}
+            className='absolute left-[10px] top-11 flex items-center justify-center w-[30px] h-[26px] bg-transparent border-none cursor-pointer text-text-muted rounded-[4px]'
+            style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <line x1="16" y1="10" x2="4" y2="10" />
@@ -82,7 +55,7 @@ const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLa
     </div>
 
     {/* Content */}
-    <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+    <div className='flex-1 min-h-0 relative overflow-hidden'>
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={step}
@@ -91,7 +64,7 @@ const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLa
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: direction * -28, opacity: 0 }}
           transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          style={{ position: 'absolute', inset: 0 }}
+          className='absolute inset-0'
         >
           {children}
         </motion.div>
@@ -99,29 +72,17 @@ const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLa
     </div>
 
     {/* Footer */}
-    <div style={{
-      height: 60,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: isFirst ? 'stretch' : 'flex-end',
-      padding: '0 20px 20px 20px',
-      gap: 8,
-      flexShrink: 0,
-    }}>
+    <div
+      className={cn(
+        'h-[60px] flex items-center gap-2 shrink-0 px-5 pb-5',
+        isFirst ? 'justify-stretch' : 'justify-end'
+      )}
+    >
       {!isFirst && isOptional && (
         <button
           onClick={onSkip}
-          style={{
-            height: 28,
-            padding: '0 10px',
-            border: 'none',
-            background: 'none',
-            color: 'var(--color-text-muted)',
-            fontSize: 12,
-            fontWeight: 500,
-            cursor: 'pointer',
-            WebkitAppRegion: 'no-drag' as any,
-          }}
+          className='h-[28px] px-[10px] border-none bg-transparent text-text-muted text-[12px] font-medium cursor-pointer'
+          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         >
           Skip
         </button>
@@ -129,24 +90,12 @@ const StepShell = ({ step, direction, total, isFirst, isLast, isOptional, nextLa
       <button
         onClick={onNext}
         disabled={nextDisabled}
-        style={{
-          height: 36,
-          borderRadius: 8,
-          border: 'none',
-          background: 'var(--color-accent)',
-          color: '#fff',
-          fontSize: 13,
-          fontWeight: 500,
-          cursor: nextDisabled ? 'default' : 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 5,
-          padding: isFirst ? undefined : '0 18px',
-          flex: isFirst ? 1 : undefined,
-          opacity: nextDisabled ? 0.4 : 1,
-          WebkitAppRegion: 'no-drag' as any,
-        }}
+        className={cn(
+          'h-9 rounded-[8px] border-none bg-accent text-white text-[13px] font-medium flex items-center justify-center gap-[5px] transition-[opacity,transform]',
+          isFirst ? 'flex-1 px-0' : 'px-[18px]',
+          nextDisabled ? 'opacity-40 cursor-default' : 'cursor-pointer'
+        )}
+        style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.85' }}
         onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1' }}
         onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.97)' }}

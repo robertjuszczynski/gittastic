@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ONBOARDING_CHANNELS } from '@shared'
+import { cn } from '@renderer/shared/lib'
 
 type TRepositoryPageProps = {
   repoPath: string | null
@@ -32,7 +33,7 @@ const CreateRepoModal = ({ onClose, onCreated }: { onClose: () => void; onCreate
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.15 }}
-      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
+      className='fixed inset-0 bg-black/45 backdrop-blur-[4px] flex items-center justify-center z-50'
       onClick={onClose}
     >
       <motion.div
@@ -41,38 +42,41 @@ const CreateRepoModal = ({ onClose, onCreated }: { onClose: () => void; onCreate
         exit={{ scale: 0.96, opacity: 0 }}
         transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
         onClick={(e) => e.stopPropagation()}
-        style={{ width: 380, background: 'var(--color-surface)', borderRadius: 10, border: '1px solid var(--color-border)', boxShadow: '0 0 0 1px rgba(0,0,0,0.05), 0 12px 40px rgba(0,0,0,0.18)', overflow: 'hidden' }}
+        className='w-[380px] bg-surface rounded-[10px] border border-border shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_12px_40px_rgba(0,0,0,0.18)] overflow-hidden'
       >
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--color-divider)', fontSize: 13, fontWeight: 600, color: 'var(--color-text)' }}>
+        <div className='px-4 py-3 border-b border-b-divider text-[13px] font-semibold text-text'>
           Create repository
         </div>
-        <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 9 }}>
+        <div className='px-4 py-3 flex flex-col gap-[9px]'>
           <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Name</label>
+            <label className='block text-[10px] font-semibold text-text-muted mb-1 uppercase tracking-[0.07em]'>Name</label>
             <input
               type="text"
               placeholder="my-project"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              style={{ width: '100%', height: 30, padding: '0 9px', borderRadius: 5, border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)', fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
+              className='w-full h-[30px] px-[9px] rounded-[5px] border border-border bg-bg text-text text-[12px] outline-none box-border'
               onFocus={(e) => { e.target.style.borderColor = 'var(--color-accent)' }}
               onBlur={(e) => { e.target.style.borderColor = 'var(--color-border)' }}
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: 10, fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Location</label>
-            <div style={{ display: 'flex', gap: 6 }}>
+            <label className='block text-[10px] font-semibold text-text-muted mb-1 uppercase tracking-[0.07em]'>Location</label>
+            <div className='flex gap-[6px]'>
               <input
                 type="text"
                 placeholder="~/Projects"
                 value={parentPath}
                 readOnly
-                style={{ flex: 1, height: 30, padding: '0 9px', borderRadius: 5, border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: parentPath ? 'var(--color-text)' : 'var(--color-text-muted)', fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
+                className={cn(
+                  'flex-1 h-[30px] px-[9px] rounded-[5px] border border-border bg-bg text-[12px] outline-none box-border',
+                  parentPath ? 'text-text' : 'text-text-muted'
+                )}
               />
               <button
                 onClick={pickFolder}
-                style={{ height: 30, padding: '0 10px', borderRadius: 5, border: '1px solid var(--color-border)', background: 'var(--color-surface-2)', color: 'var(--color-text-secondary)', fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                className='h-[30px] px-[10px] rounded-[5px] border border-border bg-surface-2 text-text-secondary text-[12px] cursor-pointer whitespace-nowrap'
               >
                 Browse
               </button>
@@ -81,20 +85,23 @@ const CreateRepoModal = ({ onClose, onCreated }: { onClose: () => void; onCreate
 
           <button
             onClick={() => setReadme(!readme)}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            className='flex items-center gap-2 bg-transparent border-none cursor-pointer p-0'
           >
-            <div style={{ width: 14, height: 14, borderRadius: 3, border: readme ? '1px solid var(--color-accent)' : '1px solid var(--color-border)', background: readme ? 'var(--color-accent)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.1s ease' }}>
+            <div className={cn(
+              'w-[14px] h-[14px] rounded-[3px] border flex items-center justify-center shrink-0 transition-all duration-100',
+              readme ? 'border-accent bg-accent' : 'border-border bg-transparent'
+            )}>
               {readme && <svg width="8" height="7" viewBox="0 0 8 7" fill="none"><path d="M1 3.5L3 5.5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
             </div>
-            <span style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>Initialize with README</span>
+            <span className='text-[12px] text-text-secondary'>Initialize with README</span>
           </button>
         </div>
-        <div style={{ padding: '9px 16px', borderTop: '1px solid var(--color-divider)', display: 'flex', justifyContent: 'flex-end', gap: 7 }}>
-          <button onClick={onClose} style={{ height: 28, padding: '0 12px', borderRadius: 5, border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Cancel</button>
+        <div className='px-4 py-[9px] border-t border-t-divider flex justify-end gap-[7px]'>
+          <button onClick={onClose} className='h-[28px] px-3 rounded-[5px] border border-border bg-transparent text-text-secondary text-[12px] font-medium cursor-pointer'>Cancel</button>
           <button
             onClick={create}
             disabled={!name.trim() || !parentPath || loading}
-            style={{ height: 28, padding: '0 14px', borderRadius: 5, border: 'none', background: 'var(--color-accent)', color: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', opacity: (!name.trim() || !parentPath || loading) ? 0.5 : 1 }}
+            className={cn('h-[28px] px-[14px] rounded-[5px] border-none bg-accent text-white text-[12px] font-medium cursor-pointer', (!name.trim() || !parentPath || loading) ? 'opacity-50' : '')}
           >
             {loading ? 'Creating…' : 'Create'}
           </button>
@@ -147,17 +154,17 @@ const RepositoryPage = ({ repoPath, onChange }: TRepositoryPageProps) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '18px 24px 14px' }}>
-      <div style={{ marginBottom: 18 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)', marginBottom: 8, letterSpacing: '-0.03em' }}>
+    <div className='flex flex-col h-full px-6 pt-[18px] pb-[14px]'>
+      <div className='mb-[18px]'>
+        <h1 className='text-[22px] font-bold text-text mb-2 tracking-[-0.03em]'>
           Open a repository
         </h1>
-        <p style={{ fontSize: 13, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+        <p className='text-[13px] text-text-muted leading-[1.6]'>
           Start working, or continue and open one later.
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className='flex flex-col gap-2'>
         {actions.map(({ id, icon, label, desc }) => {
           const isAvailable = id !== 'cloned'
           const isSelected = activeAction === id
@@ -166,29 +173,20 @@ const RepositoryPage = ({ repoPath, onChange }: TRepositoryPageProps) => {
               key={id}
               onClick={isAvailable ? () => handleAction(id) : undefined}
               disabled={!isAvailable}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '10px 14px',
-                borderRadius: 8,
-                border: isSelected ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
-                background: isSelected ? 'var(--color-accent-dim)' : 'var(--color-surface)',
-                cursor: isAvailable ? 'pointer' : 'default',
-                opacity: isAvailable ? 1 : 0.5,
-                transition: 'border-color 0.12s ease, background 0.12s ease',
-                WebkitAppRegion: 'no-drag' as any,
-                width: '100%',
-                textAlign: 'left',
-              }}
+              className={cn(
+                'flex items-center gap-3 px-[14px] py-[10px] rounded-[8px] border text-left w-full transition-[border-color,background] duration-[120ms] ease-linear',
+                isSelected ? 'border-accent bg-accent-dim' : 'border-border bg-surface',
+                isAvailable ? 'cursor-pointer' : 'cursor-default opacity-50'
+              )}
+              style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
             >
-              <span style={{ color: isSelected ? 'var(--color-accent)' : 'var(--color-text-secondary)', flexShrink: 0 }}>{icon}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 500, color: isSelected ? 'var(--color-accent)' : 'var(--color-text)', marginBottom: 1 }}>{label}</div>
-                <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{desc}</div>
+              <span className={cn('shrink-0', isSelected ? 'text-accent' : 'text-text-secondary')}>{icon}</span>
+              <div className='flex-1'>
+                <div className={cn('text-[13px] font-medium mb-px', isSelected ? 'text-accent' : 'text-text')}>{label}</div>
+                <div className='text-[11px] text-text-muted'>{desc}</div>
               </div>
               {!isAvailable && (
-                <span style={{ fontSize: 10, fontWeight: 500, color: 'var(--color-text-muted)', background: 'var(--color-surface-2)', padding: '2px 6px', borderRadius: 4, letterSpacing: '0.04em' }}>
+                <span className='text-[10px] font-medium text-text-muted bg-surface-2 px-[6px] py-[2px] rounded-[4px] tracking-[0.04em]'>
                   Coming soon
                 </span>
               )}
@@ -198,30 +196,19 @@ const RepositoryPage = ({ repoPath, onChange }: TRepositoryPageProps) => {
       </div>
 
       {error && (
-        <p style={{ fontSize: 11, color: '#c93a3a', marginTop: 10 }}>{error}</p>
+        <p className='text-[11px] text-[#c93a3a] mt-[10px]'>{error}</p>
       )}
 
       {repoPath && (
-        <div style={{ marginTop: 20 }}>
-          <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+        <div className='mt-5'>
+          <label className='block text-[11px] font-medium text-text-secondary mb-[5px] uppercase tracking-[0.07em]'>
             Selected path
           </label>
           <input
             type="text"
             readOnly
             value={repoPath}
-            style={{
-              width: '100%',
-              height: 34,
-              padding: '0 10px',
-              borderRadius: 6,
-              border: '1px solid var(--color-border)',
-              background: 'var(--color-surface)',
-              color: 'var(--color-text)',
-              fontSize: 12,
-              outline: 'none',
-              boxSizing: 'border-box',
-            }}
+            className='w-full h-[34px] px-[10px] rounded-[6px] border border-border bg-surface text-text text-[12px] outline-none box-border'
           />
         </div>
       )}

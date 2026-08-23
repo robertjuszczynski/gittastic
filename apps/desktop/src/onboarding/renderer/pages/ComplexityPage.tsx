@@ -1,6 +1,7 @@
 import React from 'react'
 import { SimpleSkeleton, MediumSkeleton, AdvancedSkeleton } from '@onboarding/shared/ui/ComplexitySkeletons'
 import type { FeatureLevel } from '@shared'
+import { cn } from '@renderer/shared/lib'
 
 type TComplexityPageProps = {
   complexity: FeatureLevel
@@ -14,51 +15,44 @@ const options: { id: FeatureLevel; label: string; desc: string; skeleton: React.
 ]
 
 const ComplexityPage = ({ complexity, onChange }: TComplexityPageProps) => (
-  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '18px 24px 14px' }}>
-    <div style={{ marginBottom: 14, textAlign: 'center' }}>
-      <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)', marginBottom: 8, letterSpacing: '-0.03em' }}>
+  <div className='flex flex-col h-full px-6 pt-[18px] pb-[14px]'>
+    <div className='mb-[14px] text-center'>
+      <h1 className='text-[22px] font-bold text-text mb-2 tracking-[-0.03em]'>
         How advanced should I be?
       </h1>
-      <p style={{ fontSize: 13, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+      <p className='text-[13px] text-text-muted leading-[1.6]'>
         Git GUIs can feel overly complex when they include features you rarely use. Choose the level of complexity that works best for you.
       </p>
     </div>
 
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, flex: 1 }}>
+    <div className='grid grid-cols-3 gap-2 flex-1'>
       {options.map(({ id, label, desc, skeleton }) => {
         const selected = complexity === id
         return (
           <button
             key={id}
             onClick={() => onChange(id)}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              borderRadius: 8,
-              border: selected ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
-              background: selected ? 'var(--color-accent-glow)' : 'var(--color-surface)',
-              cursor: 'pointer',
-              overflow: 'hidden',
-              transition: 'border-color 0.12s ease, background 0.12s ease',
-              padding: 0,
-              WebkitAppRegion: 'no-drag' as any,
-            }}
+            className={cn(
+              'flex flex-col rounded-[8px] border cursor-pointer overflow-hidden transition-[border-color,background] duration-[120ms] ease-linear p-0',
+              selected ? 'border-accent bg-accent-glow' : 'border-border bg-surface'
+            )}
+            style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
           >
-            <div style={{ background: 'var(--color-bg)', borderBottom: '1px solid var(--color-divider)' }}>
+            <div className='bg-bg border-b border-b-divider'>
               {skeleton}
             </div>
-            <div style={{ padding: '8px 10px 9px', textAlign: 'left' }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: selected ? 'var(--color-accent)' : 'var(--color-text)', marginBottom: 2 }}>
+            <div className='px-[10px] pt-2 pb-[9px] text-left'>
+              <div className={cn('text-[12px] font-semibold mb-0.5', selected ? 'text-accent' : 'text-text')}>
                 {label}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{desc}</div>
+              <div className='text-[11px] text-text-muted'>{desc}</div>
             </div>
           </button>
         )
       })}
     </div>
 
-    <p style={{ fontSize: 13, color: 'var(--color-text-muted)', margin: '24px 0', textAlign: 'center' }}>
+    <p className='text-[13px] text-text-muted my-6 text-center'>
       If you're missing a feature later, you can always enable it through Settings.
     </p>
   </div>

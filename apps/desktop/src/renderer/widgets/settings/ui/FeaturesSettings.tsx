@@ -1,6 +1,7 @@
 import React from 'react'
 import { FEATURE_LABELS, FEATURES, type FeatureName } from '@shared'
 import { useFeaturesStore } from '@renderer/shared/lib/features'
+import { cn } from '@renderer/shared/lib'
 
 const groups = ['Working copy', 'History', 'Branching', 'Interface'] as const
 
@@ -13,14 +14,8 @@ const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
     className='relative inline-flex items-center cursor-pointer'
     style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
   >
-    <div
-      className='w-8 h-4 rounded-full transition-colors duration-150'
-      style={{ background: enabled ? 'var(--color-accent)' : 'var(--color-border)' }}
-    />
-    <div
-      className='absolute top-0.5 w-3 h-3 bg-white rounded-full shadow transition-transform duration-150'
-      style={{ transform: enabled ? 'translateX(18px)' : 'translateX(2px)' }}
-    />
+    <div className={cn('w-8 h-4 rounded-full transition-colors duration-150', enabled ? 'bg-accent' : 'bg-border')} />
+    <div className={cn('absolute top-0.5 w-3 h-3 bg-white rounded-full shadow transition-transform duration-150', enabled ? 'translate-x-[18px]' : 'translate-x-[2px]')} />
   </button>
 )
 

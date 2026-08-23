@@ -33,29 +33,20 @@ function ParticlesBackground() {
     window.addEventListener('resize', resize)
     return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
   }, [])
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }} />
+  return <canvas ref={ref} className='absolute inset-0 w-full h-full pointer-events-none' />
 }
 
 const WelcomePage = () => (
-  <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <div className='relative h-full flex items-center justify-center'>
     <ParticlesBackground />
-    <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-      <div style={{
-        width: 52,
-        height: 52,
-        borderRadius: 12,
-        background: 'var(--color-surface-2)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'var(--color-accent)',
-      }}>
+    <div className='relative z-[1] flex flex-col items-center text-center'>
+      <div className='w-[52px] h-[52px] rounded-[12px] bg-surface-2 flex items-center justify-center text-accent'>
         <LogoBranchIcon size={20} />
       </div>
-      <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.03em', marginTop: 18, color: 'var(--color-text)' }}>
+      <h1 className='text-[22px] font-bold tracking-[-0.03em] mt-[18px] text-text'>
         You're Gittastic!
       </h1>
-      <p style={{ fontSize: 13, color: 'var(--color-text-muted)', maxWidth: 300, lineHeight: 1.6, marginTop: 10 }}>
+      <p className='text-[13px] text-text-muted max-w-[300px] leading-[1.6] mt-[10px]'>
         Thanks for using Gittastic. I hope it makes working with Git a little easier. I won't take up any more of your time, so let's get started. It'll be quick.
       </p>
     </div>
