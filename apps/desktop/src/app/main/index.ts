@@ -24,10 +24,11 @@ function switchToMainWindow() {
   })
 }
 
-app.setAsDefaultProtocolClient('gittastic')
+app.setAsDefaultProtocolClient('gitastic')
+app.setPath('userData', app.getPath('userData').replace(/Gittastic$/, 'Gitastic'))
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId('com.gittastic')
+  electronApp.setAppUserModelId('com.gitastic')
 
   SettingsService.buildMenu()
 

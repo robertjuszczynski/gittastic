@@ -1,5 +1,5 @@
 {
-  "name": "@gittastic/desktop",
+  "name": "@gitastic/desktop",
   "version": "1.0.0",
   "private": true,
   "main": "out/main/index.js",
@@ -14,7 +14,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "@gittastic/types": "workspace:*",
+    "@gitastic/types": "workspace:*",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-virtual": "^3.14.9",
     "@types/prismjs": "^1.26.6",

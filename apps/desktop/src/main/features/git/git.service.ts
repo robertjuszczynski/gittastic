@@ -265,7 +265,7 @@ export default class GitService {
   }
 
   private static async writeToIndex(git: SimpleGit, path: string, content: string): Promise<void> {
-    const tmpPath = join(tmpdir(), `gittastic-${Date.now()}.tmp`)
+    const tmpPath = join(tmpdir(), `gitastic-${Date.now()}.tmp`)
     await writeFile(tmpPath, content, 'utf-8')
     try {
       const hash = (await git.raw(['hash-object', '-w', tmpPath])).trim()

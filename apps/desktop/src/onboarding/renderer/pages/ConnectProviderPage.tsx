@@ -56,7 +56,7 @@ const ConnectProviderPage = ({ provider, onChange }: TConnectProviderPageProps) 
           Connect your git provider
         </h1>
         <p className='text-[13px] text-text-muted leading-[1.6]'>
-          Link an account so Gittastic can see your repos, or skip and add them locally.
+          Link an account so Gitastic can see your repos, or skip and add them locally.
         </p>
       </div>
 

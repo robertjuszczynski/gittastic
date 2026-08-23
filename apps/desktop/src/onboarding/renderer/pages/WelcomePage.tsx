@@ -44,10 +44,10 @@ const WelcomePage = () => (
         <LogoBranchIcon size={20} />
       </div>
       <h1 className='text-[22px] font-bold tracking-[-0.03em] mt-[18px] text-text'>
-        You're Gittastic!
+        You're Gitastic!
       </h1>
       <p className='text-[13px] text-text-muted max-w-[300px] leading-[1.6] mt-[10px]'>
-        Thanks for using Gittastic. I hope it makes working with Git a little easier. I won't take up any more of your time, so let's get started. It'll be quick.
+        Thanks for using Gitastic. I hope it makes working with Git a little easier. I won't take up any more of your time, so let's get started. It'll be quick.
       </p>
     </div>
   </div>

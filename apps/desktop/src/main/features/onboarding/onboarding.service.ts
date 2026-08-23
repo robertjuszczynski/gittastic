@@ -75,7 +75,7 @@ export class OnboardingService {
   }
 
   public static startGithubAuth(): void {
-    const url = `https://github.com/login/oauth/authorize?client_id=${ENV.GITHUB_CLIENT_ID}&scope=repo,user&redirect_uri=gittastic://oauth/callback`
+    const url = `https://github.com/login/oauth/authorize?client_id=${ENV.GITHUB_CLIENT_ID}&scope=repo,user&redirect_uri=gitastic://oauth/callback`
     shell.openExternal(url)
   }
 }

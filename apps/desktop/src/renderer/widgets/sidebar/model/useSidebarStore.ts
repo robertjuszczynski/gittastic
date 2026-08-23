@@ -18,6 +18,6 @@ export const useSidebarStore = create<SidebarStore>()(
       setSections: sections => set({ sections }),
       removeSection: id => set(s => ({ sections: s.sections.filter(sec => sec !== id) })),
     }),
-    { name: 'gittastic-sidebar' }
+    { name: 'gitastic-sidebar' }
   )
 )

@@ -1,2 +1,2 @@
-// Shared types between @gittastic/desktop and @gittastic/api
+// Shared types between @gitastic/desktop and @gitastic/api
 // Payment and API contracts go here
