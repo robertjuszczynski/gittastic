@@ -56,6 +56,9 @@ if (process.contextIsolated) {
       [CHANNELS.IMPORT_THEME]: () => ipcRenderer.invoke(CHANNELS.IMPORT_THEME),
       [CHANNELS.OPEN_THEMES_FOLDER]: () => ipcRenderer.invoke(CHANNELS.OPEN_THEMES_FOLDER),
       [CHANNELS.DELETE_CUSTOM_THEME]: (args) => ipcRenderer.invoke(CHANNELS.DELETE_CUSTOM_THEME, args),
+      [CHANNELS.SAVE_THEME]: (args) => ipcRenderer.invoke(CHANNELS.SAVE_THEME, args),
+      [CHANNELS.EXPORT_THEME]: (args) => ipcRenderer.invoke(CHANNELS.EXPORT_THEME, args),
+      [CHANNELS.GET_THEME_JSON]: (args) => ipcRenderer.invoke(CHANNELS.GET_THEME_JSON, args),
   } as const
     contextBridge.exposeInMainWorld('electron', API)
 

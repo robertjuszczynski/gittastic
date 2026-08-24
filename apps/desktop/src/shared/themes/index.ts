@@ -1,4 +1,5 @@
 import type { ThemeDefinition, ThemeId } from '../types/theme.types'
+export { mergeThemeTokens } from './merge'
 import { gitasticLight } from './gitastic-light'
 import { gitasticDark } from './gitastic-dark'
 import { gitasticGlassmorphism } from './gitastic-glassmorphism'

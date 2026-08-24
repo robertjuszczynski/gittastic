@@ -2,7 +2,7 @@ import type { StatusResult } from 'simple-git'
 import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { CHANNELS } from './channels'
-import type { ThemeDefinition, ThemeId } from '../types/theme.types'
+import type { ThemeDefinition, ThemeId, ThemeJSON } from '../types/theme.types'
 
 export interface IEvents {
     [CHANNELS.OPEN_REPOSITORY]: {
@@ -152,5 +152,17 @@ export interface IEvents {
     [CHANNELS.DELETE_CUSTOM_THEME]: {
         args: ThemeId;
         response: Promise<void>;
+    };
+    [CHANNELS.SAVE_THEME]: {
+        args: { slug: string; json: ThemeJSON };
+        response: Promise<ThemeDefinition>;
+    };
+    [CHANNELS.EXPORT_THEME]: {
+        args: ThemeId;
+        response: Promise<void>;
+    };
+    [CHANNELS.GET_THEME_JSON]: {
+        args: ThemeId;
+        response: Promise<ThemeJSON | null>;
     };
 }
