@@ -18,6 +18,9 @@ export default function registerSettingsIpcHandlers() {
     [CHANNELS.IMPORT_THEME]: () => SettingsService.importTheme(),
     [CHANNELS.OPEN_THEMES_FOLDER]: () => SettingsService.openThemesFolder(),
     [CHANNELS.DELETE_CUSTOM_THEME]: (_, args) => SettingsService.deleteCustomTheme(args),
+    [CHANNELS.SAVE_THEME]: (_, args) => SettingsService.saveTheme(args.slug, args.json),
+    [CHANNELS.EXPORT_THEME]: (_, args) => SettingsService.exportTheme(args),
+    [CHANNELS.GET_THEME_JSON]: (_, args) => SettingsService.getThemeJson(args),
   }
 
   for (const [channel, handler] of Object.entries(handlers)) {

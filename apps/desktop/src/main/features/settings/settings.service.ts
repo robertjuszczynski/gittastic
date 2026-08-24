@@ -1,6 +1,6 @@
 import { BrowserWindow, Menu, app, dialog, shell } from 'electron'
 import { join, basename, extname } from 'node:path'
-import { mkdir, readdir, readFile, copyFile, unlink } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile, copyFile, unlink } from 'node:fs/promises'
 import { existsSync, watch, type FSWatcher } from 'node:fs'
 import { is } from '@electron-toolkit/utils'
 import type { ThemeDefinition, ThemeId, ThemeJSON, ThemeTokens } from '@shared'
@@ -246,5 +246,57 @@ export class SettingsService {
 
   static async openThemesFolder(): Promise<void> {
     await shell.openPath(THEMES_DIR)
+  }
+
+  static async saveTheme(slug: string, json: ThemeJSON): Promise<ThemeDefinition> {
+    const filePath = join(THEMES_DIR, `${slug}.json`)
+    await writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8')
+
+    const theme = await parseCustomTheme(filePath)
+    if (!theme) throw new Error(`Failed to parse saved theme: ${slug}`)
+
+    this.customThemes = [
+      ...this.customThemes.filter(t => t.id !== theme.id),
+      theme,
+    ]
+    this.broadcastCustomThemes()
+    return theme
+  }
+
+  static async exportTheme(id: ThemeId): Promise<void> {
+    const theme = BUILT_IN_THEME_MAP.get(id) ?? this.customThemes.find(t => t.id === id)
+    if (!theme) return
+
+    const { canceled, filePath: dest } = await dialog.showSaveDialog({
+      title: 'Export Theme',
+      defaultPath: `${id}.json`,
+      filters: [{ name: 'Gitastic Theme', extensions: ['json'] }],
+    })
+    if (canceled || !dest) return
+
+    if (theme.isCustom && theme.filePath) {
+      await copyFile(theme.filePath, dest)
+    } else {
+      const json: ThemeJSON = {
+        name: theme.name,
+        base: id,
+        colors: theme.tokens.colors,
+        fonts: theme.tokens.fonts,
+        components: theme.tokens.components,
+        extras: theme.tokens.extras,
+      }
+      await writeFile(dest, JSON.stringify(json, null, 2), 'utf-8')
+    }
+  }
+
+  static async getThemeJson(id: ThemeId): Promise<ThemeJSON | null> {
+    const theme = this.customThemes.find(t => t.id === id)
+    if (!theme?.filePath) return null
+    try {
+      const raw = await readFile(theme.filePath, 'utf-8')
+      return JSON.parse(raw) as ThemeJSON
+    } catch {
+      return null
+    }
   }
 }
