@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const GitSettings = () => {
+export const GitSettings = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [saved, setSaved] = useState(false)
@@ -52,5 +52,3 @@ const GitSettings = () => {
     </div>
   )
 }
-
-export default GitSettings

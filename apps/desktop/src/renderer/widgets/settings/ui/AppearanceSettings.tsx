@@ -82,7 +82,7 @@ function ThemeCard({ theme, isActive, onSelect, onDelete }: ThemeCardProps) {
   )
 }
 
-const AppearanceSettings = () => {
+export const AppearanceSettings = () => {
   const { activeTheme, availableThemes, switchTheme } = useTheme()
   const { setAvailableThemes } = useThemeStore()
   const [editorMode, setEditorMode] = useState<EditorMode | null>(null)
@@ -196,5 +196,3 @@ const AppearanceSettings = () => {
     </>
   )
 }
-
-export default AppearanceSettings

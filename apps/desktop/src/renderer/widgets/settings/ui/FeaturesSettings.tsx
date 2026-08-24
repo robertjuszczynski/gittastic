@@ -19,7 +19,7 @@ const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void 
   </button>
 )
 
-const FeaturesSettings = () => {
+export const FeaturesSettings = () => {
   const { enabled, toggle } = useFeaturesStore()
 
   return (
@@ -52,5 +52,3 @@ const FeaturesSettings = () => {
     </div>
   )
 }
-
-export default FeaturesSettings

@@ -1,9 +1,5 @@
 import React, { useState } from 'react'
-import AiSettingsPage from '@renderer/widgets/settings/ui/AiSettings'
-import AppearanceSettings from '@renderer/widgets/settings/ui/AppearanceSettings'
-import GeneralSettings from '@renderer/widgets/settings/ui/GeneralSettings'
-import FeaturesSettings from '@renderer/widgets/settings/ui/FeaturesSettings'
-import GitSettings from '@renderer/widgets/settings/ui/GitSettings'
+import { AiSettings, AppearanceSettings, GeneralSettings, FeaturesSettings, GitSettings } from '@renderer/widgets/settings'
 
 const tabs = [{
   id: 'appearance',
@@ -12,7 +8,7 @@ const tabs = [{
 }, {
   id: 'ai',
   label: 'AI',
-  component: <AiSettingsPage />
+  component: <AiSettings />
 }, {
   id: 'general',
   label: 'General',

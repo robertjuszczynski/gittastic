@@ -1,0 +1,5 @@
+export { AiSettings } from './ui/AiSettings'
+export { AppearanceSettings } from './ui/AppearanceSettings'
+export { FeaturesSettings } from './ui/FeaturesSettings'
+export { GeneralSettings } from './ui/GeneralSettings'
+export { GitSettings } from './ui/GitSettings'
