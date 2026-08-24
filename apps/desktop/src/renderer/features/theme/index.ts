@@ -1,3 +1,5 @@
 export { useThemeStore } from './model/useThemeStore'
 export { useTheme } from './lib/useTheme'
 export { useThemeCommands } from './lib/useThemeCommands'
+export { useThemeEditor } from './lib/useThemeEditor'
+export type { EditorMode } from './lib/useThemeEditor'
