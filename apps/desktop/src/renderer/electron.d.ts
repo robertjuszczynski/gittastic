@@ -1,4 +1,5 @@
 import type { TElectronAPI } from '../app/preload'
+import type { ThemeDefinition } from '@shared'
 
 interface TerminalAPI {
   create: () => Promise<void>
@@ -14,7 +15,8 @@ interface GitEventsAPI {
 
 interface AppEventsAPI {
   onAppDidBecomeActive: (callback: () => void) => () => void
-  onThemeUpdated: (callback: (isDark: boolean) => void) => () => void
+  onThemeUpdated: (callback: (theme: ThemeDefinition) => void) => () => void
+  onCustomThemesChanged: (callback: (themes: ThemeDefinition[]) => void) => () => void
 }
 
 declare global {

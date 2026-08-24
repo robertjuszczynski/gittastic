@@ -1,8 +1,10 @@
-import React from 'react'
-import { Trash2, FolderOpen, Upload } from 'lucide-react'
+import React, { useState } from 'react'
+import { Trash2, FolderOpen, Upload, Plus, Pencil, Copy } from 'lucide-react'
 import { cn } from '@renderer/shared/lib'
 import { useTheme, useThemeStore } from '@renderer/features/theme'
 import type { ThemeDefinition } from '@shared'
+import type { EditorMode } from '@renderer/features/theme'
+import { ThemeCreatorModal } from '@renderer/widgets/theme-creator'
 
 function ThemeSwatches({ tokens }: { tokens: ThemeDefinition['tokens'] }) {
   return (
@@ -83,6 +85,7 @@ function ThemeCard({ theme, isActive, onSelect, onDelete }: ThemeCardProps) {
 const AppearanceSettings = () => {
   const { activeTheme, availableThemes, switchTheme } = useTheme()
   const { setAvailableThemes } = useThemeStore()
+  const [editorMode, setEditorMode] = useState<EditorMode | null>(null)
 
   const builtInThemes = availableThemes.filter(t => !t.isCustom && t.id !== 'system')
   const systemTheme = availableThemes.find(t => t.id === 'system')
@@ -105,6 +108,7 @@ const AppearanceSettings = () => {
   const handleOpenFolder = () => window.electron.OPEN_THEMES_FOLDER()
 
   return (
+    <>
     <div className='flex flex-col gap-6'>
       <div>
         <h3 className='text-sm font-medium text-text mb-3'>Built-in themes</h3>
@@ -125,24 +129,57 @@ const AppearanceSettings = () => {
             />
           ))}
         </div>
+        <div className='flex gap-1.5 mt-2'>
+          {builtInThemes.map(theme => (
+            <button
+              key={theme.id}
+              onClick={() => setEditorMode({ mode: 'duplicate', themeId: theme.id })}
+              className='flex items-center gap-1 text-[11px] px-2 py-1 rounded border border-border bg-surface text-text-muted hover:text-text hover:bg-surface-2 transition-colors'
+            >
+              <Copy size={10} />
+              Duplicate {theme.name}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {customThemes.length > 0 && (
-        <div>
-          <h3 className='text-sm font-medium text-text mb-3'>Custom themes</h3>
+      <div>
+        <div className='flex items-center justify-between mb-3'>
+          <h3 className='text-sm font-medium text-text'>Custom themes</h3>
+          <button
+            onClick={() => setEditorMode({ mode: 'create' })}
+            className='flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md bg-accent text-white font-medium hover:opacity-90 transition-opacity'
+          >
+            <Plus size={12} />
+            New theme
+          </button>
+        </div>
+        {customThemes.length > 0 ? (
           <div className='grid grid-cols-3 gap-2'>
             {customThemes.map(theme => (
-              <ThemeCard
-                key={theme.id}
-                theme={theme}
-                isActive={activeTheme?.id === theme.id}
-                onSelect={() => switchTheme(theme.id)}
-                onDelete={() => handleDelete(theme.id)}
-              />
+              <div key={theme.id} className='relative group/card'>
+                <ThemeCard
+                  theme={theme}
+                  isActive={activeTheme?.id === theme.id}
+                  onSelect={() => switchTheme(theme.id)}
+                  onDelete={() => handleDelete(theme.id)}
+                />
+                <button
+                  onClick={() => setEditorMode({ mode: 'edit', themeId: theme.id })}
+                  className='absolute bottom-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-surface border border-border text-text-secondary hover:text-text'
+                >
+                  <Pencil size={10} />
+                  Edit
+                </button>
+              </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className='text-xs text-text-muted py-4 text-center border border-dashed border-border rounded-lg'>
+            No custom themes yet. Create one or import a JSON file.
+          </p>
+        )}
+      </div>
 
       <div className='flex gap-2 pt-2 border-t border-border'>
         <button
@@ -161,6 +198,14 @@ const AppearanceSettings = () => {
         </button>
       </div>
     </div>
+
+    {editorMode && (
+      <ThemeCreatorModal
+        mode={editorMode}
+        onClose={() => setEditorMode(null)}
+      />
+    )}
+    </>
   )
 }
 
