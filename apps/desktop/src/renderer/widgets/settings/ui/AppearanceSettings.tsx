@@ -129,18 +129,6 @@ const AppearanceSettings = () => {
             />
           ))}
         </div>
-        <div className='flex gap-1.5 mt-2'>
-          {builtInThemes.map(theme => (
-            <button
-              key={theme.id}
-              onClick={() => setEditorMode({ mode: 'duplicate', themeId: theme.id })}
-              className='flex items-center gap-1 text-[11px] px-2 py-1 rounded border border-border bg-surface text-text-muted hover:text-text hover:bg-surface-2 transition-colors'
-            >
-              <Copy size={10} />
-              Duplicate {theme.name}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div>

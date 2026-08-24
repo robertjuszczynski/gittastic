@@ -44,9 +44,7 @@ export function ThemeCreatorModal({ mode, onClose }: Props) {
   const title =
     mode.mode === 'create'
       ? 'New Theme'
-      : mode.mode === 'duplicate'
-        ? 'Duplicate Theme'
-        : 'Edit Theme'
+      : 'Edit Theme'
 
   const isEditMode = mode.mode === 'edit'
   const isCustom = isEditMode && !BUILT_IN_THEME_MAP.has(mode.themeId)

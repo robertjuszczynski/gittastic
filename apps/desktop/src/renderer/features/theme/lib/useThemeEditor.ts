@@ -15,7 +15,6 @@ import { useThemeStore } from '../model/useThemeStore'
 export type EditorMode =
   | { mode: 'create' }
   | { mode: 'edit'; themeId: ThemeId }
-  | { mode: 'duplicate'; themeId: ThemeId }
 
 export function useThemeEditor(editorMode: EditorMode) {
   const previousTheme = useRef(useThemeStore.getState().activeTheme)
@@ -44,19 +43,6 @@ export function useThemeEditor(editorMode: EditorMode) {
         setFontOverrides(json.fonts ?? {})
         setComponentOverrides(json.components ?? {})
         setExtras(json.extras ?? {})
-      } else if (editorMode.mode === 'duplicate') {
-        const builtIn = BUILT_IN_THEME_MAP.get(editorMode.themeId)
-        if (builtIn) {
-          setName(`${builtIn.name} Copy`)
-          setBase(editorMode.themeId)
-        } else if (json) {
-          setName(`${json.name} Copy`)
-          setBase(json.base ?? 'gitastic-light')
-          setColorOverrides(json.colors ?? {})
-          setFontOverrides(json.fonts ?? {})
-          setComponentOverrides(json.components ?? {})
-          setExtras(json.extras ?? {})
-        }
       }
 
       setIsLoading(false)
