@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Trash2, FolderOpen, Upload, Plus, Pencil, Copy } from 'lucide-react'
+import { Trash2, FolderOpen, Upload, Plus, Pencil } from 'lucide-react'
 import { cn } from '@renderer/shared/lib'
 import { useTheme, useThemeStore } from '@renderer/features/theme'
 import type { ThemeDefinition } from '@shared'

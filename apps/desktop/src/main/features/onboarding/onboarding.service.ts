@@ -1,18 +1,11 @@
 import { dialog, shell, type BrowserWindow } from 'electron'
 import { ENV } from '@shared/config/env'
-import { type FeatureName, type GitUser, type TGitProvider } from '@shared'
 import { Storage } from '@main/shared/storage.service'
 import GitService from '@main/features/git/git.service'
 import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'path'
 import simpleGit from 'simple-git'
-
-export type TCompletePayload = {
-  features: Record<FeatureName, boolean>
-  provider: TGitProvider | null
-  gitUser: GitUser
-  repoPath: string | null
-}
+import { type TCompletePayload } from '@shared'
 
 export class OnboardingService {
   public static async complete(data: TCompletePayload): Promise<void> {

@@ -1,5 +1,5 @@
 import { type Dispatch, type SetStateAction } from 'react'
-import { ONBOARDING_CHANNELS, type FeatureLevel, type TGitProvider } from '@shared'
+import { ONBOARDING_CHANNELS } from '@shared'
 import { validate } from '@onboarding/shared/lib/validate'
 import { getFeaturesMap } from '@onboarding/shared/lib/getFeaturesMap'
 import { type TFormState } from '../App'

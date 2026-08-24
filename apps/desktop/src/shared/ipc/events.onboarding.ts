@@ -1,5 +1,5 @@
 import type { ONBOARDING_CHANNELS, ONBOARDING_EVENT_CHANNELS } from './channels'
-import type { TCompletePayload } from '@main/features/onboarding/onboarding.service'
+import type { TCompletePayload } from '../types/onboarding.types'
 
 export interface IOnboardingEvents {
   [ONBOARDING_CHANNELS.ONBOARDING_COMPLETE]: {
