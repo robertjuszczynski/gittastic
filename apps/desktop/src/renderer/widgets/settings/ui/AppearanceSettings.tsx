@@ -4,7 +4,7 @@ import { cn } from '@renderer/shared/lib'
 import { useTheme, useThemeStore } from '@renderer/features/theme'
 import type { ThemeDefinition } from '@shared'
 import type { EditorMode } from '@renderer/features/theme'
-import { ThemeCreatorModal } from '@renderer/widgets/theme-creator'
+import { ThemeCreatorModal } from '@renderer/features/theme'
 
 function ThemeSwatches({ tokens }: { tokens: ThemeDefinition['tokens'] }) {
   return (

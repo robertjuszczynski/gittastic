@@ -1,4 +1,4 @@
-import { useTerminalStore } from '@renderer/widgets/terminal'
+import { useTerminalStore } from './terminal'
 
 export const useContentHeight = () => {
   const isOpen = useTerminalStore((s) => s.isOpen)

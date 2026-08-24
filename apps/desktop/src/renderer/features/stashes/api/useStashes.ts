@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath } from '@renderer/entities/repository'
 
 export const useStashes = () => {
   const { activePath } = useActivePath()

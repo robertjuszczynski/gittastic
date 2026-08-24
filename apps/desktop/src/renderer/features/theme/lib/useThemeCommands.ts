@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Palette } from 'lucide-react'
 import React from 'react'
 import { useThemeStore } from '../model/useThemeStore'
-import { registerCommands } from '@renderer/widgets/command-palette'
+import { registerCommands } from '@renderer/shared/lib/command-palette'
 
 export function useThemeCommands() {
   const availableThemes = useThemeStore(s => s.availableThemes)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import ChevronDownIcon from '@renderer/shared/ui/icons/ChevronDownIcon'
+import { ChevronDownIcon } from '@renderer/shared/ui/icons'
 
 type SidebarSectionProps = {
   id: string

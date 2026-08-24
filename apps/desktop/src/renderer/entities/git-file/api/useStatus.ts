@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath } from '@renderer/entities/repository/@x/git-file'
 import { useSetStagedAndUnstaged } from './useSetStagedAndUnstaged'
 
 export const useStatus = () => {

@@ -1,3 +1,7 @@
 export * from './cn'
 export * from './getFileExtensionFromPath'
 export * from './mapFileStatus'
+export { useCommandPaletteStore, registerCommands } from './command-palette'
+export type { Command } from './command-palette'
+export { useTerminalStore } from './terminal'
+export { useContentHeight } from './useContentHeight'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useGitUser, useCommit } from '@renderer/entities/commit/api/useCommitActions'
-import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
+import { useGitUser, useCommit } from '@renderer/entities/commit'
+import { useChangesStore } from '@renderer/entities/git-file'
 
 
 const CommitSection = () => {

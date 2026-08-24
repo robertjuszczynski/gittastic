@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
 import UncommittedPanel from './UncommittedPanel'
 import CommitDiffPanel from './CommitDiffPanel'
 

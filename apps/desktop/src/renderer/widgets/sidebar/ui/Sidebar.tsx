@@ -17,9 +17,9 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { useSidebarStore, type SectionId } from '../model/useSidebarStore'
 import SidebarSection from './SidebarSection'
-import RepositoriesSection from '@renderer/features/repositories/ui/RepositoriesSection'
-import BranchesSection from '@renderer/features/branches/ui/BranchesSection'
-import StashesSection from '@renderer/features/stashes/ui/StashesSection'
+import { RepositoriesSection } from '@renderer/features/repositories'
+import { BranchesSection } from '@renderer/features/branches'
+import { StashesSection } from '@renderer/features/stashes'
 
 const SECTION_LABELS: Record<SectionId, string> = {
   repos: 'Repos',

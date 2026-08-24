@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useCommandPaletteStore } from '../model/useCommandPaletteStore'
+import { useCommandPaletteStore } from '@renderer/shared/lib/command-palette'
 import type { Command } from './types'
 
 export function useRegisterCommands(commands: Command[]) {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useTerminalStore } from '@renderer/widgets/terminal'
-import { useStatus } from '@renderer/entities/git-file/api/useStatus'
+import { useTerminalStore } from '@renderer/shared/lib'
+import { useStatus } from '@renderer/entities/git-file'
 import { useActivePath, useRepositories } from '@renderer/entities/repository'
-import { useStashes } from '@renderer/features/stashes/api/useStashes'
+import { useStashes } from '@renderer/features/stashes'
 import {
   ArrowDownToLine,
   ArrowUpToLine,
@@ -17,8 +17,8 @@ import {
   Terminal,
   Undo2,
 } from 'lucide-react'
-import BranchIcon from '@renderer/shared/ui/icons/BranchIcon'
-import { useCommandPaletteStore } from '@renderer/widgets/command-palette'
+import { BranchIcon } from '@renderer/shared/ui/icons'
+import { useCommandPaletteStore } from '@renderer/shared/lib'
 
 const isMac = navigator.userAgent.includes('Mac')
 

@@ -1,7 +1,7 @@
 import { useQuery, keepPreviousData, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import type { GitRawCommit } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath } from '@renderer/entities/repository/@x/commit'
 import type { CommitGraphRow } from '../lib/computeGraphLanes'
 import GraphWorker from '../lib/computeGraphLanes.worker?worker'
 

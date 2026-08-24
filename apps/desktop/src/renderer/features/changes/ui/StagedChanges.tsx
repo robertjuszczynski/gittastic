@@ -1,5 +1,5 @@
 import React from 'react'
-import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
+import { useChangesStore } from '@renderer/entities/git-file'
 import FileTree from './FileTree'
 
 const StagedChanges = () => {

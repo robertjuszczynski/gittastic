@@ -1,7 +1,7 @@
 import React from 'react'
-import { useActivePath, useRepositories } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath, useRepositories } from '@renderer/entities/repository'
 import { useSetActiveRepository } from '../api/useSetActiveRepository'
-import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
 import { Repository } from '@shared'
 
 const RepositoriesSection = () => {

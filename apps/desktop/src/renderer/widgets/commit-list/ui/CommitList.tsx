@@ -1,9 +1,9 @@
 import React, { useRef, useMemo } from 'react'
-import { useContentHeight } from '@renderer/shared/lib/useContentHeight'
+import { useContentHeight } from '@renderer/shared/lib'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useCommits } from '@renderer/entities/commit/api/useCommits'
-import { useStatus } from '@renderer/entities/git-file/api/useStatus'
-import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import { useCommits } from '@renderer/entities/commit'
+import { useStatus } from '@renderer/entities/git-file'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
 import CommitItem from './CommitItem'
 import UncommittedItem from './UncommittedItem'
 import { ResizableBox } from 'react-resizable';

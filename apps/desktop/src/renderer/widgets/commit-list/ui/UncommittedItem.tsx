@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
 import { cn } from '@renderer/shared/lib'
 
 type UncommittedItemProps = {

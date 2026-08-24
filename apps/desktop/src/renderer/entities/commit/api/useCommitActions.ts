@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
-import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
+import { useActivePath } from '@renderer/entities/repository/@x/commit'
+import { useChangesStore } from '@renderer/entities/git-file/@x/commit'
 
 export const useGitUser = () => {
   const { activePath } = useActivePath()

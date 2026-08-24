@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { motion } from 'motion/react'
-import type { CommitGraphRow, GraphSegment } from '@renderer/entities/commit/lib/computeGraphLanes'
-import { useCommitSelectionStore } from '@renderer/entities/commit/model/useCommitSelectionStore'
+import type { CommitGraphRow, GraphSegment } from '@renderer/entities/commit'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
 
 const LANE_WIDTH = 12
 const ROW_HEIGHT = 25

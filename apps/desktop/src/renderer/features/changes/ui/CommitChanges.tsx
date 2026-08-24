@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath } from '@renderer/entities/repository'
 import FileTree from './FileTree'
 
 const CommitChanges = ({ hash }: { hash: string }) => {

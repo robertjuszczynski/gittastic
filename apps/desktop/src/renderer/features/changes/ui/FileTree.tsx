@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import type { FileChange } from '@shared'
-import ChevronDownIcon from '@renderer/shared/ui/icons/ChevronDownIcon'
-import FolderIcon from '@renderer/shared/ui/icons/FolderIcon'
+import { ChevronDownIcon } from '@renderer/shared/ui/icons'
+import { FolderIcon } from '@renderer/shared/ui/icons'
 import ChangeItem from './ChangeItem'
 import StageCheckbox from './StageCheckbox'
-import { useChangesStore } from '@renderer/entities/git-file/model/useChangesStore'
+import { useChangesStore } from '@renderer/entities/git-file'
 
 type TreeNode = {
   name: string

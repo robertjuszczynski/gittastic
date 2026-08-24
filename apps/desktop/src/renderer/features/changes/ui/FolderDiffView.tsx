@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import type { FileChange } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
+import { useActivePath } from '@renderer/entities/repository'
 import { computeStagedLines } from '../lib/diffUtils'
 import FileDiffView from './FileDiffView'
 

@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import type { Repository } from '@shared'
-import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
-import { useSetStagedAndUnstaged } from '@renderer/entities/git-file/api/useSetStagedAndUnstaged'
+import { useActivePath } from '@renderer/entities/repository'
+import { useSetStagedAndUnstaged } from '@renderer/entities/git-file'
 
 export const useSetActiveRepository = () => {
   const { setActivePath } = useActivePath()
