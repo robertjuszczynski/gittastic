@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import ReactDiffViewer from 'react-diff-viewer-continued'
 import type { FileDiff } from '@shared'
-import { DiffType, getCompareMethod, diffStyles } from './lib/diffUtils'
+import { DiffType, getCompareMethod, diffStyles } from '../lib/diffUtils'
 import StageCheckbox from './StageCheckbox'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-typescript'

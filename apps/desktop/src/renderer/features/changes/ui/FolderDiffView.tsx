@@ -3,7 +3,7 @@ import { useQueries } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import type { FileChange } from '@shared'
 import { useActivePath } from '@renderer/entities/repository/model/RepositoriesContext'
-import { computeStagedLines } from './lib/diffUtils'
+import { computeStagedLines } from '../lib/diffUtils'
 import FileDiffView from './FileDiffView'
 
 type FolderDiffViewProps = {
