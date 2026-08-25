@@ -1,6 +1,7 @@
 import { BrowserWindow, nativeTheme, shell } from 'electron'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
+import { MAIN_EVENTS } from '@shared'
 
 export function createMainWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -19,6 +20,9 @@ export function createMainWindow(): BrowserWindow {
 
   win.maximize()
   win.on('ready-to-show', () => win.show())
+
+  win.on('enter-full-screen', () => win.webContents.send(MAIN_EVENTS.FULLSCREEN_CHANGED, true))
+  win.on('leave-full-screen', () => win.webContents.send(MAIN_EVENTS.FULLSCREEN_CHANGED, false))
 
   win.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)

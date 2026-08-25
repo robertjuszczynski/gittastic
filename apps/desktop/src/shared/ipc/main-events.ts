@@ -5,6 +5,7 @@ export const MAIN_EVENTS = {
   APP_DID_BECOME_ACTIVE: 'app-did-become-active',
   THEME_UPDATED: 'theme-updated',
   CUSTOM_THEMES_CHANGED: 'custom-themes-changed',
+  FULLSCREEN_CHANGED: 'fullscreen-changed',
 } as const
 
 export type TMainEvents = {
@@ -12,4 +13,5 @@ export type TMainEvents = {
     [MAIN_EVENTS.APP_DID_BECOME_ACTIVE]: void
     [MAIN_EVENTS.THEME_UPDATED]: ThemeDefinition
     [MAIN_EVENTS.CUSTOM_THEMES_CHANGED]: ThemeDefinition[]
+    [MAIN_EVENTS.FULLSCREEN_CHANGED]: boolean
 }

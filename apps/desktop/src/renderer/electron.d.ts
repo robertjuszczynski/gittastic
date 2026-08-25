@@ -17,6 +17,7 @@ interface AppEventsAPI {
   onAppDidBecomeActive: (callback: () => void) => () => void
   onThemeUpdated: (callback: (theme: ThemeDefinition) => void) => () => void
   onCustomThemesChanged: (callback: (themes: ThemeDefinition[]) => void) => () => void
+  onFullscreenChanged: (callback: (isFullscreen: boolean) => void) => () => void
 }
 
 declare global {

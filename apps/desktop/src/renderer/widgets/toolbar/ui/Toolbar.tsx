@@ -79,6 +79,7 @@ const Toolbar = () => {
   const { data: stashes } = useStashes()
 
   const [canRedo, setCanRedo] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const ahead = status?.ahead ?? 0
   const repoName = repositories.find(r => r.path === activePath)?.name ?? '—'
@@ -95,6 +96,7 @@ const Toolbar = () => {
       console.log('App did become active, invalidating git queries')
       invalidateGit()
     })
+    window.appEventsAPI.onFullscreenChanged(setIsFullscreen)
   }, [queryClient])
 
   const handlePush = async () => {
@@ -125,11 +127,12 @@ const Toolbar = () => {
   }
 
   return (
-    <div
-      className='flex items-stretch px-1 shrink-0 bg-surface h-[52px] border-b border-b-black/[0.07]'
-      style={drag}
-    >
-      <div className={`flex items-stretch ${isMac ? 'pl-[76px]' : ''}`} style={noDrag}>
+    <div className='shrink-0 bg-surface border-b border-b-black/[0.07]' style={drag}>
+      {isMac && isFullscreen && (
+        <div className='h-[8px] w-full' style={drag} />
+      )}
+      <div className='flex items-stretch px-1 h-[52px]'>
+      <div className={`flex items-stretch ${isMac && !isFullscreen ? 'pl-[76px]' : ''}`} style={noDrag}>
         <ToolbarButton icon={RefreshCcw} label='Fetch' onClick={() => { window.electron[CHANNELS.FETCH](); invalidateGit() }} />
         <ToolbarButton icon={ArrowDownToLine} label='Pull' onClick={() => { window.electron[CHANNELS.PULL](); invalidateGit() }} />
         <ToolbarButton icon={ArrowUpToLine} label='Push' badge={ahead || undefined} onClick={handlePush} />
@@ -158,6 +161,7 @@ const Toolbar = () => {
         <ToolbarButton icon={RefreshCw} label='Refresh' onClick={invalidateGit} />
         <Separator />
         <ToolbarButton icon={Terminal} label='Terminal' onClick={toggleTerminal} active={isTerminalOpen} />
+      </div>
       </div>
     </div>
   )

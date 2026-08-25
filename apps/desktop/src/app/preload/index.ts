@@ -70,6 +70,7 @@ if (process.contextIsolated) {
       onAppDidBecomeActive: (callback: () => void) => listenTo(MAIN_EVENTS.APP_DID_BECOME_ACTIVE, callback),
       onThemeUpdated: (callback: (theme: ThemeDefinition) => void) => listenTo(MAIN_EVENTS.THEME_UPDATED, callback),
       onCustomThemesChanged: (callback: (themes: ThemeDefinition[]) => void) => listenTo(MAIN_EVENTS.CUSTOM_THEMES_CHANGED, callback),
+      onFullscreenChanged: (callback: (isFullscreen: boolean) => void) => listenTo(MAIN_EVENTS.FULLSCREEN_CHANGED, callback),
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {
