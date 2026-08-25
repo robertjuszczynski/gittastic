@@ -1,0 +1,6 @@
+export { default as GitHubIcon } from './GitHubIcon'
+export { default as GitLabIcon } from './GitLabIcon'
+export { default as BitbucketIcon } from './BitbucketIcon'
+export { default as AzureIcon } from './AzureIcon'
+export { default as ChevronRightIcon } from './ChevronRightIcon'
+export { default as CheckIcon } from './CheckIcon'

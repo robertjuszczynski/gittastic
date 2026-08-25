@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ONBOARDING_CHANNELS, type TGitProvider } from '@shared'
-import GitHubIcon from '@onboarding/shared/ui/icons/GitHubIcon'
-import GitLabIcon from '@onboarding/shared/ui/icons/GitLabIcon'
-import BitbucketIcon from '@onboarding/shared/ui/icons/BitbucketIcon'
-import AzureIcon from '@onboarding/shared/ui/icons/AzureIcon'
-import ChevronRightIcon from '@onboarding/shared/ui/icons/ChevronRightIcon'
-import CheckIcon from '@onboarding/shared/ui/icons/CheckIcon'
+import { GitHubIcon, GitLabIcon, BitbucketIcon, AzureIcon, ChevronRightIcon, CheckIcon } from '@onboarding/shared/ui/icons'
 import { cn } from '@renderer/shared/lib'
 
 type TProviderConfig = {
