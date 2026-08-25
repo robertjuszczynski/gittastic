@@ -2,7 +2,7 @@ import registerRepositoriesIpcHandlers from '@main/features/repositories/ipc/reg
 import registerGitIpcHandlers from '@main/features/git/ipc/register-git-ipc-handlers'
 import registerTerminalIpcHandlers from '@main/features/terminal/ipc/register-terminal-ipc-handlers'
 import registerFileIpcHandlers from '@main/entities/file/ipc/register-file-ipc-handlers'
-import registerSettingsIpcHandlers from '@main/features/settings/ipc/register-settings-ipc-handlers'
+import registerThemeIpcHandlers from '@main/features/theme/ipc/register-theme-ipc-handlers'
 import registerOnboardingIpcHandlers, { type OnboardingIpcContext } from '@main/features/onboarding/ipc/register-onboarding-ipc-handlers'
 
 export default function registerIpcHandlers(onboardingCtx: OnboardingIpcContext) {
@@ -10,6 +10,6 @@ export default function registerIpcHandlers(onboardingCtx: OnboardingIpcContext)
   registerGitIpcHandlers()
   registerTerminalIpcHandlers()
   registerFileIpcHandlers()
-  registerSettingsIpcHandlers()
+  registerThemeIpcHandlers()
   registerOnboardingIpcHandlers(onboardingCtx)
 }

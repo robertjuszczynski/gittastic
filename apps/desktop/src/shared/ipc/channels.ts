@@ -46,7 +46,7 @@ export const CONTEXT_MENU_CHANNELS = {
   OPEN_FILE_CONTEXT_MENU: 'OPEN_FILE_CONTEXT_MENU'
 } as const
 
-export const SETTINGS_CHANNELS = {
+export const THEME_CHANNELS = {
   GET_THEMES: 'GET_THEMES',
   GET_ACTIVE_THEME: 'GET_ACTIVE_THEME',
   SET_THEME: 'SET_THEME',
@@ -75,7 +75,7 @@ export const CHANNELS = {
   ...REPOSITORY_CHANNELS,
   ...GIT_CHANNELS,
   ...CONTEXT_MENU_CHANNELS,
-  ...SETTINGS_CHANNELS
+  ...THEME_CHANNELS
 } as const
 
 export type TChannelKeys = keyof typeof CHANNELS;
