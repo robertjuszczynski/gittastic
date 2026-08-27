@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import { useChangesStore } from '@renderer/entities/git-file'
 import { useActivePath } from '@renderer/entities/repository'
-import { computeStagedLines } from '../lib/diffUtils'
+import { computeStagedLines, isImageFile } from '../lib/diffUtils'
 import FileDiffView from './FileDiffView'
 import FolderDiffView from './FolderDiffView'
 
@@ -37,7 +37,7 @@ const DiffView = () => {
     return result
   }, [diff])
 
-  const isTooLarge = !!diff && (diff.original.length > 100000 || (diff.modified?.length ?? 0) > 100000)
+  const isTooLarge = !!diff && !isImageFile(selectedFile ?? '') && (diff.original.length > 100000 || (diff.modified?.length ?? 0) > 100000)
 
   useEffect(() => { setForceShow(false) }, [selectedFile])
 

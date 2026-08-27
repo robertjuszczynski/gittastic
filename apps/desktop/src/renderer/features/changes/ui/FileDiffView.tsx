@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
 import ReactDiffViewer from 'react-diff-viewer-continued'
 import type { FileDiff } from '@shared'
-import { DiffType, getCompareMethod, diffStyles } from '../lib/diffUtils'
+import { DiffType, getCompareMethod, diffStyles, IMAGE_EXTENSIONS_MAP, isImageFile } from '../lib/diffUtils'
 import StageCheckbox from './StageCheckbox'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-typescript'
+import ImageDiffView from './ImageDiffView'
 
 type FileDiffViewProps = {
   filePath: string
@@ -13,6 +14,7 @@ type FileDiffViewProps = {
   onStageLine: (path: string, lineNumber: number, isAddition: boolean, isCurrentlyStaged: boolean) => void
   stagedLines: { additions: Set<number>; removals: Set<number> }
 }
+
 
 const FileDiffView = ({ filePath, diff, isUncommitted, onStageLine, stagedLines }: FileDiffViewProps) => {
   const renderGutter = useCallback(({ lineNumber, type, additionalLineNumber }: {
@@ -40,7 +42,18 @@ const FileDiffView = ({ filePath, diff, isUncommitted, onStageLine, stagedLines 
     />
   );
 
+  const fileName = filePath.split('/').pop() || ''
+  const ext = fileName.split('.').pop()?.toLowerCase() || ''
+  const mime = IMAGE_EXTENSIONS_MAP.get(ext) ?? ''
+
   return (
+    isImageFile(fileName) ? (
+      <ImageDiffView
+        oldValue={diff.original ?? ''}
+        newValue={diff.modified ?? ''}
+        mime={mime}
+      />
+    ) :
     <ReactDiffViewer
       oldValue={diff.original ?? ''}
       newValue={diff.modified ?? ''}

@@ -4,6 +4,33 @@ import { getFileExtensionFromPath } from '@renderer/shared/lib'
 
 export const DiffType = { DEFAULT: 0, ADDED: 1, REMOVED: 2, CHANGED: 3 } as const
 
+export const IMAGE_EXTENSIONS_MAP = new Map<string, string>([
+  ['jpg', 'image/jpeg'],
+  ['jpeg', 'image/jpeg'],
+  ['png', 'image/png'],
+  ['gif', 'image/gif'],
+  ['webp', 'image/webp'],
+  ['bmp', 'image/bmp'],
+  ['svg', 'image/svg+xml'],
+  ['ico', 'image/x-icon'],
+  ['avif', 'image/avif'],
+  ['tif', ''],
+  ['tiff', ''],
+  ['eps', ''],
+  ['heic', ''],
+  ['heif', ''],
+  ['psd', ''],
+  ['psb', ''],
+  ['wmf', ''],
+  ['xcf', ''],
+  ['dng', ''],
+])
+
+export const isImageFile = (fileName: string): boolean => {
+  const ext = fileName.split('.').pop()?.toLowerCase()
+  return ext ? IMAGE_EXTENSIONS_MAP.has(ext) : false
+}
+
 const COMPARE_METHOD_MAP: Record<string, DiffMethod> = {
   '.json': DiffMethod.JSON,
   '.yaml': DiffMethod.YAML,

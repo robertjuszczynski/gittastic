@@ -3,11 +3,31 @@ import simpleGit from 'simple-git'
 import { readFile, writeFile, unlink } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
+import { spawn } from 'child_process'
 import { diffArrays, type ArrayChange } from 'diff'
-import type { GitBranch, GitRawCommits, GitStash, FileChange, FileChangeStatus, FileDiff, GitUser } from 'src/shared/types/git.types'
+import type { GitBranch, GitRawCommits, GitStash, FileChange, FileChangeStatus, FileDiff, GitUser } from '@shared'
 import { splitLines } from '@main/utils'
 import { createHash } from 'crypto'
 import fs from 'node:fs'
+const IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'ico', 'avif'])
+
+const isImagePath = (path: string): boolean => {
+  const ext = path.split('.').pop()?.toLowerCase()
+  return ext ? IMAGE_EXTENSIONS.has(ext) : false
+}
+
+const gitShowBinary = (repoPath: string, ref: string): Promise<Buffer> => {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = []
+    const proc = spawn('git', ['-C', repoPath, 'show', ref])
+    proc.stdout.on('data', (chunk: Buffer) => chunks.push(chunk))
+    proc.on('error', reject)
+    proc.on('close', code => {
+      if (code === 0) resolve(Buffer.concat(chunks))
+      else reject(new Error(`git show exited with code ${code}`))
+    })
+  })
+}
 
 export const git = new Proxy({} as SimpleGit, {
     get: (_, prop) => GitService.getInstance()[prop as keyof SimpleGit]
@@ -105,6 +125,30 @@ export default class GitService {
 
 
   public static async getFileDiff(path: string, hash?: string): Promise<FileDiff> {
+    const repoRoot = (await git.revparse(['--show-toplevel'])).trim()
+
+    if (isImagePath(path)) {
+      if (hash) {
+        const parentHash = `${hash}~1`
+        let original = ''
+        let modified = ''
+        try { original = (await gitShowBinary(repoRoot, `${parentHash}:${path}`)).toString('base64') } catch { /* new file */ }
+        try { modified = (await gitShowBinary(repoRoot, `${hash}:${path}`)).toString('base64') } catch { /* deleted file */ }
+        return { original, modified }
+      }
+
+      let original = ''
+      try { original = (await gitShowBinary(repoRoot, `HEAD:${path}`)).toString('base64') } catch { /* new file */ }
+
+      let indexed = ''
+      try { indexed = (await gitShowBinary(repoRoot, `:${path}`)).toString('base64') } catch { /* untracked file */ }
+
+      let modified = ''
+      try { modified = (await readFile(join(repoRoot, path))).toString('base64') } catch { /* deleted file */ }
+
+      return { original, modified, indexed }
+    }
+
     if (hash) {
       const parentHash = `${hash}~1`
       let original = ''
@@ -120,9 +164,8 @@ export default class GitService {
     let indexed = ''
     try { indexed = await git.show([`:${path}`]) } catch { /* untracked file */ }
 
-    const repoRoot = await git.revparse(['--show-toplevel'])
     let modified = ''
-    try { modified = await readFile(join(repoRoot.trim(), path), 'utf-8') } catch { /* deleted file */ }
+    try { modified = await readFile(join(repoRoot, path), 'utf-8') } catch { /* deleted file */ }
 
     return { original, modified, indexed }
   }
@@ -343,4 +386,3 @@ export default class GitService {
    })
   }
 }
-
