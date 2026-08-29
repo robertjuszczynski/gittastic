@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useTerminalStore } from '@renderer/shared/lib'
+import { useTerminalStore, withGlobalIndicator, useLoadingStore } from '@renderer/shared/lib'
 import { useStatus } from '@renderer/entities/git-file'
 import { useActivePath, useRepositories } from '@renderer/entities/repository'
 import { useStashes } from '@renderer/features/stashes'
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react'
 import { BranchIcon } from '@renderer/shared/ui/icons'
 import { useCommandPaletteStore } from '@renderer/shared/lib'
+import ToolbarOperationContent from './ToolbarOperationContent'
 
 const isMac = navigator.userAgent.includes('Mac')
 
@@ -77,6 +79,7 @@ const Toolbar = () => {
   const { activePath } = useActivePath()
   const { repositories } = useRepositories()
   const { data: stashes } = useStashes()
+  const operations = useLoadingStore((s) => s.operations)
 
   const [canRedo, setCanRedo] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -86,42 +89,44 @@ const Toolbar = () => {
   const branchName = status?.current ?? '—'
   const hasStashes = (stashes?.length ?? 0) > 0
 
+  const entries = Array.from(operations.entries())
+  const activeOp = entries.length > 0 ? entries[entries.length - 1] : null
+
   const commitsData = queryClient.getQueryData<{ hash: string }[]>(['git', 'commits', activePath])
   const canUndo = (commitsData?.length ?? 0) > 0
 
-  const invalidateGit = () => queryClient.invalidateQueries({ queryKey: ['git'] })
+  const invalidateGit = withGlobalIndicator('Refreshing', () => queryClient.invalidateQueries({ queryKey: ['git'] }))
 
   useEffect(() => {
     window.appEventsAPI.onAppDidBecomeActive(() => {
-      console.log('App did become active, invalidating git queries')
       invalidateGit()
     })
     window.appEventsAPI.onFullscreenChanged(setIsFullscreen)
   }, [queryClient])
 
   const handlePush = async () => {
-    await window.electron[CHANNELS.PUSH]()
+    await withGlobalIndicator(CHANNELS.PUSH, window.electron[CHANNELS.PUSH])()
     invalidateGit()
   }
 
   const handleStash = async () => {
-    await window.electron[CHANNELS.STASH]()
+    await withGlobalIndicator(CHANNELS.STASH, window.electron[CHANNELS.STASH])()
     invalidateGit()
   }
 
   const handlePopStash = async () => {
-    await window.electron[CHANNELS.POP_STASH]()
+    await withGlobalIndicator(CHANNELS.POP_STASH, window.electron[CHANNELS.POP_STASH])()
     invalidateGit()
   }
 
   const handleUndo = async () => {
-    await window.electron[CHANNELS.UNDO]()
+    await withGlobalIndicator(CHANNELS.UNDO, window.electron[CHANNELS.UNDO])()
     invalidateGit()
     setCanRedo(true)
   }
 
   const handleRedo = async () => {
-    await window.electron[CHANNELS.REDO]()
+    await withGlobalIndicator(CHANNELS.REDO, window.electron[CHANNELS.REDO])()
     invalidateGit()
     setCanRedo(false)
   }
@@ -131,37 +136,65 @@ const Toolbar = () => {
       {isMac && isFullscreen && (
         <div className='h-[8px] w-full' style={drag} />
       )}
-      <div className='flex items-stretch px-1 h-[52px]'>
-      <div className={`flex items-stretch ${isMac && !isFullscreen ? 'pl-[76px]' : ''}`} style={noDrag}>
-        <ToolbarButton icon={RefreshCcw} label='Fetch' onClick={() => { window.electron[CHANNELS.FETCH](); invalidateGit() }} />
-        <ToolbarButton icon={ArrowDownToLine} label='Pull' onClick={() => { window.electron[CHANNELS.PULL](); invalidateGit() }} />
-        <ToolbarButton icon={ArrowUpToLine} label='Push' badge={ahead || undefined} onClick={handlePush} />
-        <Separator />
-        <ToolbarButton icon={Package} label='Stash' onClick={handleStash} />
-        <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={handlePopStash} />
-      </div>
-
-      <div className='flex-1 flex items-center justify-center' style={drag}>
-        <div className='flex items-center gap-2.5 px-3 py-[7px] bg-surface-2 rounded-lg border border-white/[0.05] select-none' style={noDrag}>
-          <span className='text-[12px] font-semibold text-neutral-200 tracking-tight'>{repoName}</span>
-          <div className='w-px h-3.5 bg-neutral-700' />
-          <div className='flex items-center gap-1.5 text-[12px] text-neutral-400'>
-            <BranchIcon size={11} />
-            <span>{branchName}</span>
-          </div>
+      <div className='flex items-stretch px-1 h-[58px]'>
+        <div className={`flex items-stretch ${isMac && !isFullscreen ? 'pl-[76px]' : ''}`} style={noDrag}>
+          <ToolbarButton icon={RefreshCcw} label='Fetch' onClick={async () => { await withGlobalIndicator(CHANNELS.FETCH, window.electron[CHANNELS.FETCH])(); invalidateGit() }} />
+          <ToolbarButton icon={ArrowDownToLine} label='Pull' onClick={async () => { await withGlobalIndicator(CHANNELS.PULL, window.electron[CHANNELS.PULL])(); invalidateGit() }} />
+          <ToolbarButton icon={ArrowUpToLine} label='Push' badge={ahead || undefined} onClick={handlePush} />
+          <Separator />
+          <ToolbarButton icon={Package} label='Stash' onClick={handleStash} />
+          <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={handlePopStash} />
         </div>
-      </div>
 
-      <div className='flex items-stretch' style={noDrag}>
-        <ToolbarButton icon={Undo2} label='Undo' disabled={!canUndo} onClick={handleUndo} />
-        <ToolbarButton icon={Redo2} label='Redo' disabled={!canRedo} onClick={handleRedo} />
-        <Separator />
-        <ToolbarButton icon={Command} label='Quick Actions' onClick={openPalette} />
-        <Separator />
-        <ToolbarButton icon={RefreshCw} label='Refresh' onClick={invalidateGit} />
-        <Separator />
-        <ToolbarButton icon={Terminal} label='Terminal' onClick={toggleTerminal} active={isTerminalOpen} />
-      </div>
+        <div className='flex-1 flex items-center justify-center' style={drag}>
+          <motion.div
+            layout
+            className='flex items-center bg-surface-2 rounded-lg border border-white/[0.05] select-none overflow-hidden'
+            style={noDrag}
+            transition={{ layout: { type: 'spring', stiffness: 360, damping: 28 } }}
+          >
+            <AnimatePresence mode='wait' initial={false}>
+              {activeOp ? (
+                <motion.div
+                  key={activeOp[0]}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <ToolbarOperationContent op={activeOp[1]} opId={activeOp[0]} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='repo-branch'
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className='flex items-center gap-2.5 px-3 py-[7px]'
+                >
+                  <span className='text-[12px] font-semibold text-neutral-200 tracking-tight'>{repoName}</span>
+                  <div className='w-px h-3.5 bg-neutral-700' />
+                  <div className='flex items-center gap-1.5 text-[12px] text-neutral-400'>
+                    <BranchIcon size={11} />
+                    <span>{branchName}</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+
+        <div className='flex items-stretch' style={noDrag}>
+          <ToolbarButton icon={Undo2} label='Undo' disabled={!canUndo} onClick={handleUndo} />
+          <ToolbarButton icon={Redo2} label='Redo' disabled={!canRedo} onClick={handleRedo} />
+          <Separator />
+          <ToolbarButton icon={Command} label='Quick Actions' onClick={openPalette} />
+          <Separator />
+          <ToolbarButton icon={RefreshCw} label='Refresh' onClick={invalidateGit} />
+          <Separator />
+          <ToolbarButton icon={Terminal} label='Terminal' onClick={toggleTerminal} active={isTerminalOpen} />
+        </div>
       </div>
     </div>
   )
