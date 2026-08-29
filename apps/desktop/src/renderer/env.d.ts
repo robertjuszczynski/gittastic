@@ -7,9 +7,3 @@ declare module 'react' {
     WebkitAppRegion?: 'drag' | 'no-drag'
   }
 }
-
-declare module 'framer-motion' {
-  interface MotionStyle {
-    WebkitAppRegion?: 'drag' | 'no-drag'
-  }
-}
