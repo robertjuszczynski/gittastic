@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { CHANNELS, Repositories } from '@shared'
+import { withGlobalIndicator } from '@renderer/shared/lib'
 
 type ActivePathContextType = {
   activePath: string | null
@@ -39,10 +40,12 @@ export const RepositoriesProvider = ({ children }: RepositoriesProviderProps) =>
   }, [])
 
   const openRepository = async () => {
-    const repo = await window.electron[CHANNELS.OPEN_REPOSITORY]()
-    if (repo?.path) {
-      setActivePath(repo.path)
-      setRepositories((prev) => prev.some(r => r.path === repo.path) ? prev : [...prev, repo])
+    try {
+      const repo = await withGlobalIndicator(CHANNELS.OPEN_REPOSITORY, () => window.electron[CHANNELS.OPEN_REPOSITORY]())()
+      if (repo?.path) {
+        setActivePath(repo.path)
+        setRepositories((prev) => prev.some(r => r.path === repo.path) ? prev : [...prev, repo])
+      }
     }
   }
 

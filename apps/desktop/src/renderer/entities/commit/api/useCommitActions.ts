@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
 import { useActivePath } from '@renderer/entities/repository/@x/commit'
 import { useChangesStore } from '@renderer/entities/git-file/@x/commit'
+import { withGlobalIndicator } from '@renderer/shared/lib'
 
 export const useGitUser = () => {
   const { activePath } = useActivePath()
@@ -19,7 +20,7 @@ export const useCommit = () => {
   const setStagedAndUnstaged = useChangesStore(s => s.setStagedAndUnstaged)
 
   return async (message: string, description?: string) => {
-    await window.electron[CHANNELS.COMMIT]({ message, description })
+    await withGlobalIndicator(CHANNELS.COMMIT, () => window.electron[CHANNELS.COMMIT]({ message, description }))()
     const unstaged = useChangesStore.getState().unstaged
     setStagedAndUnstaged([], unstaged)
     queryClient.invalidateQueries({ queryKey: ['git', 'commits', activePath] })
