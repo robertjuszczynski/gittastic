@@ -23,6 +23,8 @@ if (process.contextIsolated) {
       [CHANNELS.GET_REPOSITORIES]: () => ipcRenderer.invoke(CHANNELS.GET_REPOSITORIES),
       [CHANNELS.GET_ACTIVE_REPOSITORY]: () => ipcRenderer.invoke(CHANNELS.GET_ACTIVE_REPOSITORY),
       [CHANNELS.SET_ACTIVE_REPOSITORY]: args => ipcRenderer.invoke(CHANNELS.SET_ACTIVE_REPOSITORY, args),
+      [CHANNELS.GET_REPOSITORY_GROUPS]: () => ipcRenderer.invoke(CHANNELS.GET_REPOSITORY_GROUPS),
+      [CHANNELS.SET_REPOSITORY_GROUPS]: args => ipcRenderer.invoke(CHANNELS.SET_REPOSITORY_GROUPS, args),
       [CHANNELS.GET_COMMITS]: (args) => ipcRenderer.invoke(CHANNELS.GET_COMMITS, args),
       [CHANNELS.GET_BRANCHES]: () => ipcRenderer.invoke(CHANNELS.GET_BRANCHES),
       [CHANNELS.GET_STASHES]: () => ipcRenderer.invoke(CHANNELS.GET_STASHES),

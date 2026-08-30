@@ -18,6 +18,14 @@ export default class RepositoriesService {
     return repo
   }
 
+  public static async getGroups(): Promise<RepositoryGroups> {
+    return await Storage.get('repository-groups') ?? []
+  }
+
+  public static async setGroups(groups: RepositoryGroups): Promise<RepositoryGroups> {
+    await Storage.set('repository-groups', groups)
+    return groups
+  }
   public static async openRepository(): Promise<Repository | void> {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openDirectory']

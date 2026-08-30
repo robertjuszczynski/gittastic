@@ -1,6 +1,7 @@
 import type { StatusResult } from 'simple-git'
 import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
+import type { RepositoryGroups } from '../types/repository-groups.types'
 import type { CHANNELS } from './channels'
 import type { ThemeDefinition, ThemeId, ThemeJSON } from '../types/theme.types'
 
@@ -20,6 +21,14 @@ export interface IEvents {
     [CHANNELS.SET_ACTIVE_REPOSITORY]: {
         args: Repository
         response: Promise<Repository>;
+    };
+    [CHANNELS.GET_REPOSITORY_GROUPS]: {
+        args: void;
+        response: Promise<RepositoryGroups>;
+    };
+    [CHANNELS.SET_REPOSITORY_GROUPS]: {
+        args: RepositoryGroups;
+        response: Promise<RepositoryGroups>;
     };
     [CHANNELS.GET_COMMITS]: {
         args: { limit?: number; skip?: number };

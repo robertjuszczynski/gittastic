@@ -15,6 +15,8 @@ export default function registerRepositoriesIpcHandlers() {
     [CHANNELS.GET_REPOSITORIES]: () => RepositoriesService.getRepositories(),
     [CHANNELS.GET_ACTIVE_REPOSITORY]: () => RepositoriesService.getActiveRepository(),
     [CHANNELS.SET_ACTIVE_REPOSITORY]: (_, args) => RepositoriesService.setActiveRepository(args),
+    [CHANNELS.GET_REPOSITORY_GROUPS]: () => RepositoriesService.getGroups(),
+    [CHANNELS.SET_REPOSITORY_GROUPS]: (_, args) => RepositoriesService.setGroups(args),
   }
 
   for (const [channel, handler] of Object.entries(handlers)) {
