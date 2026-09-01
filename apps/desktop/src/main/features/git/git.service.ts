@@ -63,7 +63,7 @@ export default class GitService {
   }
 
   public static async getRawCommits(options?: { limit?: number; skip?: number }): Promise<GitRawCommits> {
-    const args = ['log', '--all', '--pretty=format:%H|%P|%an|%ae|%aI|%s']
+    const args = ['log', '--branches', '--tags', '--pretty=format:%H|%P|%an|%ae|%aI|%s']
     if (options?.limit) args.push(`--max-count=${options.limit}`)
       if (options?.skip) args.push(`--skip=${options.skip}`)
         const raw = await git.raw(args)
