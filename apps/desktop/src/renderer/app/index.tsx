@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RepositoriesProvider } from '@renderer/entities/repository'
 import { ModalProvider } from '@renderer/shared/ui/ModalContext'
+import { ToastProvider } from '@renderer/shared/ui/ToastContext'
 import { CommandPalette } from '@renderer/widgets/command-palette'
 import { useThemeStore } from '@renderer/features/theme'
 import { useThemeCommands } from '@renderer/features/theme'
@@ -45,10 +46,12 @@ function AppShell() {
 
 createRoot(document.getElementById('app')!).render(
   <QueryClientProvider client={queryClient}>
-    <RepositoriesProvider>
-      <ModalProvider>
-        <AppShell />
-      </ModalProvider>
-    </RepositoriesProvider>
+    <ToastProvider>
+      <RepositoriesProvider>
+        <ModalProvider>
+          <AppShell />
+        </ModalProvider>
+      </RepositoriesProvider>
+    </ToastProvider>
   </QueryClientProvider>
 )

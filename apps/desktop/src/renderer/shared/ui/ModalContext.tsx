@@ -1,5 +1,6 @@
 import Modal from './Modal'
 import React, { createContext, useEffect, useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import type { ReactElement } from 'react'
 
 type ModalContextType = {
@@ -34,7 +35,9 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   return (
     <ModalContext.Provider value={{ isModalOpen, toggleModal }}>
       {children}
-      {isModalOpen && content && <Modal component={content} />}
+      <AnimatePresence>
+        {isModalOpen && content && <Modal component={content} />}
+      </AnimatePresence>
     </ModalContext.Provider>
   )
 }
