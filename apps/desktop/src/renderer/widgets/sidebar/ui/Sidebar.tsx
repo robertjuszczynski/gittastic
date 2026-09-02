@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { ResizableBox } from 'react-resizable'
 import {
   DndContext,
@@ -7,6 +7,8 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DraggableAttributes,
+  type DraggableSyntheticListeners,
 } from '@dnd-kit/core'
 import {
   SortableContext,
@@ -17,9 +19,14 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { useSidebarStore, type SectionId } from '../model/useSidebarStore'
 import SidebarSection from './SidebarSection'
-import { RepositoriesSection } from '@renderer/features/repositories'
-import { BranchesSection } from '@renderer/features/branches'
+import { BranchesSection, CreateBranchModal } from '@renderer/features/branches'
 import { StashesSection } from '@renderer/features/stashes'
+import { RepositoryGroupsList, useRepositoryGroups, useSetRepositoryGroups } from '@renderer/features/repository-groups'
+import { useRepositories } from '@renderer/entities/repository'
+import { useSetActiveRepository } from '@renderer/features/repositories'
+import { useCommitSelectionStore } from '@renderer/entities/commit'
+import ModalContext from '@renderer/shared/ui/ModalContext'
+import type { Repository, RepositoryGroup } from '@shared'
 
 const SECTION_LABELS: Record<SectionId, string> = {
   repos: 'Repos',
@@ -27,13 +34,7 @@ const SECTION_LABELS: Record<SectionId, string> = {
   stashes: 'Stashes',
 }
 
-const SECTION_CONTENT: Record<SectionId, React.ReactNode> = {
-  repos: <RepositoriesSection />,
-  branches: <BranchesSection />,
-  stashes: <StashesSection />,
-}
-
-const DragHandle = ({ listeners, attributes }: { listeners: object | undefined; attributes: object }) => (
+const DragHandle = ({ listeners, attributes }: { listeners: DraggableSyntheticListeners; attributes: DraggableAttributes }) => (
   <span
     {...listeners}
     {...attributes}
@@ -44,7 +45,15 @@ const DragHandle = ({ listeners, attributes }: { listeners: object | undefined; 
   </span>
 )
 
-const SortableSection = ({ id, onRemove }: { id: SectionId; onRemove: () => void }) => {
+type SortableSectionProps = {
+  id: SectionId
+  onRemove: () => void
+  onAdd?: () => void
+  onAddFolder?: () => void
+  children: React.ReactNode
+}
+
+const SortableSection = ({ id, onRemove, onAdd, onAddFolder, children }: SortableSectionProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
   return (
@@ -61,9 +70,11 @@ const SortableSection = ({ id, onRemove }: { id: SectionId; onRemove: () => void
         title={SECTION_LABELS[id]}
         defaultOpen={id !== 'stashes'}
         onRemove={onRemove}
+        onAdd={onAdd}
+        onAddFolder={onAddFolder}
         dragHandle={<DragHandle listeners={listeners} attributes={attributes} />}
       >
-        {SECTION_CONTENT[id]}
+        {children}
       </SidebarSection>
     </div>
   )
@@ -74,6 +85,13 @@ const Sidebar = () => {
   const setSections = useSidebarStore(s => s.setSections)
   const removeSection = useSidebarStore(s => s.removeSection)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+  const { openRepository } = useRepositories()
+  const { toggleModal } = useContext(ModalContext)
+  const setActiveRepository = useSetActiveRepository()
+  const setSelectedCommit = useCommitSelectionStore(s => s.setSelectedCommit)
+  const { data: groups = [] } = useRepositoryGroups()
+  const { mutate: saveGroups } = useSetRepositoryGroups()
+  const [pendingRenameId, setPendingRenameId] = useState<string | null>(null)
 
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e
@@ -82,6 +100,18 @@ const Sidebar = () => {
       const newIdx = sections.indexOf(over.id as SectionId)
       setSections(arrayMove(sections, oldIdx, newIdx))
     }
+  }
+
+  const handleRepoClick = async (repo: Repository) => {
+    await setActiveRepository(repo)
+    setSelectedCommit('uncommitted')
+  }
+
+  const handleAddFolder = () => {
+    const id = crypto.randomUUID()
+    const newGroup: RepositoryGroup = { id, name: 'New folder', repositoryPaths: [] }
+    saveGroups([...groups, newGroup])
+    setPendingRenameId(id)
   }
 
   return (
@@ -95,9 +125,41 @@ const Sidebar = () => {
     >
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={sections} strategy={verticalListSortingStrategy}>
-          {sections.map(id => (
-            <SortableSection key={id} id={id} onRemove={() => removeSection(id)} />
-          ))}
+          {sections.map(id => {
+            if (id === 'repos') {
+              return (
+                <SortableSection
+                  key={id}
+                  id={id}
+                  onRemove={() => removeSection(id)}
+                  onAdd={openRepository}
+                  onAddFolder={handleAddFolder}
+                >
+                  <RepositoryGroupsList
+                    pendingRenameId={pendingRenameId}
+                    onRepoClick={handleRepoClick}
+                  />
+                </SortableSection>
+              )
+            }
+            if (id === 'branches') {
+              return (
+                <SortableSection
+                  key={id}
+                  id={id}
+                  onRemove={() => removeSection(id)}
+                  onAdd={() => toggleModal(<CreateBranchModal />)}
+                >
+                  <BranchesSection />
+                </SortableSection>
+              )
+            }
+            return (
+              <SortableSection key={id} id={id} onRemove={() => removeSection(id)}>
+                <StashesSection />
+              </SortableSection>
+            )
+          })}
         </SortableContext>
       </DndContext>
     </ResizableBox>

@@ -1,2 +1,3 @@
 export { default as BranchesSection } from './ui/BranchesSection'
-export { useBranches, useCheckoutBranch, useCreateBranch } from './api/useBranches'
+export { default as CreateBranchModal } from './ui/CreateBranchModal'
+export { useBranches, useCheckoutBranch, useCreateBranch, useMergeBranch } from './api/useBranches'
