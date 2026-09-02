@@ -1,4 +1,6 @@
 export { useCommitSelectionStore } from './model/useCommitSelectionStore'
+export { useCommitDraftStore } from './model/useCommitDraftStore'
+export { dropPushedCommitsOnBranch } from './model/commit-undo'
 export { useCommits } from './api/useCommits'
 export { useGitUser, useCommit } from './api/useCommitActions'
 export type { CommitGraphRow, GraphSegment } from './lib/computeGraphLanes'
