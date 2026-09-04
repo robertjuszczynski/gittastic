@@ -1,9 +1,10 @@
 import { BrowserWindow, app, dialog, shell } from 'electron'
 import { join, basename, extname } from 'node:path'
+import { is } from '@electron-toolkit/utils'
 import { mkdir, readdir, readFile, writeFile, copyFile, unlink } from 'node:fs/promises'
 import { existsSync, watch, type FSWatcher } from 'node:fs'
 import type { ThemeDefinition, ThemeId, ThemeJSON, ThemeTokens } from '@shared'
-import { MAIN_EVENTS, BUILT_IN_THEMES, BUILT_IN_THEME_MAP, gitasticLight, gitasticDark } from '@shared'
+import { MAIN_EVENTS, BUILT_IN_THEMES, BUILT_IN_THEME_MAP, gitasticLight, gitasticDark, ParseError } from '@shared'
 import { nativeTheme } from 'electron/main'
 import { Storage } from '@main/shared/storage.service'
 
@@ -67,10 +68,29 @@ export class ThemeService {
 
     this.activeThemeId = migrated
     this.applySystemThemeIfNeeded()
+    this.updateDockIcon()
+
+    nativeTheme.on('updated', () => {
+      if (this.activeThemeId === 'system') this.updateDockIcon()
+    })
   }
 
   private static applySystemThemeIfNeeded(): void {
     nativeTheme.themeSource = this.activeThemeId === 'system' ? 'system' : 'light'
+  }
+
+  private static updateDockIcon(): void {
+    if (process.platform !== 'darwin') return
+    const base = is.dev ? join(__dirname, '../../resources') : process.resourcesPath
+    const resolved = this.resolveActiveDefinition()
+    const icons = new Map()
+
+    icons.set('gitastic-glassmorphism', 'icon-glass.png')
+    icons.set('gitastic-dark', 'icon-dark.png')
+
+    const icon = join(base, icons.has(resolved.id) ? icons.get(resolved.id) : 'icon-light.png')
+
+    app.dock?.setIcon(icon)
   }
 
   private static async loadCustomThemes(): Promise<ThemeDefinition[]> {
@@ -144,6 +164,7 @@ export class ThemeService {
     this.applySystemThemeIfNeeded()
     this.watchActiveTheme()
     this.broadcastTheme()
+    this.updateDockIcon()
     return this.resolveActiveDefinition()
   }
 
@@ -193,7 +214,7 @@ export class ThemeService {
     await writeFile(filePath, JSON.stringify(json, null, 2), 'utf-8')
 
     const theme = await parseCustomTheme(filePath)
-    if (!theme) throw new Error(`Failed to parse saved theme: ${slug}`)
+    if (!theme) throw new ParseError(`Failed to parse saved theme: ${slug}`)
 
     this.customThemes = [
       ...this.customThemes.filter(t => t.id !== theme.id),
