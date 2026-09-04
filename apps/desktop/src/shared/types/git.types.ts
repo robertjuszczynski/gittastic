@@ -36,3 +36,33 @@ export type FileDiff = {
   modified: string;
   indexed?: string;
 }
+
+export type MergeParticipants = {
+  ours: string;
+  theirs: string;
+}
+
+export type MergeMessage = {
+  title: string;
+  description: string;
+}
+
+export type MergeStatus = {
+  inProgress: boolean;
+  conflictedFiles: string[];
+  message: MergeMessage | null;
+  participants: MergeParticipants | null;
+}
+
+export type ConflictFileContent = {
+  isBinary: boolean;
+  /** One side deleted the file, the other modified it — no conflict markers to show, just a keep/delete choice. */
+  isDeleteConflict: boolean;
+  oursDeleted: boolean;
+  theirsDeleted: boolean;
+  /** Working-tree file content, conflict markers included. Empty for binary/delete conflicts. */
+  raw: string;
+  /** base64, only populated for binary conflicts. */
+  oursBinary: string;
+  theirsBinary: string;
+}

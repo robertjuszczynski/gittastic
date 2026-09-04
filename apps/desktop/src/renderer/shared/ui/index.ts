@@ -1,2 +1,5 @@
 export { default as ContextMenu } from './ContextMenu'
 export type { ContextMenuItem } from './ContextMenu'
+export { default as Modal } from './Modal'
+export { default as ModalContext } from './ModalContext'
+export { default as StageCheckbox } from './StageCheckbox'

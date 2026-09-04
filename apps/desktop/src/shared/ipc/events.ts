@@ -1,5 +1,5 @@
 import type { StatusResult } from 'simple-git'
-import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus } from '../types/git.types'
+import type { GitBranch, GitRawCommits, GitStash, GitUser, FileChange, FileDiff, FileChangeStatus, MergeStatus, ConflictFileContent } from '../types/git.types'
 import type { Repository, Repositories } from '../types/repositories.types'
 import type { RepositoryGroups } from '../types/repository-groups.types'
 import type { CHANNELS } from './channels'
@@ -8,7 +8,7 @@ import type { ThemeDefinition, ThemeId, ThemeJSON } from '../types/theme.types'
 export interface IEvents {
     [CHANNELS.OPEN_REPOSITORY]: {
         args: void,
-        response?: Promise<Repository | void>;
+        response: Promise<Repository | void>;
     };
     [CHANNELS.GET_REPOSITORIES]: {
         args: void,
@@ -21,6 +21,10 @@ export interface IEvents {
     [CHANNELS.SET_ACTIVE_REPOSITORY]: {
         args: Repository
         response: Promise<Repository>;
+    };
+    [CHANNELS.REMOVE_REPOSITORY]: {
+        args: string;
+        response: Promise<void>;
     };
     [CHANNELS.GET_REPOSITORY_GROUPS]: {
         args: void;
@@ -68,7 +72,7 @@ export interface IEvents {
     };
     [CHANNELS.COMMIT]: {
         args: { message: string; description?: string };
-        response: Promise<void>;
+        response: Promise<{ hash: string; branch: string }>;
     };
     [CHANNELS.GET_USER]: {
         args: void;
@@ -87,6 +91,10 @@ export interface IEvents {
         response: Promise<void>;
     };
     [CHANNELS.CREATE_BRANCH]: {
+        args: string;
+        response: Promise<void>;
+    };
+    [CHANNELS.DELETE_BRANCH]: {
         args: string;
         response: Promise<void>;
     };
@@ -120,18 +128,46 @@ export interface IEvents {
     };
     [CHANNELS.STASH]: {
         args: void;
-        response: Promise<void>;
+        response: Promise<boolean>;
     };
     [CHANNELS.POP_STASH]: {
         args: void;
         response: Promise<void>;
     };
     [CHANNELS.UNDO]: {
+        args: { expectedHeadHash: string };
+        response: Promise<{ resultingHeadHash: string }>;
+    };
+    [CHANNELS.REDO]: {
+        args: { expectedHeadHash: string; targetHash: string };
+        response: Promise<void>;
+    };
+    [CHANNELS.MERGE_BRANCH]: {
+        args: string;
+        response: Promise<{ hasConflicts: boolean }>;
+    };
+    [CHANNELS.ABORT_MERGE]: {
         args: void;
         response: Promise<void>;
     };
-    [CHANNELS.REDO]: {
+    [CHANNELS.GET_MERGE_STATUS]: {
         args: void;
+        response: Promise<MergeStatus>;
+    };
+    [CHANNELS.GET_CONFLICT_FILE]: {
+        args: string;
+        response: Promise<ConflictFileContent>;
+    };
+    [CHANNELS.RESOLVE_CONFLICT]: {
+        args: { path: string; content: string };
+        response: Promise<void>;
+    };
+    [CHANNELS.RESOLVE_CONFLICT_SIDE]: {
+        args: { path: string; side: 'ours' | 'theirs' };
+        response: Promise<void>;
+    };
+    [CHANNELS.REMOVE_CONFLICT_FILE]: {
+        args: string;
         response: Promise<void>;
     };
     [CHANNELS.OPEN_FILE_CONTEXT_MENU]: {

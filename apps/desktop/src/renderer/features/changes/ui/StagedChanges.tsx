@@ -1,8 +1,12 @@
 import React from 'react'
 import { useChangesStore } from '@renderer/entities/git-file'
-import FileTree from './FileTree'
+import FilteredFileTree from './FilteredFileTree'
 
-const StagedChanges = () => {
+type StagedChangesProps = {
+  query: string
+}
+
+const StagedChanges = ({ query }: StagedChangesProps) => {
   const staged = useChangesStore(s => s.staged)
 
   return (
@@ -10,7 +14,7 @@ const StagedChanges = () => {
       <div className='px-3 py-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider'>
         Staged
       </div>
-      <FileTree files={staged} isStaged={true} />
+      <FilteredFileTree files={staged} query={query} isStaged={true} />
     </div>
   )
 }

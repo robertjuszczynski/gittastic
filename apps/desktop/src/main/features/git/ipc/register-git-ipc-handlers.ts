@@ -45,7 +45,7 @@ export default function registerGitIpcHandlers() {
       return await GitService.getFileDiff(args.path, args.hash)
     },
     [GIT_CHANNELS.COMMIT]: async (_, args) => {
-      await GitService.commit(args.message, args.description)
+      return await GitService.commit(args.message, args.description)
     },
     [GIT_CHANNELS.GET_USER]: async () => {
       return await GitService.getUser()
@@ -65,6 +65,9 @@ export default function registerGitIpcHandlers() {
     [GIT_CHANNELS.CREATE_BRANCH]: async (_, name) => {
       await GitService.createBranch(name)
     },
+    [GIT_CHANNELS.DELETE_BRANCH]: async (_, name) => {
+      await GitService.deleteBranch(name)
+    },
     [GIT_CHANNELS.PULL]: async () => {
       await git.pull()
     },
@@ -79,16 +82,37 @@ export default function registerGitIpcHandlers() {
       return JSON.parse(JSON.stringify(status))
     },
     [GIT_CHANNELS.STASH]: async () => {
-      await GitService.stash()
+      return await GitService.stash()
     },
     [GIT_CHANNELS.POP_STASH]: async () => {
       await GitService.popStash()
     },
-    [GIT_CHANNELS.UNDO]: async () => {
-      await GitService.undo()
+    [GIT_CHANNELS.UNDO]: async (_, args) => {
+      return await GitService.undo(args.expectedHeadHash)
     },
-    [GIT_CHANNELS.REDO]: async () => {
-      await GitService.redo()
+    [GIT_CHANNELS.REDO]: async (_, args) => {
+      await GitService.redo(args.expectedHeadHash, args.targetHash)
+    },
+    [GIT_CHANNELS.MERGE_BRANCH]: async (_, branchName) => {
+      return await GitService.mergeBranch(branchName)
+    },
+    [GIT_CHANNELS.ABORT_MERGE]: async () => {
+      await GitService.abortMerge()
+    },
+    [GIT_CHANNELS.GET_MERGE_STATUS]: async () => {
+      return await GitService.getMergeStatus()
+    },
+    [GIT_CHANNELS.GET_CONFLICT_FILE]: async (_, path) => {
+      return await GitService.getConflictFileContent(path)
+    },
+    [GIT_CHANNELS.RESOLVE_CONFLICT]: async (_, args) => {
+      await GitService.resolveConflictFile(args.path, args.content)
+    },
+    [GIT_CHANNELS.RESOLVE_CONFLICT_SIDE]: async (_, args) => {
+      await GitService.resolveConflictSide(args.path, args.side)
+    },
+    [GIT_CHANNELS.REMOVE_CONFLICT_FILE]: async (_, path) => {
+      await GitService.removeConflictFile(path)
     },
   }
 

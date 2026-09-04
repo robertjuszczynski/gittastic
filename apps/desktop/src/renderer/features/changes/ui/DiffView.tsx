@@ -12,6 +12,7 @@ const DiffView = () => {
   const selectedFile = useChangesStore(s => s.selectedFile)
   const selectedHash = useChangesStore(s => s.selectedHash)
   const selectedFolder = useChangesStore(s => s.selectedFolder)
+  const selectedFolderScope = useChangesStore(s => s.selectedFolderScope)
   const selectedFolderHash = useChangesStore(s => s.selectedFolderHash)
   const staged = useChangesStore(s => s.staged)
   const unstaged = useChangesStore(s => s.unstaged)
@@ -61,6 +62,7 @@ const DiffView = () => {
     return (
       <FolderDiffView
         selectedFolder={selectedFolder}
+        scope={selectedFolderHash ? null : selectedFolderScope}
         staged={selectedFolderHash ? commitFolderFiles : staged}
         unstaged={selectedFolderHash ? [] : unstaged}
         isUncommitted={!selectedFolderHash}

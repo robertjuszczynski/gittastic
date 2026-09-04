@@ -4,8 +4,8 @@ import type { FileChange } from '@shared'
 import { ChevronDownIcon } from '@renderer/shared/ui/icons'
 import { FolderIcon } from '@renderer/shared/ui/icons'
 import ChangeItem from './ChangeItem'
-import StageCheckbox from './StageCheckbox'
-import { useChangesStore } from '@renderer/entities/git-file'
+import { StageCheckbox } from '@renderer/shared/ui'
+import { useChangesStore, type FolderScope } from '@renderer/entities/git-file'
 
 type TreeNode = {
   name: string
@@ -64,7 +64,8 @@ const FolderNode = ({ node, depth, isStaged, hash }: FolderNodeProps) => {
   const isPartial = isStaged === true && allPaths.some(p => unstaged.some(f => f.path === p))
 
   const handleRowClick = () => {
-    setSelectedFolder(node.fullPath, hash)
+    const scope: FolderScope = isStaged === true ? 'staged' : isStaged === false ? 'unstaged' : null
+    setSelectedFolder(node.fullPath, hash, scope)
   }
 
   const handleCheckboxClick = () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import { CHANNELS, type FileChange } from '@shared'
 import { useChangesStore } from '@renderer/entities/git-file'
 import StatusBadge from './StatusBadge'
-import StageCheckbox from './StageCheckbox'
+import { StageCheckbox } from '@renderer/shared/ui'
 
 type ChangeItemProps = {
   change: FileChange

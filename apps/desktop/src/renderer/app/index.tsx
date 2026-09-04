@@ -7,6 +7,7 @@ import { ToastProvider } from '@renderer/shared/ui/ToastContext'
 import { CommandPalette } from '@renderer/widgets/command-palette'
 import { useThemeStore } from '@renderer/features/theme'
 import { useThemeCommands } from '@renderer/features/theme'
+import { useUndoShortcut } from '@renderer/shared/lib'
 import { router } from './router'
 import './styles.css'
 
@@ -36,6 +37,7 @@ const queryClient = new QueryClient()
 
 function AppShell() {
   useThemeCommands()
+  useUndoShortcut()
   return (
     <>
       <RouterProvider router={router} />

@@ -1,12 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useContentHeight } from '@renderer/shared/lib/useContentHeight'
 import { ResizableBox } from 'react-resizable'
-import { UnstagedChanges, StagedChanges, CommitSection, DiffView } from '@renderer/features/changes'
+import { UnstagedChanges, StagedChanges, SearchBar, CommitSection, DiffView } from '@renderer/features/changes'
+import { ConflictEditor } from '@renderer/features/merge-conflicts'
+import { useChangesStore } from '@renderer/entities/git-file'
+import { useActivePath } from '@renderer/entities/repository'
 
 const Divider = () => <div className='border-t border-black/[0.07]' />
 
 const UncommittedPanel = () => {
   const height = useContentHeight()
+  const { activePath } = useActivePath()
+  const selectedFile = useChangesStore(s => s.selectedFile)
+  const unstaged = useChangesStore(s => s.unstaged)
+  const isConflicted = !!selectedFile && unstaged.some(f => f.path === selectedFile && f.status === 'conflicted')
+
+  const [query, setQuery] = useState('')
+
+  // Search is UI-only and scoped to whatever repo is open — don't let a filter from the previous repo silently hide files in a newly-opened one.
+  useEffect(() => {
+    setQuery('')
+  }, [activePath])
+
   return (
     <div className='flex flex-1 min-h-0 h-full'>
       <ResizableBox
@@ -18,14 +33,15 @@ const UncommittedPanel = () => {
         className='height-transition flex flex-col shrink-0 border-r border-r-black/[0.07]'
       >
         <div className='flex flex-col h-full'>
-          <UnstagedChanges />
+          <SearchBar value={query} onChange={setQuery} />
+          <UnstagedChanges query={query} />
           <Divider />
-          <StagedChanges />
+          <StagedChanges query={query} />
           <Divider />
           <CommitSection />
         </div>
       </ResizableBox>
-      <DiffView />
+      {isConflicted ? <ConflictEditor path={selectedFile} /> : <DiffView />}
     </div>
   )
 }

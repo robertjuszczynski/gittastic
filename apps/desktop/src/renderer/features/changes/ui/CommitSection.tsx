@@ -1,16 +1,25 @@
-import React, { useState } from 'react'
-import { useGitUser, useCommit } from '@renderer/entities/commit'
+import React, { useEffect } from 'react'
+import { useGitUser, useCommit, useCommitDraftStore } from '@renderer/entities/commit'
 import { useChangesStore } from '@renderer/entities/git-file'
+import { useActivePath } from '@renderer/entities/repository'
 
 
 const CommitSection = () => {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
+  const { activePath } = useActivePath()
+  const title = useCommitDraftStore(s => s.title)
+  const description = useCommitDraftStore(s => s.description)
+  const setTitle = useCommitDraftStore(s => s.setTitle)
+  const setDescription = useCommitDraftStore(s => s.setDescription)
   const { data: user } = useGitUser()
   const commit = useCommit()
   const staged = useChangesStore(s => s.staged)
   const stageAll = useChangesStore(s => s.stageAll)
   const unstageAll = useChangesStore(s => s.unstageAll)
+
+  // The draft is a single global store — clear it on repo switch so a half-typed message doesn't leak into another repo's commit box.
+  useEffect(() => {
+    useCommitDraftStore.getState().clear()
+  }, [activePath])
 
   const initials = user?.name
     .split(' ')
@@ -22,8 +31,7 @@ const CommitSection = () => {
   const handleCommit = async () => {
     if (!title.trim() || staged.length === 0) return
     await commit(title.trim(), description.trim() || undefined)
-    setTitle('')
-    setDescription('')
+    useCommitDraftStore.getState().clear()
   }
 
   return (

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { CHANNELS } from '@shared'
-import { useTerminalStore, withGlobalIndicator, useLoadingStore } from '@renderer/shared/lib'
+import { useTerminalStore, withGlobalIndicator, useLoadingStore, useUndoStore } from '@renderer/shared/lib'
+import { useToast } from '@renderer/shared/ui/ToastContext'
 import { useStatus } from '@renderer/entities/git-file'
 import { useActivePath, useRepositories } from '@renderer/entities/repository'
-import { useStashes } from '@renderer/features/stashes'
+import { useStashes, useStashActions } from '@renderer/features/stashes'
+import { dropPushedCommitsOnBranch } from '@renderer/entities/commit'
 import {
   ArrowDownToLine,
   ArrowUpToLine,
@@ -31,6 +33,7 @@ const ToolbarButton = ({
   active = false,
   disabled = false,
   badge,
+  title,
 }: {
   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>
   label: string
@@ -38,9 +41,11 @@ const ToolbarButton = ({
   active?: boolean
   disabled?: boolean
   badge?: number
+  title?: string
 }) => (
   <button
     onClick={disabled ? undefined : () => onClick()}
+    title={title}
     className={`flex flex-col items-center justify-center gap-[5px] px-4 h-full transition-[background-color,color,transform] duration-100 cursor-default select-none outline-none group
       ${disabled
         ? 'text-neutral-600 opacity-40 pointer-events-none'
@@ -80,20 +85,30 @@ const Toolbar = () => {
   const { repositories } = useRepositories()
   const { data: stashes } = useStashes()
   const operations = useLoadingStore((s) => s.operations)
+  const { showToast } = useToast()
+  const { stash, popStash } = useStashActions()
 
-  const [canRedo, setCanRedo] = useState(false)
+  const undoEntry = useUndoStore((s) => s.undoStack[s.undoStack.length - 1])
+  const isUndoing = useUndoStore((s) => s.isUndoing)
+  const isRedoing = useUndoStore((s) => s.isRedoing)
+  const canUndo = !!undoEntry && !isUndoing
+  const canRedo = useUndoStore((s) => s.redoStack.length > 0) && !isRedoing
+  const undoLabel = undoEntry?.label ?? null
+  const redoLabel = useUndoStore((s) => s.redoStack[s.redoStack.length - 1]?.label ?? null)
+
+  const truncate = (label: string, max = 20) =>
+    label.length > max ? label.slice(0, max) + '…' : label
+
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   const ahead = status?.ahead ?? 0
   const repoName = repositories.find(r => r.path === activePath)?.name ?? '—'
   const branchName = status?.current ?? '—'
+  const hasChangesToStash = (status?.files.length ?? 0) > 0
   const hasStashes = (stashes?.length ?? 0) > 0
 
   const entries = Array.from(operations.entries())
   const activeOp = entries.length > 0 ? entries[entries.length - 1] : null
-
-  const commitsData = queryClient.getQueryData<{ hash: string }[]>(['git', 'commits', activePath])
-  const canUndo = (commitsData?.length ?? 0) > 0
 
   const invalidateGit = withGlobalIndicator('Refreshing', () => queryClient.invalidateQueries({ queryKey: ['git'] }))
 
@@ -106,30 +121,15 @@ const Toolbar = () => {
 
   const handlePush = async () => {
     await withGlobalIndicator(CHANNELS.PUSH, window.electron[CHANNELS.PUSH])()
-    invalidateGit()
+    if (status?.current) dropPushedCommitsOnBranch(status.current)
+    await invalidateGit()
   }
 
-  const handleStash = async () => {
-    await withGlobalIndicator(CHANNELS.STASH, window.electron[CHANNELS.STASH])()
-    invalidateGit()
-  }
+  const handleUndo = () =>
+    useUndoStore.getState().undo((msg) => showToast(msg, 'error'))
 
-  const handlePopStash = async () => {
-    await withGlobalIndicator(CHANNELS.POP_STASH, window.electron[CHANNELS.POP_STASH])()
-    invalidateGit()
-  }
-
-  const handleUndo = async () => {
-    await withGlobalIndicator(CHANNELS.UNDO, window.electron[CHANNELS.UNDO])()
-    invalidateGit()
-    setCanRedo(true)
-  }
-
-  const handleRedo = async () => {
-    await withGlobalIndicator(CHANNELS.REDO, window.electron[CHANNELS.REDO])()
-    invalidateGit()
-    setCanRedo(false)
-  }
+  const handleRedo = () =>
+    useUndoStore.getState().redo((msg) => showToast(msg, 'error'))
 
   return (
     <div className='shrink-0 bg-surface border-b border-b-black/[0.07]' style={drag}>
@@ -142,8 +142,8 @@ const Toolbar = () => {
           <ToolbarButton icon={ArrowDownToLine} label='Pull' onClick={async () => { await withGlobalIndicator(CHANNELS.PULL, window.electron[CHANNELS.PULL])(); invalidateGit() }} />
           <ToolbarButton icon={ArrowUpToLine} label='Push' badge={ahead || undefined} onClick={handlePush} />
           <Separator />
-          <ToolbarButton icon={Package} label='Stash' onClick={handleStash} />
-          <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={handlePopStash} />
+          <ToolbarButton icon={Package} label='Stash' disabled={!hasChangesToStash} onClick={stash} />
+          <ToolbarButton icon={PackageOpen} label='Pop Stash' disabled={!hasStashes} onClick={popStash} />
         </div>
 
         <div className='flex-1 flex items-center justify-center' style={drag}>
@@ -186,8 +186,20 @@ const Toolbar = () => {
         </div>
 
         <div className='flex items-stretch' style={noDrag}>
-          <ToolbarButton icon={Undo2} label='Undo' disabled={!canUndo} onClick={handleUndo} />
-          <ToolbarButton icon={Redo2} label='Redo' disabled={!canRedo} onClick={handleRedo} />
+          <ToolbarButton
+            icon={Undo2}
+            label={undoLabel ? `Undo ${truncate(undoLabel)}` : 'Undo'}
+            title={undoLabel ? `Undo ${undoLabel}` : undefined}
+            disabled={!canUndo}
+            onClick={handleUndo}
+          />
+          <ToolbarButton
+            icon={Redo2}
+            label={redoLabel ? `Redo ${truncate(redoLabel)}` : 'Redo'}
+            title={redoLabel ? `Redo ${redoLabel}` : undefined}
+            disabled={!canRedo}
+            onClick={handleRedo}
+          />
           <Separator />
           <ToolbarButton icon={Command} label='Quick Actions' onClick={openPalette} />
           <Separator />

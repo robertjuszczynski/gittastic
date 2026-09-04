@@ -11,4 +11,7 @@ export const LOADING_LABELS: Partial<Record<TChannelKeys, string>> = {
   COMMIT:          'Committing',
   CHECKOUT_BRANCH: 'Checking out',
   CREATE_BRANCH: 'Creating branch',
+  OPEN_REPOSITORY: 'Opening repository',
+  MERGE_BRANCH: 'Merging',
+  ABORT_MERGE: 'Aborting merge',
 }

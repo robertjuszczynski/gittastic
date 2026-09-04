@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react'
 import ReactDiffViewer from 'react-diff-viewer-continued'
 import type { FileDiff } from '@shared'
-import { DiffType, getCompareMethod, diffStyles, IMAGE_EXTENSIONS_MAP, isImageFile } from '../lib/diffUtils'
-import StageCheckbox from './StageCheckbox'
-import Prism from 'prismjs'
-import 'prismjs/components/prism-typescript'
+import { IMAGE_EXTENSIONS_MAP, isImageFile } from '../lib/diffUtils'
+import { DiffType, getCompareMethod, diffStyles, highlightCode } from '@renderer/shared/lib'
+import { StageCheckbox } from '@renderer/shared/ui'
 import ImageDiffView from './ImageDiffView'
 
 type FileDiffViewProps = {
@@ -33,14 +32,9 @@ const FileDiffView = ({ filePath, diff, isUncommitted, onStageLine, stagedLines 
     )
   }, [filePath, onStageLine, stagedLines])
 
-  const highlightSyntax = (str) => (
-    <pre
-      className='inline'
-      dangerouslySetInnerHTML={{
-        __html: Prism.highlight(str, Prism.languages.typescript ?? Prism.languages.javascript, 'typescript'),
-      }}
-    />
-  );
+  const highlightSyntax = (str: string) => (
+    <pre className='inline' dangerouslySetInnerHTML={{ __html: highlightCode(str) }} />
+  )
 
   const fileName = filePath.split('/').pop() || ''
   const ext = fileName.split('.').pop()?.toLowerCase() || ''
