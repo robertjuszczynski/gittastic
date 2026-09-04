@@ -260,7 +260,7 @@ const ConflictEditor = ({ path }: ConflictEditorProps) => {
     <div className='flex-1 min-w-0 flex overflow-hidden'>
       <div className='flex-1 min-w-0 flex flex-col overflow-hidden'>
         <div className='flex items-center justify-between px-3 py-2 gap-3 shrink-0'>
-          <span className='text-[11px] font-bold text-neutral-500 uppercase tracking-wider truncate'>{path}</span>
+          <span className='text-[11px] font-bold text-neutral-500 tracking-wider truncate'>{path}</span>
           <div className='flex items-center gap-1.5 shrink-0'>
             <button onClick={() => handleUseWholeFile('ours')} className={acceptButtonClass}>Use Ours (whole file)</button>
             <button onClick={() => handleUseWholeFile('theirs')} className={acceptButtonClass}>Use Theirs (whole file)</button>

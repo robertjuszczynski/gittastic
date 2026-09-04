@@ -78,7 +78,7 @@ const FolderDiffView = ({ selectedFolder, scope, staged, unstaged, isUncommitted
   return (
     <div className='flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden'>
       <div className='flex items-center gap-2 px-3 py-2 shrink-0'>
-        <span className='text-[11px] font-bold text-neutral-500 uppercase tracking-wider truncate'>{selectedFolder}/</span>
+        <span className='text-[11px] font-bold text-neutral-500 tracking-wider truncate'>{selectedFolder}/</span>
         {scope && (
           <span className={`text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0 ${
             scope === 'staged' ? 'text-accent bg-accent/10' : 'text-neutral-500 bg-white/[0.04]'
