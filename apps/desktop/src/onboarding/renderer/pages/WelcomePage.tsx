@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import LogoBranchIcon from '@onboarding/shared/ui/LogoBranchIcon'
+import { fromEvent } from 'rxjs'
 
 function ParticlesBackground() {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -30,9 +31,13 @@ function ParticlesBackground() {
       raf = requestAnimationFrame(draw)
     }
     draw()
-    window.addEventListener('resize', resize)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
+
+    // TODO: Is RxJS needed here?
+    const resizeSub = fromEvent(window, 'resize').subscribe(resize)
+
+    return () => { cancelAnimationFrame(raf); resizeSub.unsubscribe() }
   }, [])
+
   return <canvas ref={ref} className='absolute inset-0 w-full h-full pointer-events-none' />
 }
 

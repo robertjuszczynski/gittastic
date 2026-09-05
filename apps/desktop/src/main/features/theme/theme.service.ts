@@ -7,6 +7,7 @@ import type { ThemeDefinition, ThemeId, ThemeJSON, ThemeTokens } from '@shared'
 import { MAIN_EVENTS, BUILT_IN_THEMES, BUILT_IN_THEME_MAP, gitasticLight, gitasticDark, ParseError } from '@shared'
 import { nativeTheme } from 'electron/main'
 import { Storage } from '@main/shared/storage.service'
+import { debounceTime, from, fromEventPattern, Subscription, switchMap } from 'rxjs'
 
 const THEMES_DIR = join(app.getPath('userData'), 'themes')
 
@@ -26,7 +27,7 @@ function mergeTokens(base: ThemeTokens, override: ThemeJSON): ThemeTokens {
           ...Object.fromEntries(
             Object.entries(override.components).map(([k, v]) => [
               k,
-              { ...(base.components as any)?.[k], ...(v as any) },
+              { ...(base.components as any)?.[k], ...(v as any) }, // TODO: as any?
             ])
           ),
         }
@@ -138,16 +139,18 @@ export class ThemeService {
     const active = this.customThemes.find(t => t.id === this.activeThemeId)
     if (!active?.filePath) return
 
-    let debounce: ReturnType<typeof setTimeout> | null = null
-    this.watcher = watch(active.filePath, () => {
-      if (debounce) clearTimeout(debounce)
-      debounce = setTimeout(async () => {
-        const updated = await parseCustomTheme(active.filePath!)
-        if (!updated) return
-        this.customThemes = this.customThemes.map(t => t.id === updated.id ? updated : t)
-        this.broadcastTheme()
-      }, 150)
+    const change$ = fromEventPattern(handler => watch(active.filePath!, handler))
+
+    const sub: Subscription = change$.pipe(
+      debounceTime(150),
+      switchMap(() => from(parseCustomTheme(active.filePath!)))
+    ).subscribe(updated => {
+      if (!updated) return
+      this.customThemes = this.customThemes.map(t => t.id === updated.id ? updated : t)
+      this.broadcastTheme()
     })
+
+    sub.unsubscribe()
   }
 
   static getThemes(): ThemeDefinition[] {

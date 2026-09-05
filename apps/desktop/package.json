@@ -36,6 +36,7 @@
     "react-dom": "^19.2.7",
     "react-resizable": "^4.0.2",
     "react-router": "8.0.0",
+    "rxjs": "^7.8.2",
     "simple-git": "^3.36.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
