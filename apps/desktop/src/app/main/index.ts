@@ -5,11 +5,10 @@ import registerIpcHandlers from '@main/ipc/register-ipc-handlers'
 import GitService from '@main/features/git/git.service'
 import { Storage } from '@main/shared/storage.service'
 import { sendToRenderer } from '@main/shared/send-to-renderer'
+import { ENV } from '@shared/config/env'
 import { MAIN_EVENTS, ONBOARDING_EVENT_CHANNELS } from '@shared'
 import { createMainWindow } from './windows/main.window'
 import { createOnboardingWindow } from './windows/onboarding.window'
-
-const RESET_ONBOARDING = false // set to true during dev to always show onboarding
 
 let mainWin: BrowserWindow | null = null
 let onboardingWin: BrowserWindow | null = null
@@ -45,7 +44,7 @@ app.whenReady().then(async () => {
     switchToMainWindow,
   })
 
-  if (onboardingCompleted && !RESET_ONBOARDING) {
+  if (onboardingCompleted && !ENV.RESET_ONBOARDING) {
     onboardingDone = true
     mainWin = createMainWindow()
     app.on('did-become-active', () => {
