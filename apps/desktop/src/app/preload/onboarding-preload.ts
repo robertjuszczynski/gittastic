@@ -2,6 +2,7 @@ import { ONBOARDING_CHANNELS, ONBOARDING_EVENT_CHANNELS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
 import type { TOnboardingAPI, TOnboardingEventsAPI } from '@shared/ipc/api.onboarding'
 import type { IOnboardingEventEvents } from '../../shared/ipc/events.onboarding'
+import type { TAbortableChannel } from '../../shared/ipc/abortable-channels'
 
 type TGithubAuthResultData = IOnboardingEventEvents[typeof ONBOARDING_EVENT_CHANNELS.ONBOARDING_GITHUB_AUTH_RESULT]
 
@@ -26,6 +27,9 @@ if (process.contextIsolated) {
     }
     contextBridge.exposeInMainWorld('onboardingAPI', api)
     contextBridge.exposeInMainWorld('onboardingEventsAPI', eventsApi)
+    contextBridge.exposeInMainWorld('abortAPI', {
+      cancel: (channel: TAbortableChannel, requestId: string) => ipcRenderer.invoke(`CANCEL_${channel}`, { requestId }),
+    })
   } catch (error) {
     console.error(error)
   }

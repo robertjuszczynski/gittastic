@@ -4,6 +4,7 @@ import registerTerminalIpcHandlers from '@main/features/terminal/ipc/register-te
 import registerFileIpcHandlers from '@main/entities/file/ipc/register-file-ipc-handlers'
 import registerThemeIpcHandlers from '@main/features/theme/ipc/register-theme-ipc-handlers'
 import registerOnboardingIpcHandlers, { type OnboardingIpcContext } from '@main/features/onboarding/ipc/register-onboarding-ipc-handlers'
+import registerCancelIpcHandlers from '@main/ipc/register-cancel-ipc-handlers'
 
 export default function registerIpcHandlers(onboardingCtx: OnboardingIpcContext) {
   registerRepositoriesIpcHandlers()
@@ -12,4 +13,5 @@ export default function registerIpcHandlers(onboardingCtx: OnboardingIpcContext)
   registerFileIpcHandlers()
   registerThemeIpcHandlers()
   registerOnboardingIpcHandlers(onboardingCtx)
+  registerCancelIpcHandlers()
 }

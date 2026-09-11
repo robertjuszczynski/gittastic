@@ -2,6 +2,7 @@ import type { IEvents, TMainEvents, ThemeDefinition } from '@shared'
 import { CHANNELS, TERMINAL_CHANNELS, MAIN_EVENTS } from '@shared'
 import { contextBridge, ipcRenderer } from 'electron'
 import { type TOptionalArgs } from '@shared'
+import type { TAbortableChannel } from '@shared/ipc/abortable-channels'
 
 export type TElectronAPI = {
     [K in keyof typeof CHANNELS]: (...args: TOptionalArgs<IEvents[typeof CHANNELS[K]]['args']>) => IEvents[typeof CHANNELS[K]]['response'];
@@ -82,6 +83,10 @@ if (process.contextIsolated) {
       onThemeUpdated: (callback: (theme: ThemeDefinition) => void) => listenTo(MAIN_EVENTS.THEME_UPDATED, callback),
       onCustomThemesChanged: (callback: (themes: ThemeDefinition[]) => void) => listenTo(MAIN_EVENTS.CUSTOM_THEMES_CHANGED, callback),
       onFullscreenChanged: (callback: (isFullscreen: boolean) => void) => listenTo(MAIN_EVENTS.FULLSCREEN_CHANGED, callback),
+    })
+
+    contextBridge.exposeInMainWorld('abortAPI', {
+      cancel: (channel: TAbortableChannel, requestId: string) => ipcRenderer.invoke(`CANCEL_${channel}`, { requestId }),
     })
 
     contextBridge.exposeInMainWorld('terminalAPI', {

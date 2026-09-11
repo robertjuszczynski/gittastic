@@ -1,5 +1,6 @@
 import type { TElectronAPI } from '../app/preload'
 import type { ThemeDefinition } from '@shared'
+import type { TAbortableChannel } from '@shared/ipc/abortable-channels'
 
 interface TerminalAPI {
   create: () => Promise<void>
@@ -7,6 +8,10 @@ interface TerminalAPI {
   sendInput: (data: string) => void
   resize: (cols: number, rows: number) => void
   onOutput: (callback: (data: string) => void) => () => void
+}
+
+interface AbortAPI {
+  cancel: (channel: TAbortableChannel, requestId: string) => Promise<void>
 }
 
 interface GitEventsAPI {
@@ -24,6 +29,7 @@ declare global {
   interface Window {
     electron: TElectronAPI
     terminalAPI: TerminalAPI
+    abortAPI: AbortAPI
     gitEventsAPI: GitEventsAPI
     appEventsAPI: AppEventsAPI
   }
