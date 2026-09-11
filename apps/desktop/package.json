@@ -6,7 +6,6 @@
   "scripts": {
     "predev": "tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json && npx steiger ./src/renderer && npx steiger ./src/onboarding/renderer",
     "dev": "electron-vite dev",
-    "dev:reset-onboarding": "pnpm run predev && RESET_ONBOARDING=true electron-vite dev",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json",
     "postinstall": "install-electron && npx @electron/rebuild -f -w node-pty"
