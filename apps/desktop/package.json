@@ -32,7 +32,7 @@
     "pino": "^10.3.1",
     "prismjs": "^1.30.0",
     "react": "^19.2.7",
-    "react-diff-viewer-continued": "^4.4.0",
+    "react-diff-viewer-continued": "github:robertjuszczynski/react-diff-viewer-continued#v4.4.0-gt.1",
     "react-dom": "^19.2.7",
     "react-resizable": "^4.0.2",
     "react-router": "8.0.0",
