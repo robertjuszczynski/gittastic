@@ -8,6 +8,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json",
+    "lint": "eslint .",
     "postinstall": "install-electron && npx @electron/rebuild -f -w node-pty"
   },
   "dependencies": {

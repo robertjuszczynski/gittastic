@@ -2,7 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
-import { defineConfig } from 'eslint/config'
+import { defineConfig, globalIgnores } from 'eslint/config'
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -48,6 +48,7 @@ const requireIpcHandlerRegistration = {
 }
 
 export default defineConfig([
+  globalIgnores(['out/**']),
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     plugins: { js },
@@ -81,9 +82,9 @@ export default defineConfig([
   },
   {
     files: ['**/*.{jsx,tsx}'],
-    extends: [pluginReact.configs.flat.recommended],
+    extends: [pluginReact.configs.flat.recommended, pluginReact.configs.flat['jsx-runtime']],
     settings: {
-      react: { version: 'detect' },
+      react: { version: '19.2' },
     },
   },
 ])
